@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyberspeurtocht – Phishingdetective</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary-teal:#16857e;
+  --primary-teal-dark:#116a65;
+  --primary-teal-light:#1fa39a;
+  --accent-pink:#e11d48;
+  --accent-pink-light:#fda4af;
+  --bg-page:#f9fafb;
+  --bg-white:#ffffff;
+  --bg-soft:#f3f4f6;
+  --border:#e5e7eb;
+  --text-heading:#1f2937;
+  --text-primary:#374151;
+  --text-secondary:#6b7280;
+  --text-muted:#9ca3af;
+  --success-green:#059669;
+  --warning-orange:#d97706;
+  --danger-red:#dc2626;
+  --shadow-sm:0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --radius-sm:6px;
+  --radius-md:8px;
+  --radius-lg:12px;
+  --radius-xl:16px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:var(--bg-page);
+  color:var(--text-primary);
+  height:100vh;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+
+.app{
+  display:flex;
+  flex:1;
+  min-height:0;
+  padding-bottom:80px;
+}
+
+.sidebar{
+  width:240px;
+  background:var(--bg-white);
+  border-right:1px solid var(--border);
+  padding:16px 12px;
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:700;
+  font-size:18px;
+  color:var(--primary-teal);
+  padding:8px 12px 20px;
+  margin-bottom:8px;
+  border-bottom:1px solid var(--border);
+}
+
+.brand svg{
+  width:28px;
+  height:28px;
+  flex-shrink:0;
+}
+
+.navbtn{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 16px;
+  border:none;
+  background:none;
+  font-size:14px;
+  font-weight:500;
+  color:var(--text-primary);
+  cursor:pointer;
+  border-radius:var(--radius-md);
+  text-align:left;
+  width:100%;
+  transition:all 0.15s ease;
+}
+
+.navbtn:hover{
+  background:var(--bg-soft);
+  color:var(--primary-teal);
+}
+
+.navbtn.active{
+  background:rgba(22,133,126,0.1);
+  font-weight:600;
+  color:var(--primary-teal);
+  box-shadow:0 1px 2px rgba(0,0,0,0.05);
+}
+
+.navbtn .count{
+  font-size:12px;
+  color:var(--text-secondary);
+  background:var(--bg-soft);
+  padding:2px 8px;
+  border-radius:12px;
+  font-weight:500;
+}
+
+.sidebar-tip{
+  margin-top:auto;
+  font-size:12px;
+  color:var(--text-secondary);
+  padding:16px 14px;
+  border-top:2px dashed var(--border);
+  line-height:1.6;
+  background:linear-gradient(to bottom,var(--bg-white),var(--bg-soft));
+  border-radius:var(--radius-md);
+  margin:8px 6px 0;
+}
+
+.sidebar-tip strong{
+  color:var(--accent-pink);
+  display:block;
+  margin-bottom:6px;
+  font-size:11px;
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+}
+
+/* ===== HEADER / BRANDING ===== */
+main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+
+.topbar{
+  background:var(--bg-white);
+  border-bottom:1px solid var(--border);
+  padding:16px 24px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  flex-shrink:0;
+  box-shadow:var(--shadow-sm);
+}
+
+.search{
+  flex:1;
+  max-width:500px;
+  background:var(--bg-soft);
+  border:2px solid transparent;
+  border-radius:var(--radius-lg);
+  padding:12px 20px;
+  font-size:14px;
+  outline:none;
+  color:var(--text-heading);
+  transition:all 0.2s ease;
+  font-weight:500;
+}
+
+.search::placeholder{
+  color:var(--text-muted);
+}
+
+.search:focus{
+  background:var(--bg-white);
+  border-color:var(--primary-teal);
+  box-shadow:0 0 0 3px rgba(22,133,126,0.1);
+}
+
+.badge-game{
+  margin-left:auto;
+  font-size:12px;
+  font-weight:700;
+  color:var(--accent-pink);
+  background:rgba(225,29,72,0.08);
+  border:2px solid var(--accent-pink);
+  padding:6px 14px;
+  border-radius:var(--radius-xl);
+  white-space:nowrap;
+  letter-spacing:0.3px;
+}
+
+/* ===== EMAIL LIST & READING PANES ===== */
+.content{
+  display:grid;
+  grid-template-columns:minmax(280px,42%) 1fr;
+  flex:1;
+  min-height:0;
+}
+
+.list-pane{
+  overflow-y:auto;
+  background:var(--bg-white);
+  border-right:1px solid var(--border);
+}
+/* ===== EMAILLIJST (flex-layout, kan niet breken) ===== */
+.email-row{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  transition:background 0.15s ease;
+}
+.email-row:hover{background:var(--bg-soft)}
+.email-row:hover:not(.selected){box-shadow:inset 3px 0 0 var(--primary-teal)}
+.email-row.selected{background:rgba(22,133,126,0.08);box-shadow:inset 3px 0 0 var(--primary-teal)}
+
+.email-row .num{
+  flex-shrink:0;
+  font-size:11px;
+  font-weight:700;
+  color:var(--text-muted);
+  background:var(--bg-soft);
+  border-radius:var(--radius-sm);
+  padding:3px 6px;
+  text-align:center;
+  margin-top:2px;
+  min-width:44px;
+}
+
+.email-row .row-main{
+  flex:1;
+  min-width:0;
+}
+
+.email-row .row-top{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.email-row .from{
+  flex:1;
+  min-width:0;
+  font-size:14px;
+  font-weight:700;
+  color:var(--text-heading);
+  line-height:1.3;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.email-row .time{
+  flex-shrink:0;
+  font-size:11px;
+  color:var(--text-muted);
+  font-weight:500;
+}
+
+.email-row .subj{
+  margin-top:3px;
+  font-size:13px;
+  font-weight:500;
+  color:var(--text-primary);
+  line-height:1.4;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.email-row.unread .from{font-weight:700}
+.email-row.unread .subj{font-weight:700;color:var(--text-heading)}
+
+.email-row.reported{background:var(--bg-soft);opacity:0.75}
+.email-row.reported .from,
+.email-row.reported .subj{text-decoration:line-through;color:var(--text-muted)}
+.email-row.reported .subj::after{
+  content:" ✓ gemeld";
+  color:var(--success-green);
+  font-weight:700;
+  text-decoration:none;
+  font-size:11px;
+}
+
+.empty-folder{
+  padding:48px 24px;
+  text-align:center;
+  color:var(--text-secondary);
+  font-size:14px;
+}
+/* ===== READ PANE ===== */
+.read-pane{
+  overflow-y:auto;
+  background:var(--bg-white);
+  padding:32px 40px;
+}
+
+.read-empty{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  height:100%;
+  color:var(--text-secondary);
+  gap:16px;
+  font-size:15px;
+  text-align:center;
+}
+
+.read-empty .big{
+  font-size:56px;
+  opacity:0.6;
+}
+
+.mail-header h2{
+  font-size:20px;
+  margin-bottom:16px;
+  line-height:1.3;
+  color:var(--text-heading);
+  font-weight:700;
+}
+
+.mail-meta{
+  display:flex;
+  align-items:flex-start;
+  gap:16px;
+  padding:16px 0;
+  border-bottom:2px solid var(--border);
+  margin-bottom:24px;
+  background:var(--bg-soft);
+  border-radius:var(--radius-lg);
+  padding:16px 20px;
+}
+
+.avatar{
+  width:44px;
+  height:44px;
+  border-radius:12px;
+  background:var(--primary-teal);
+  color:#fff;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  font-size:17px;
+  box-shadow:var(--shadow-sm);
+}
+
+.avatar.phish{
+  background:var(--danger-red);
+  box-shadow:0 0 0 2px rgba(220,38,38,0.2);
+}
+
+.meta-from{
+  font-size:14px;
+  font-weight:700;
+  color:var(--text-heading);
+}
+
+.meta-mail{
+  font-size:12px;
+  color:var(--text-secondary);
+  word-break:break-all;
+  margin-top:2px;
+}
+
+.mail-body{
+  font-size:15px;
+  line-height:1.8;
+  color:var(--text-primary);
+}
+
+.mail-body p{
+  margin-bottom:16px;
+}
+
+.mail-body ul{
+  margin:0 0 16px 24px;
+  line-height:1.8;
+}
+
+.phish-warn{
+  background:linear-gradient(to bottom,#fef2f2,#fee2e2);
+  border-left:4px solid var(--danger-red);
+  padding:16px 18px;
+  border-radius:var(--radius-md);
+  font-weight:600;
+  color:#991b1b;
+  margin:0 0 18px;
+  box-shadow:var(--shadow-sm);
+}
+
+.nice-box{
+  background:rgba(22,133,126,0.08);
+  border-left:4px solid var(--primary-teal);
+  padding:14px 16px;
+  border-radius:var(--radius-md);
+  font-size:14px;
+  line-height:1.7;
+  margin:0 0 16px;
+  color:var(--text-primary);
+}
+
+.official-box{
+  background:var(--bg-soft);
+  border:1px solid var(--border);
+  padding:18px 20px;
+  border-radius:var(--radius-lg);
+  font-size:14px;
+  line-height:1.7;
+  margin:10px 0 20px;
+  color:var(--text-primary);
+}
+
+.mail-link{
+  color:var(--primary-teal);
+  text-decoration:underline;
+  cursor:pointer;
+  font-weight:500;
+  transition:color 0.15s;
+}
+
+.mail-link:hover{
+  color:var(--primary-teal-dark);
+}
+
+.phish-btn{
+  display:inline-block;
+  background:var(--danger-red);
+  color:#fff;
+  padding:14px 28px;
+  border:none;
+  border-radius:var(--radius-lg);
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  margin:10px 0 18px;
+  box-shadow:var(--shadow-md);
+  transition:all 0.15s;
+  text-decoration:none;
+}
+
+.phish-btn:hover{
+  background:#b91c1c;
+  transform:translateY(-1px);
+  box-shadow:var(--shadow-lg);
+}
+
+.cta-btn{
+  display:inline-block;
+  background:var(--primary-teal);
+  color:#fff;
+  padding:12px 24px;
+  border:none;
+  border-radius:var(--radius-lg);
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  margin:8px 0 16px;
+  box-shadow:var(--shadow-sm);
+  transition:all 0.15s;
+}
+
+.cta-btn:hover{
+  background:var(--primary-teal-dark);
+  transform:translateY(-1px);
+}
+
+.signature{
+  font-size:13px;
+  color:var(--text-secondary);
+  line-height:1.6;
+  border-top:1px solid var(--border);
+  padding-top:14px;
+  margin-top:8px;
+}
+
+.mail-footer-note{
+  font-size:11px;
+  color:var(--text-muted);
+  margin-top:28px;
+  border-top:1px dashed var(--border);
+  padding-top:14px;
+  line-height:1.5;
+}
+
+.back-btn{
+  display:none;
+  border:1px solid var(--border);
+  background:var(--bg-white);
+  color:var(--text-heading);
+  padding:10px 16px;
+  border-radius:var(--radius-md);
+  font-size:13px;
+  font-weight:500;
+  cursor:pointer;
+  margin-bottom:16px;
+  transition:all 0.15s;
+}
+
+.back-btn:hover{
+  background:var(--bg-soft);
+  border-color:var(--primary-teal);
+  color:var(--primary-teal);
+}
+
+.statusbar{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:64px;
+  background:var(--text-heading);
+  color:#f3f4f6;
+  font-size:12px;
+  font-family:Consolas,'Courier New',monospace;
+  padding:6px 16px;
+  display:none;
+  z-index:400;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  border-top:2px solid var(--primary-teal);
+  box-shadow:var(--shadow-lg);
+}
+
+.statusbar.show{
+  display:block;
+}
+
+.report-phish-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  background:var(--warning-orange);
+  color:#fff;
+  padding:14px 28px;
+  border:none;
+  border-radius:var(--radius-lg);
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  margin:14px 0 18px;
+  box-shadow:var(--shadow-md);
+  transition:all 0.15s;
+}
+
+.report-phish-btn:hover{
+  background:#b45309;
+  transform:translateY(-1px);
+  box-shadow:var(--shadow-lg);
+}
+
+.answer-bar{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  background:var(--bg-white);
+  border-top:2px solid var(--primary-teal);
+  padding:16px 24px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;
+  z-index:500;
+  box-shadow:0 -4px 20px rgba(0,0,0,0.08);
+}
+
+.progress-icon{
+  font-size:22px;
+}
+
+.progress-text{
+  font-size:15px;
+  font-weight:600;
+  color:var(--text-heading);
+}
+
+.progress-hint{
+  margin-left:auto;
+  font-size:12px;
+  color:var(--text-secondary);
+  background:var(--bg-soft);
+  padding:6px 12px;
+  border-radius:var(--radius-md);
+}
+
+/* ===== MODALS & OVERLAYS ===== */
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(15, 23, 42, 0.8);
+  backdrop-filter:blur(4px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:900;
+  padding:20px;
+}
+
+.modal-overlay.show{
+  display:flex;
+}
+
+.modal-card{
+  background:var(--bg-white);
+  border-radius:var(--radius-xl);
+  max-width:620px;
+  width:100%;
+  padding:36px 32px;
+  text-align:center;
+  animation:popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-height:85vh;
+  overflow-y:auto;
+  box-shadow:var(--shadow-lg);
+  border:1px solid var(--border);
+}
+
+@keyframes popIn{
+  from{transform:scale(0.7);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+.modal-card .icon{
+  font-size:64px;
+  margin-bottom:16px;
+}
+
+.modal-card h2{
+  color:var(--primary-teal);
+  font-size:26px;
+  margin-bottom:8px;
+  font-weight:800;
+  letter-spacing:-0.5px;
+}
+
+.modal-card .sub{
+  color:var(--text-secondary);
+  font-size:14px;
+  margin-bottom:24px;
+  line-height:1.6;
+}
+
+.modal-card ul{
+  text-align:left;
+  font-size:14px;
+  line-height:1.8;
+  color:var(--text-primary);
+  background:var(--bg-soft);
+  border-radius:var(--radius-lg);
+  padding:20px 20px 20px 36px;
+  margin-bottom:24px;
+  border:1px solid var(--border);
+}
+
+.modal-card li{
+  margin-bottom:8px;
+}
+
+.again{
+  background:var(--primary-teal);
+  color:#fff;
+  border:none;
+  border-radius:var(--radius-lg);
+  padding:14px 32px;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:var(--shadow-md);
+  transition:all 0.15s;
+  margin-top:12px;
+}
+
+.again:hover{
+  background:var(--primary-teal-dark);
+  transform:translateY(-1px);
+  box-shadow:var(--shadow-lg);
+}
+
+#confetti{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:1000;
+}
+
+/* ===== FLAG PANEL (WIN SCREEN) ===== */
+.flag-panel{
+  background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);
+  border:2px solid var(--primary-teal);
+  border-radius:var(--radius-xl);
+  padding:24px 20px;
+  margin:24px 0;
+  text-align:center;
+  box-shadow:var(--shadow-lg);
+  position:relative;
+  overflow:hidden;
+}
+
+.flag-panel::before{
+  content:"🏁";
+  position:absolute;
+  top:14px;
+  left:18px;
+  font-size:24px;
+  filter:brightness(1.2);
+}
+
+.flag-label{
+  display:block;
+  font-size:11px;
+  font-weight:700;
+  color:var(--primary-teal);
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-bottom:12px;
+  background:var(--bg-white);
+  display:inline-block;
+  padding:4px 14px;
+  border-radius:var(--radius-md);
+}
+
+#flag-output{
+  display:block;
+  font-family:'Consolas','Monaco','Courier New',monospace;
+  font-size:20px;
+  font-weight:700;
+  color:#f1f5f9;
+  background:rgba(22,133,126,0.15);
+  border:2px dashed var(--primary-teal);
+  border-radius:var(--radius-lg);
+  padding:16px 14px;
+  letter-spacing:1px;
+  word-break:break-all;
+  user-select:all;
+  text-shadow:0 2px 4px rgba(0,0,0,0.3);
+}
+
+.flag-note{
+  font-size:13px;
+  color:#94a3b8;
+  margin:12px 0 0;
+  line-height:1.5;
+}
+
+.copy-flag-btn{
+  background:var(--primary-teal);
+  color:#fff;
+  border:none;
+  border-radius:var(--radius-lg);
+  padding:10px 20px;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  margin-top:12px;
+  transition:all 0.15s;
+  box-shadow:var(--shadow-sm);
+}
+
+.copy-flag-btn:hover{
+  background:var(--primary-teal-dark);
+  transform:translateY(-1px);
+}
+
+/* ===== PHISHING WARNING OVERLAY ===== */
+.phish-warning-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(220,38,38,0.92);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:1100;
+  animation:flicker 0.3s ease-out;
+}
+
+.phish-warning-overlay.show{
+  display:flex;
+}
+
+.phish-warning-card{
+  background:var(--bg-white);
+  border-radius:var(--radius-xl);
+  max-width:620px;
+  width:92%;
+  padding:40px 32px;
+  text-align:center;
+  animation:popWarn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:var(--shadow-lg);
+  border:3px solid #ef4444;
+}
+
+@keyframes popWarn{
+  from{transform:scale(0.6);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+@keyframes flicker{
+  0%{opacity:0.9}
+  50%{opacity:1}
+  100%{opacity:1}
+}
+
+.phish-warning-icon{
+  font-size:64px;
+  margin-bottom:16px;
+}
+
+.phish-warning-title{
+  color:var(--danger-red);
+  font-size:24px;
+  font-weight:800;
+  margin-bottom:16px;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  line-height:1.2;
+}
+
+.phish-warning-message{
+  color:var(--text-primary);
+  font-size:16px;
+  line-height:1.7;
+  margin-bottom:24px;
+  background:#fef2f2;
+  border:2px solid #fecaca;
+  border-radius:var(--radius-lg);
+  padding:20px 20px;
+}
+
+.phish-url-display{
+  font-family:'Consolas','Courier New',monospace;
+  font-size:13px;
+  color:#991b1b;
+  background:#fff1f2;
+  border:2px dashed #f87171;
+  border-radius:var(--radius-md);
+  padding:12px 14px;
+  margin:16px 0;
+  word-break:break-all;
+  font-weight:600;
+  text-align:left;
+}
+
+.phish-warning-tips{
+  text-align:left;
+  background:var(--bg-soft);
+  border-radius:var(--radius-lg);
+  padding:20px 20px 20px 32px;
+  margin:20px 0;
+  font-size:14px;
+  line-height:1.8;
+  color:var(--text-primary);
+  border:1px solid var(--border);
+}
+
+.phish-warning-tips strong{
+  color:var(--primary-teal);
+}
+
+.close-warning-btn{
+  background:var(--primary-teal);
+  color:#fff;
+  border:none;
+  border-radius:var(--radius-lg);
+  padding:16px 36px;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:var(--shadow-md);
+  transition:all 0.15s;
+}
+
+.close-warning-btn:hover{
+  background:var(--primary-teal-dark);
+  transform:translateY(-1px);
+  box-shadow:var(--shadow-lg);
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:820px){
+  .app{
+    flex-direction:column;
+    padding-bottom:130px;
+  }
+  
+  .sidebar{
+    width:100%;
+    flex-direction:row;
+    overflow-x:auto;
+    align-items:center;
+    padding:10px;
+    border-right:none;
+    border-bottom:1px solid var(--border);
+    gap:2px;
+  }
+  
+  .brand,.sidebar-tip{
+    display:none;
+  }
+  
+  .navbtn{
+    width:auto;
+    white-space:nowrap;
+    padding:10px 14px;
+  }
+  
+  .badge-game{
+    display:none;
+  }
+  
+  .content{
+    grid-template-columns:1fr;
+  }
+  
+  .read-pane{
+    position:fixed;
+    inset:0;
+    top:0;
+    z-index:600;
+    display:none;
+    padding:16px;
+    background:var(--bg-white);
+    overflow-y:auto;
+  }
+  
+  .read-pane.open{
+    display:block;
+  }
+  
+  .back-btn{
+    display:inline-block;
+  }
+  
+  .statusbar{
+    bottom:96px;
+    font-size:10px;
+  }
+  
+  .answer-bar{
+    padding:12px 16px;
+  }
+  
+  .progress-hint{
+    display:none;
+  }
+  
+  .phish-warning-title{
+    font-size:20px;
+  }
+  
+  .phish-warning-message{
+    font-size:14px;
+  }
+  
+  .email-row{
+    grid-template-columns:44px 1fr;
+  }
+  
+  .email-row .time{
+    display:none;
+  }
+  
+  .modal-card{
+    padding:28px 20px;
+  }
+  
+  .modal-card h2{
+    font-size:22px;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="12" fill="#16857e"/>
+        <circle cx="16" cy="16" r="6" fill="white"/>
+        <path d="M22 26l4 4" stroke="#16857e" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      Cyberspeurtocht
+    </div>
+    <button class="navbtn active" data-folder="inbox">
+      📥 Postvak IN 
+      <span class="count" id="cnt-inbox"></span>
+    </button>
+    <button class="navbtn" data-folder="sent">
+      📤 Verzonden 
+      <span class="count" id="cnt-sent"></span>
+    </button>
+    <button class="navbtn" data-folder="drafts">
+      📝 Concepten 
+      <span class="count" id="cnt-drafts"></span>
+    </button>
+    <button class="navbtn" data-folder="spam">
+      🚫 Spam 
+      <span class="count" id="cnt-spam"></span>
+    </button>
+    <div class="sidebar-tip">
+      <strong>🎯 MISSIE</strong>
+      Er zitten <strong>3 phishingmails</strong> verstopt in je Postvak IN.<br><br>
+      Denk je er één gevonden te hebben? Open de mail en klik op <strong>🚩 Phishing Melden</strong>. Meld alle 3 om te winnen!
+    </div>
+  </aside>
+  
+  <main>
+    <div class="topbar">
+      <input class="search" id="searchBox" type="text" placeholder="🔍 Zoek in e-mails...">
+      <span class="badge-game">🎮 VIND 3 PHISHINGMAILS</span>
+    </div>
+    
+    <div class="content">
+      <section class="list-pane" id="listPane"></section>
+      <section class="read-pane" id="readPane">
+        <div class="read-empty">
+          <span class="big">✉️</span>
+          Selecteer een e-mail om hem te lezen.<br>
+          Let op afzenders, links, knoppen en taalgebruik…
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<div class="statusbar" id="statusbar"></div>
+
+<div class="answer-bar">
+  <span class="progress-icon" id="progIcon">🔍</span>
+  <span class="progress-text" id="progressDisplay">Phishingmails gemeld: 0 / 3</span>
+  <span class="progress-hint">💡 Tips: check afzenderdomein, hover over links, let op spelfouten.</span>
+</div>
+
+<div class="modal-overlay" id="winModal">
+  <div class="modal-card">
+    <div class="icon">🔓</div>
+    <h2>ACCESS GRANTED</h2>
+    <p class="sub">Je hebt alle 3 phishingmails gevonden en gemeld! Het account van Sanne is weer veilig. 🎉</p>
+    
+    <div class="flag-panel">
+      <span class="flag-label">GEVONDEN FLAG</span>
+      <code id="flag-output"></code>
+      <p class="flag-note">Gebruik deze code om de opdracht af te ronden bij de gameleiding.</p>
+      <button class="copy-flag-btn" id="copyFlagBtn" type="button">📋 Kopieer flag</button>
+    </div>
+    
+    <ul>
+      <li>📭 <strong>Afzenderdomein checken</strong> — nepdomeinen lijken op echte maar hebben kleine verschillen</li>
+      <li>⏳ <strong>Valse haast</strong> — "binnen 2 uur" is een klassieke paniekmaker</li>
+      <li>✏️ <strong>Spelfouten</strong> — "accound", "DRINGENT", "GEDTECTEERD" zijn rode vlaggen</li>
+      <li>🖱️ <strong>Links checken</strong> — hoveren laat de echte URL zien; http:// (zonder s) is onveilig</li>
+      <li>🎭 <strong>Valse afzender</strong> — een echt bedrijf mailt nooit vanaf een look-alike domein</li>
+    </ul>
+    
+    <button class="again" id="backToInboxBtn" type="button">← Terug naar je Postvak IN</button>
+    <button class="again" onclick="location.reload()" style="margin-left:10px">Opnieuw spelen 🔁</button>
+  </div>
+</div>
+
+<!-- ===== PHISHING LINK WARNING OVERLAY ===== -->
+<div class="phish-warning-overlay" id="phishWarningOverlay">
+  <div class="phish-warning-card">
+    <div class="phish-warning-icon">⚠️</div>
+    <h2 class="phish-warning-title">WAARSCHUWING! DIT IS EEN PHISHING LINK</h2>
+    <p class="phish-warning-message">
+      Klik nooit zomaar op een link in een verdachte e-mail! Oplichters maken nep-websites die lijken op echte bedrijven om je persoonsgegevens te stelen.
+    </p>
+    <div class="phish-url-display" id="phishWarningURL"></div>
+    <div class="phish-warning-tips">
+      <strong>🔒 Wat moet je wel doen?</strong><br>
+      • Controleer altijd het afzenderdomein (bijv. @bedrijf.nl)<br>
+      • Hover over links om de echte URL te zien<br>
+      • Geen HTTPS? Niet aanklikken!<br>
+      • Twijfel je? Meld de mail als phishing
+    </div>
+    <button class="close-warning-btn" id="closeWarningBtn" type="button">Begrepen, ik leer hier van ✅</button>
+  </div>
+</div>
+
+<canvas id="confetti"></canvas>
+<script>
+/* ===== CTF Flag (base64-gecodeerd) =====
+   TEJHe1BoaXNoaW5nU3F1YWR9 = LBG{PhishingSquad} */
+const FLAG_B64 = "TEJHe1BoaXNoaW5nU3F1YWR9";
+
+function decodeFlag(){ return atob(FLAG_B64); }
+function showFlag(){ document.getElementById("flag-output").textContent = decodeFlag(); }
+
+document.getElementById("copyFlagBtn").addEventListener("click", function () {
+  const flag = decodeFlag();
+  const btn = this;
+  function feedback(){ btn.textContent = "✅ Gekopieerd!"; setTimeout(function(){ btn.textContent = "📋 Kopieer flag"; }, 2500); }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(flag).then(feedback).catch(function(){ window.prompt("Kopieer de flag:", flag); });
+  } else { window.prompt("Kopieer de flag:", flag); }
+});
+
+document.getElementById("backToInboxBtn").addEventListener("click", function () {
+  document.getElementById("winModal").classList.remove("show");
+});
+
+/* ===== GROTE RODE PHISHING-LINK WAARSCHUWING ===== */
+function showPhishWarning(url){
+  document.getElementById("phishWarningURL").textContent = "🔗 " + url;
+  document.getElementById("phishWarningOverlay").classList.add("show");
+}
+document.getElementById("closeWarningBtn").addEventListener("click", function () {
+  document.getElementById("phishWarningOverlay").classList.remove("show");
+});
+document.addEventListener("keydown", function(ev){
+  if(ev.key === "Escape"){ document.getElementById("phishWarningOverlay").classList.remove("show"); }
+});
+
+function L(u,t){return '<a class="mail-link" data-url="'+u+'" href="#">'+t+'</a>'}
+function pad(n){return String(n).padStart(2,"0")}
+
+/* ===== 20 RUIS-E-MAILS ===== */
+const NOISE=[
+{from:"Akela – Scouting De Zwaluwen",mail:"akela@scoutingdezwaluwen.nl",subj:"Opkomst zaterdag: survival-thema! 🏕️",unread:true,
+body:"<p>Sanne!</p><p>Zaterdag bouwen we een <strong>echt survival-parcours</strong> in het bos. Neem oude kleren mee (mogen vies worden!), een drinkfles en je zaklamp. Programma: "+L("https://www.scoutingdezwaluwen.nl/opkomsten/oktober","de groepswebsite")+".</p><p>Tot zaterdag! Akela 🐺</p>"},
+{from:"Juf Marije (groep 6b)",mail:"m.dewit@obsdewijzer.nl",subj:"Morgen buiten tekenen: wat neem je mee?",unread:true,
+body:"<p>Beste kinderen (en ouders), morgen tekenen we buiten. Neem mee: klembord of dik boek, oud overhemd tegen vlekken, en een petje. Tot morgen! Juf Marije</p>"},
+{from:"Roblox",mail:"noreply@roblox.com",subj:"Spekkie heeft je vriendschapsverzoek geaccepteerd!",unread:true,
+body:"<p>Hoera! <strong>Spekkie_2009</strong> heeft je vriendschapsverzoek geaccepteerd — jullie kunnen nu samen spelen! Privacy-instellingen: "+L("https://www.roblox.com/my/account#!/privacy","roblox.com → Privacy")+".</p>"},
+{from:"Instagram",mail:"noreply@mail.instagram.com",subj:"Nour heeft je verzoek geliked ❤️",
+body:"<p><strong>nour_vb</strong> heeft je volgersverzoek geliked — jullie kunnen nu berichten sturen via "+L("https://www.instagram.com/direct/inbox/","instagram.com → Berichten")+".</p>"},
+{from:"Magister",mail:"noreply@magister.net",subj:"Roosterwijziging vrijdag: eerste uur vervalt",
+body:"<p>Vanwege een studiedag valt het eerste uur van vrijdag weg; de dag begint om <strong>10:20 uur</strong>. Aangepast rooster: "+L("https://accounts.magister.net/inloggen?school=OBS-DE-WIJZER","Magister → Rooster")+".</p>"},
+{from:"Noor (buurmeisje)",mail:"noor.van.dijk@gmail.com",subj:"Knutselen bij mij in de tuin? 🌼",unread:true,
+body:"<p>Hoi Sanne! Mijn oma bracht een doos met oude knopen en strikjes — we maken armbanden! Je mag ook een ketting voor je zus maken. Vanaf half vier ben ik thuis. Noor 🌸</p>"},
+{from:"Scouting De Zwaluwen",mail:"nieuwsbrief@scoutingdezwaluwen.nl",subj:"Kampbrief zomerkamp 2026 🎒",
+body:"<p>Vier nachten kamperen op de Weidehoeve! 14 t/m 18 juli, €65,- incl. eten en bus, thema: <strong>Detectives in het donker</strong> 🔦 Inpaklijst: "+L("https://www.scoutingdezwaluwen.nl/kamp-2026/inpaklijst","onze kamppagina")+".</p>"},
+{from:"Papa",mail:"p.jansen@werkmail.nl",subj:"Vanavond later thuis — pizza-avond??",
+body:"<p>Hé schat, mama is naar yoga en ik ben pas rond half zeven thuis. Pizza's bakken als ik er ben? Jij kiest: salami, tonijn of die met mais waar je zo gek op bent. Liefs, papa ❤️</p>"},
+{from:"Roblox",mail:"messages-noreply@roblox.com",subj:"Je bouwsel in 'Bouw een huis' heeft 12 likes 👷‍♀️",
+body:"<p>Je <strong>'villa met zwembad'</strong> is 12 keer geliked! Reacties: \"zo gaaf!!\" en \"hoe heb je dat dak gemaakt?\". Bekijk het in "+L("https://www.roblox.com/users/profile","jouw profiel")+".</p>"},
+{from:"Magister",mail:"noreply@magister.net",subj:"Nieuwe toets: rekenen (breuken) op donderdag",unread:true,
+body:"<p>De toets <strong>Rekenen: breuken</strong> staat in het rooster voor donderdag 10:30. Oefenblaadjes: "+L("https://accounts.magister.net/bestanden/6b/rekenen","Magister → Bestanden")+".</p>"},
+{from:"Gemeente Lindewijk – Sport en Recreatie",mail:"sport.recreatie@lindewijk.nl",subj:"Bevestiging aanmelding Zwemvaardigheid 1 + betalingsinformatie",unread:true,
+body:"<p>Geachte mevrouw Jansen,</p><p>Wij bevestigen de aanmelding van uw dochter Sanne Jansen (deelnemernummer <strong>ZW-2026-11478</strong>) voor de cursus Zwemvaardigheid 1, verzorgd door Zwembad De Golfslag in opdracht van de gemeente.</p><div class='official-box'><strong>Overzicht aanmelding</strong><br>Cursus: Zwemvaardigheid 1 (12 lessen)<br>Startdatum: 4 november · Locatie: De Golfslag, baan 3<br>Gemeentelijke bijdrage: €62,50 · Eigen bijdrage: €18,00 (éénmalig)</div><p>De eigen bijdrage dient uiterlijk drie werkdagen voor de startdatum voldaan te zijn via "+L("https://betalingen.lindewijk.nl/zwemvaardigheid/ZW-2026-11478","betalingen.lindewijk.nl")+" met iDEAL of automatische incasso. Bij niet-tijdige betaling wordt de plaats pas vrijgegeven ná een herinneringsbrief met tien dagen bedenktijd.</p><div class='signature'>Met vriendelijke groet,<br>Afdeling Sport en Recreatie · Gemeente Lindewijk · www.lindewijk.nl</div>"},
+{from:"YouTube",mail:"noreply@youtube.com",subj:"Nieuw bij jouw favoriete kanaal: KnutselKoala",unread:true,
+body:"<p><strong>KnutselKoala</strong> uploadde: \"Drie dingen maken van een oude sok!\" Kijken: "+L("https://www.youtube.com/watch?v=kn8Qw2xLmA0","youtube.com/watch?v=kn8Qw2x")+"</p>"},
+{from:"Kakatorium 🐻",mail:"kampcorvee@gmail.com",subj:"Corveelijst zomerkamp (niet spannend, wel belangrijk)",
+body:"<p>Hoi Sanne, op kamp sta jij zondagmiddag op <strong>de vaatwacht</strong> met Nour. Bestek afspoelen en in de bak zetten — met zijn tweeën supersnel klaar. 💪</p>"},
+{from:"Directie OBS De Wijzer",mail:"directie@obsdewijzer.nl",subj:"Klassenfoto's zijn klaar om te bestellen 📸",
+body:"<p>Beste ouders, de klassenfoto's van 12 oktober zijn geslaagd! Bestellen tot 15 november via "+L("https://fotografie-vanommen.nl/bestellen?school=DEWIJZER6B","de site van de fotograaf")+" (€6,- per foto).</p>"},
+{from:"Nichtje Ava (10)",mail:"ava.superstar@icloud.com",subj:"FEESTJE mijn verjaardag 🎂🎈",unread:true,
+body:"<p>SANNEEE IK WORD ELF!!! Feestje met thema <strong>Spy's &amp; Geheim Agenten</strong> 🕵️‍♀️ We lossen een mysterie op in de schuur van opa en er is chocoladetaart. Ava xxx</p>"},
+{from:"MijnBank – Jeugdsparen",mail:"jeugd@mijnbank.nl",subj:"Spaaroverzicht oktober 2026: saldo & rente Sanne J.",
+body:"<p>Beste Sanne (en ouders), hierbij het maandelijkse overzicht van je jeugdspaarrekening.</p><div class='official-box'><strong>Spaaroverzicht per 1 oktober</strong><br>Vorig saldo: € 148,35 · Toelage: € 10,00 · Rente september: € 0,21<br><strong>Nieuw saldo: € 158,56</strong></div><p>Bekijk je saldo in de app of via "+L("https://www.mijnbank.nl/jong-sparen/inloggen","mijnbank.nl/jong-sparen")+".</p><p class='nice-box'>💡 Let op: wij vragen nooit om je inlogcode of een sms-code. Dat doen oplichters soms — wij nooit.</p><div class='signature'>MijnBank N.V. · Jeugdsparen · Amsterdam · toezicht DNB en AFM</div>"},
+{from:"Zwembad De Golfslag",mail:"info@degolfslag.nl",subj:"Zwemdiploma A behaald — gefeliciteerd! 🏊‍♀️",
+body:"<p>Beste Sanne, wat een plezier beleefden we: vandaag haalde je je <strong>Zwemdiploma A</strong>! Het diploma en de speld worden op school uitgereikt. Gefeliciteerd!</p>"},
+{from:"Gamevriendin Vonne",mail:"vonne.gamer@outlook.com",subj:"Trade vanavond?? mijn pegasus voor jouw neon egel 🦄",unread:true,
+body:"<p>SANNEEE vanavond trade??? Jij bent tenminste geen scammer zoals die gast vorige week 😤 Om 19:00 in Adopt Me: "+L("https://www.roblox.com/games/920587237/Adopt-Me","serverlijst")+". xx Vonne</p>"},
+{from:"Magister – Accounts",mail:"accounts-noreply@magister.net",subj:"Actie vereist: je schoolwachtwoord verloopt over 14 dagen",unread:true,
+body:"<p>Beste Sanne,</p><p>De school vernieuwt leerlingwachtwoorden jaarlijks. Jouw Magister-wachtwoord verloopt over <strong>14 dagen</strong>.</p><div class='official-box'><strong>Wat moet je doen?</strong><br>1. Log in op Magister met je huidige wachtwoord.<br>2. Kies een nieuw wachtwoord van minimaal 8 tekens, met één cijfer.<br>3. Gebruik hetzelfde wachtwoord daarna op school.</div><p>Wijzigen kan alleen op de officiële inlogpagina: "+L("https://accounts.magister.net/wachtwoord-wijzigen?leerling=S.Jansen-6b","accounts.magister.net/wachtwoord-wijzigen")+".</p><p class='nice-box'>💡 Even goed kijken! Deze mail lijkt spannend, maar is écht: het afzenderdomein klopt, twee weken is ruime tijd en je vult niks ín de mail in.</p><div class='signature'>Magister | Schoolmaster Software BV</div>"},
+{from:"CoderDojo Lindewijk",mail:"info@coderdojolindewijk.nl",subj:"Aanmelding bevestigd: Doejo van zaterdag (Scratch & websites)",
+body:"<p>Hoi Sanne! Zaterdag van 13:00 tot 16:00 bouw je je eigen game in Scratch of een website met HTML. Neem een laptop mee (of leen er één), drinken en je goede ideeën 💡 Info: "+L("https://www.coderdojolindewijk.nl/doejos/zaterdag","coderdojolindewijk.nl")+". Tot zaterdag! 🤖</p>"}
+];
+
+/* ===== DE 3 PHISHINGMAILS — oplopende moeilijkheid ===== */
+
+/* NIVEAU 1 — MAKKELIJK: spelfouten, http://, extreme haast, nepdomein */
+const PHISH_EASY={
+from:"Beveiligings Alert",mail:"beveiliging@veifieer-account-nu.online",subj:"DRINGENT!! Uw accound wordt verwijderd",unread:true,
+body:'<p>Beste gebruiker,</p><p>Wij hebben <strong>ongebruikelijke aktiviteiten</strong> waargenomen op uw accound. Om uw gegevens te beschermen moet u uw identiteit <strong>omiddelijk</strong> bevestigen.</p><p class="phish-warn">⚠️ WAARSCHUWING: Doet u dit niet binnen <strong>2 uur</strong>, dan wordt uw accound permanent verwijderd en raken AL uw foto\'s, berichten en volgers verloren!</p><p>Herstel uw accound via deze directe link: '+L("http://veifieer-account-nu.online/beveiliging/herstel?usr=sanne2016&ref=klant-id8823","http://veifieer-account-nu.online/herstel")+'</p><button class="phish-btn" data-url="http://veifieer-account-nu.online/beveiliging/herstel?usr=sanne2016">Bevestig uw acount nu »</button><p>Met vriendelijke groet,<br>Het Klantenservice Team<br><small>(deze mail is gevarifieerd door onze server)</small></p>'};
+
+/* NIVEAU 2 — MIDDEL: nettere taal, maar linktekst wijst naar instagram.com terwijl de echte URL daar niet heen gaat + wachtwoord gevraagd */
+const PHISH_MEDIUM={
+from:"Instagram Beveiligingsteam",mail:"security@instagram-veiligheidsteam.com",subj:"Beveiligingsmelding: onbekende login op je account",unread:true,
+body:'<p>Hallo,</p><p>We hebben een login vanaf een nieuw apparaat gedetecteerd op je Instagram-account. Was jij dit niet? Verifieer dan je account.</p><p class="phish-warn">🔒 Je account wordt binnen <strong>24 uur</strong> tijdelijk beperkt als je niet verifieert.</p><p>Verifieer je account via de officiële pagina: '+L("http://instagram-veiligheidsteam.com/login/verify?user=sanne.knutselt","www.instagram.com/veiligheid/verifieer")+'</p><button class="phish-btn" data-url="http://instagram-veiligheidteam.com/login/verify?user=sanne.knutselt">Account verifiëren »</button><p>Log in met je gebruikersnaam en wachtwoord om te bevestigen dat jij het bent.</p><p>Met vriendelijke groet,<br>Instagram Beveiligingsteam</p>'};
+
+/* NIVEAU 3 — MOEILIJK: perfecte taal, https, geen haast. Alleen het afzenderdomein (scouting-nederland.org i.p.v. scouting.nl) en de afwijkende betaallink verraden hem. */
+const PHISH_HARD={
+from:"Scouting Nederland – Ledenadministratie",mail:"ledenadministratie@scouting-nederland.org",subj:"Herinnering contributie 2026 – lidnummer 4482917",unread:true,
+body:'<p>Geachte ouder/verzorger,</p><p>Uit onze administratie blijkt dat de contributie voor het lopende seizoen nog niet is ontvangen. Mogelijk is er iets misgegaan bij de automatische incasso. Wij verzoeken u vriendelijk het openstaande bedrag alsnog te voldoen.</p><div class="official-box"><strong>Overzicht openstaande post</strong><br>Lidnummer: 4482917<br>Seizoen: 2026<br>Openstaand bedrag: € 27,50<br>Betalingstermijn: 5 werkdagen</div><p>U kunt het bedrag veilig voldoen via onderstaande knop. Na ontvangst wordt uw betaling binnen twee werkdagen verwerkt en ontvangt u een bevestiging per e-mail.</p><p>'+L("https://mijn-scouting-nederland.org/contributie/betalen/4482917","mijn.scouting.nl/contributie")+'</p><button class="phish-btn" data-url="https://mijn-scouting-nederland.org/contributie/betalen/4482917">Betaling voldoen »</button><p>Heeft u de contributie al voldaan? Dan kunt u dit bericht negeren en hoeft u niets te doen.</p><div class="signature">Met vriendelijke groet,<br>Ledenadministratie Scouting Nederland<br>Postbus 210 · 3800 AE Amersfoort</div>'};
+
+/* ===== VERZONDEN ===== */
+const SENT=[
+{from:"Aan: Juf Marije",mail:"m.dewit@obsdewijzer.nl",subj:"re: ziek gister (ECHT deze keer)",
+body:"<p>Beste juf Marije, ik was écht ziek, dat zweer ik op mijn hamster Biscuit. Mijn moeder kan dit beamen. Mag ik de rekenblaadjes meenemen? Gezond groetend, Sanne</p>"},
+{from:"Aan: Noor",mail:"noor.van.dijk@gmail.com",subj:"SOS armband voor morgen + dringend knutselnood",
+body:"<p>NOOR. Noodgeval niveau 3. 1. Blauwe kraaltjes kwijt. 2. Breng morgen je glitters mee. Antwoord SNEL. Sanne 🚨</p>"},
+{from:"Aan: Roblox Support",mail:"support@roblox.com",subj:"HELP ik heb per ongeluk mijn pet weggegeven",
+body:"<p>Beste Roblox Support, gisteren deed ik een trade en nu is mijn PET WEG (Meneer Snuggels, van mijn verjaardag). Kunt u de trade terugdraaien? Hoogachtende, Sanne 💔</p>"},
+{from:"Aan: Directie OBS De Wijzer",mail:"directie@obsdewijzer.nl",subj:"Formele klacht over de soep van dinsdag",
+body:"<p>Geachte directie, hierbij dien ik een officiële klacht in over de soep van dinsdag. Niet over de smaak (die was prima) maar over de TEMPERATUUR. Hoogachtende, Sanne Jansen en medeondertekenaars</p>"}
+];
+
+/* ===== CONCEPTEN ===== */
+const DRAFTS=[
+{from:"Concept (tegen mezelf)",mail:"bewaren: niet verzenden",subj:"Verjaardagslijstje (NIET OPENEN JUUL, IK ZIE JE KIJKEN)",
+body:"<p>- glow-in-the-dark sterren ⭐<br>- PAARDRIJDEN (cursus) (heel belangrijk)<br>- glitterlijm, vooral groen<br>- sokken?? nee. nooit sokken.</p>"},
+{from:"Concept aan: Mama (op kantoor)",mail:"m.jansen@kantoormail.nl",subj:"klein vraagje over zaterdag (beloof dat je rustig blijft)",
+body:"<p>Hoi mama, allereerst: met mij is alles goed en niemand is gewond. Ten tweede: de watervaste stift blijkt NIET watervast op de bank van oma. [concept bewaard]</p>"},
+{from:"Concept aan: Nour (vaatwacht-genoot)",mail:"nour.scouting@gmail.com",subj:"PLAN: hoe overleven we de vaatwacht op kamp",
+body:"<p>Nour — STRIKT GEHEIM vaatwachtplan: Stap 1: ik spoel, jij sorteert. Stap 2: zingen tijdens het werk. Stap 3 schrappen we.</p>"}
+];
+
+/* ===== SPAM — overduidelijke rommel ===== */
+const SPAM=[
+{from:"🎰 LUCKY WINNER CASINO",mail:"winner-64721@loterij-fastwin-info.info",subj:"GEFELICITEERD!!! U bent gekozen als LUCKY WINNER!!!!",
+body:"<p>U heeft GEWELDIGE PRIJS gewonnen in onze loterij waarvan u niet wist dat u meedeed!!! "+L("http://loterij-fastwin-info.info/claim/PRIJS-NOW.html","★ CLAIM UW PRIJS NU ★")+"</p><p class='nice-box'>💡 Je kunt geen prijs winnen in een loterij waar je nooit aan hebt meegedaan!</p>"},
+{from:"👑 PRINS VAN FARAWAYLAND",mail:"prins.tarek1987@definitief-niet-opgelicht.xyz",subj:"Ik heb 10 miljoen voor jou maar heb eerst klein bedrag nodig",
+body:"<p>Ik ben een prins uit een ver land en jij bent de ENIGE die ik vertrouw. Ik wil je 10 miljoen euro geven, maar ik heb eerst €50 nodig voor de bankpapiertjes. Stuur ook je wachtwoord. De prins 👑</p><p class='nice-box'>💡 Een wachtwoord stuur je NOOIT naar wie dan ook!</p>"},
+{from:"🃏 STAFFELENDE SUPERMARK-AANBIEDING",mail:"aanbieding@super-kortingsbonnen-vandaag.download",subj:"AL 53 KEER DOORGESTUURD = 53 JAAR GELUK (breek de ketting niet!!)",
+body:"<p>Stuur hem naar 10 vrienden en je krijgt een kortingsbon van €50 van de supermarkt. "+L("http://super-kortingsbonnen-vandaag.download/bon-50eu","KOOPON MET KORTING")+"</p><p class='nice-box'>💡 Kettingsmails met beloftes zijn altijd onzin — delete!</p>"},
+{from:"🐈 MENEER FLUFFY'S ZAKELIJKE VOORSTEL",mail:"m.fluffy@kat-zakelijk-enterprise.party",subj:"Miauw (vertaald: zakelijk partnerschip aangeboden)",
+body:"<p>Meneer Fluffy biedt u een premium partnerschap aan in zijn lucratieve kattenvoer-imperium. Investering: €12. "+L("http://kat-zakelijk-enterprise.party/partner","WORD PARTNER VAN MENEER FLUFFY")+"</p><p class='nice-box'>💡 De eerlijkste mail in deze map — de afzender is in ieder geval een kat. 🐱</p>"}
+];
+
+/* ===== Inplanten: makkelijk op #8, middel op #14, moeilijk op #19 ===== */
+const PHISH_LIST=[PHISH_EASY,PHISH_MEDIUM,PHISH_HARD];
+const PHISH_SLOTS=[7,13,18];
+const inbox=[];let ni=0;
+for(let si=0;si<PHISH_SLOTS.length;si++){
+  while(inbox.length<PHISH_SLOTS[si]&&ni<NOISE.length){
+    inbox.push(Object.assign({},NOISE[ni],{phish:false,time:pad(7+(ni%13))+":"+pad((ni*17)%60)}));ni++;
+  }
+  inbox.push(Object.assign({},PHISH_LIST[si],{phish:true,time:pad(2+si)+":14"}));
+}
+while(ni<NOISE.length){
+  inbox.push(Object.assign({},NOISE[ni],{phish:false,time:pad(7+(ni%13))+":"+pad((ni*17)%60)}));ni++;
+}
+
+const FOLDERS={inbox:inbox,sent:SENT,drafts:DRAFTS,spam:SPAM};
+["inbox","sent","drafts","spam"].forEach(function(f){document.getElementById("cnt-"+f).textContent=FOLDERS[f].length});
+
+/* ===== STATE ===== */
+let reportedCount=0;
+let selectedIdx=-1,currentFolder="inbox",searchTerm="";
+const listPane=document.getElementById("listPane"),readPane=document.getElementById("readPane"),statusbar=document.getElementById("statusbar");
+const TOTAL_PHISH=inbox.filter(m=>m.phish).length;
+
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+
+function updateProgress(){
+document.getElementById("progressDisplay").textContent="Phishingmails gemeld: "+reportedCount+" / "+TOTAL_PHISH;
+if(reportedCount>=TOTAL_PHISH){
+  showFlag();
+  setTimeout(function(){document.getElementById("winModal").classList.add("show");launchConfetti()},600);
+}
+}
+
+let savedFolderLastOpened="inbox";
+function openMail(i){
+selectedIdx=i;savedFolderLastOpened=currentFolder;
+const m=FOLDERS[currentFolder][i];
+if(m.unread&&!m.reported)m.unread=false;
+const isPhish=currentFolder==="inbox"&&m.phish;
+readPane.innerHTML='<button class="back-btn" onclick="closeRead()">← Terug</button>'
++'<div class="mail-header"><h2>'+m.subj+'</h2></div>'
++'<div class="mail-meta"><div class="avatar'+(isPhish?" phish":"")+'">'+esc(m.from.charAt(0).toUpperCase())+'</div>'
++'<div><div class="meta-from">'+esc(m.from)+'</div><div class="meta-mail">'+esc(m.mail)+'</div></div></div>'
++'<div class="mail-body">'+m.body+'</div>'
++'<div class="mail-actions"></div>'
++'<div class="mail-footer-note">E-mail #'+(i+1)+(currentFolder==="inbox"?" · Postvak IN":" · "+currentFolder)+(m.time?" · "+m.time:"")+'</div>';
+readPane.classList.add("open");
+
+const actions=readPane.querySelector(".mail-actions");
+if(currentFolder==="inbox"){
+if(m.reported){
+actions.innerHTML='<p style="color:#059669;font-weight:700;">🚩 Je hebt deze mail gemeld als phishing. Goed gedaan!</p>';
+}else{
+const btn=document.createElement("button");
+btn.className="report-phish-btn";
+btn.textContent="🚩 Phishing Melden";
+btn.onclick=function(){reportPhish(i)};
+actions.appendChild(btn);
+}
+}
+
+readPane.querySelectorAll(".mail-link,.phish-btn,.cta-btn").forEach(function(el){
+const url=el.dataset.url;if(!url)return;
+const unsafe=url.indexOf("http://")===0?"   ⚠️ Onveilig adres!":"";
+el.addEventListener("mouseenter",function(){statusbar.textContent="🔗 "+url+unsafe;statusbar.classList.add("show")});
+el.addEventListener("mouseleave",function(){statusbar.classList.remove("show")});
+el.addEventListener("touchstart",function(){statusbar.textContent="🔗 "+url+unsafe;statusbar.classList.add("show");setTimeout(function(){statusbar.classList.remove("show")},3500)},{passive:true});
+el.addEventListener("click",function(ev){
+ev.preventDefault();
+if(el.classList.contains("phish-btn") || isPhish){ showPhishWarning(url); return; }
+statusbar.textContent="🔗 "+url+"   (Oefening — link gaat nergens naartoe)";
+statusbar.classList.add("show");
+setTimeout(function(){statusbar.classList.remove("show")},3000);
+});
+});
+renderList();
+}
+
+function reportPhish(i){
+const m=inbox[i];
+m.reported=true;m.unread=false;
+if(m.phish){
+reportedCount++;
+openMail(i);
+updateProgress();
+}else{
+const actions=readPane.querySelector(".mail-actions");
+actions.innerHTML='<p style="color:#b06000;font-weight:700;">🤔 Hmm, deze mail blijkt NIET phishing te zijn. Kijk nog eens goed: klopt de afzender, de link en de toon? Blijf zoeken!</p>';
+setTimeout(function(){if(currentFolder==="inbox"&&selectedIdx===i)openMail(i)},3500);
+m.reported=false;m.unread=false;
+}
+renderList();
+}
+
+function renderList(){
+listPane.innerHTML="";
+let shown=0;
+FOLDERS[currentFolder].forEach(function(m,i){
+if(searchTerm&&(m.from+" "+m.mail+" "+m.subj).toLowerCase().indexOf(searchTerm)===-1)return;
+shown++;
+const row=document.createElement("div");
+let cls="email-row";
+if(m.unread&&currentFolder==="inbox"&&!m.reported)cls+=" unread";
+if(currentFolder==="inbox"&&m.reported)cls+=" reported";
+if(i===selectedIdx&&currentFolder===savedFolderLastOpened)cls+=" selected";
+row.className=cls;
+row.innerHTML='<span class="num">#'+(i+1)+'</span><div class="row-main"><div class="row-top"><span class="from">'+esc(m.from)+'</span><span class="time">'+(m.time||"")+'</span></div><div class="subj">'+esc(m.subj)+'</div></div>';row.addEventListener("click",function(){openMail(i)});
+listPane.appendChild(row);
+});
+if(!shown)listPane.innerHTML='<div class="empty-folder">Geen e-mails hier. 📭<br>'+(currentFolder==="inbox"?"De missie speelt zich af in je Postvak IN!":"Ga terug naar je Postvak IN!")+'</div>';
+}
+
+function closeRead(){readPane.classList.remove("open");selectedIdx=-1;renderList()}
+
+document.querySelectorAll(".navbtn").forEach(function(b){
+b.addEventListener("click",function(){
+document.querySelectorAll(".navbtn").forEach(function(x){x.classList.remove("active")});
+b.classList.add("active");currentFolder=b.dataset.folder;selectedIdx=-1;closeRead();renderList();
+})});
+document.getElementById("searchBox").addEventListener("input",function(e){searchTerm=e.target.value.trim().toLowerCase();renderList()});
+
+/* ===== CONFETTI ===== */
+function launchConfetti(){
+const canvas=document.getElementById("confetti"),ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+const colors=["#16857e","#e11d48","#059669","#fbbf24","#e879f9","#60a5fa"],pieces=[];
+for(let i=0;i<220;i++)pieces.push({x:Math.random()*canvas.width,y:-20-Math.random()*canvas.height,w:6+Math.random()*7,h:8+Math.random()*8,c:colors[Math.floor(Math.random()*colors.length)],vy:2+Math.random()*3.5,vx:-1.5+Math.random()*3,rot:Math.random()*360,vr:-6+Math.random()*12});
+let frames=0;(function anim(){ctx.clearRect(0,0,canvas.width,canvas.height);
+pieces.forEach(function(p){p.y+=p.vy;p.x+=p.vx;p.rot+=p.vr;
+if(p.y>canvas.height+20){p.y=-20;p.x=Math.random()*canvas.width}
+ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);ctx.fillStyle=p.c;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore()});
+frames++;if(frames<480)requestAnimationFrame(anim);else ctx.clearRect(0,0,canvas.width,canvas.height)})();
+}
+
+renderList();
+updateProgress();
+</script>
+</body>
+</html>

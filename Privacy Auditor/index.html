@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber-speurders: Telefoon Onderzoek</title>
+<style>
+:root {
+    --blue: #007AFF;
+    --gray: #8E8E93;
+    --bg: #F2F2F7;
+    --white: #FFFFFF;
+    --red: #FF3B30;
+    --green: #34C759;
+    --orange: #FF9500;
+    --sep: rgba(60,60,67,0.29);
+    --cs-teal: #10B981;
+    --cs-teal-dark: #0D9488;
+    --cs-navy1: #0F172A;
+    --cs-navy2: #1E293B;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: radial-gradient(circle at 20% 10%, #2b2350 0%, #17121f 60%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 12px;
+}
+
+/* ===== IPHONE FRAME ===== */
+.iphone {
+    width: 392px;
+    height: 800px;
+    background: #000;
+    border-radius: 56px;
+    padding: 12px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.65), inset 0 0 4px #333;
+    position: relative;
+}
+.screen-frame {
+    width: 100%;
+    height: 100%;
+    border-radius: 44px;
+    overflow: hidden;
+    background: var(--bg);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+.dynamic-island {
+    position: absolute;
+    top: 11px; left: 50%; transform: translateX(-50%);
+    width: 118px; height: 33px;
+    background: #000;
+    border-radius: 20px;
+    z-index: 500;
+}
+.status-bar {
+    height: 54px;
+    background: inherit;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 0 30px 6px;
+    font-size: 15px;
+    font-weight: 600;
+    position: relative;
+    z-index: 400;
+    flex-shrink: 0;
+}
+.status-right { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.batt { width: 25px; height: 12px; border: 1.4px solid currentColor; border-radius: 4px; position: relative; }
+.batt::after { content:''; position:absolute; right:-4px; top:3px; width:2.5px; height:5px; background: currentColor; border-radius: 0 2px 2px 0; }
+.batt > i { display:block; height:100%; width:80%; background:currentColor; border-radius:2.5px; margin:1px; }
+
+.views { flex: 1; overflow: hidden; position: relative; display: flex; flex-direction: column; }
+
+/* ===== START SCHERM ===== */
+#viewStart {
+    position: absolute; inset: 0; z-index: 60;
+    background: linear-gradient(180deg, #1c1633 0%, #2d2158 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 32px; color: #fff;
+    overflow-y: auto;
+}
+.detective-logo { font-size: 72px; margin-bottom: 18px; }
+.mission-title { font-size: 30px; font-weight: 800; margin-bottom: 14px; }
+.mission-subtitle { font-size: 16px; color: #cfc9ee; line-height: 1.55; margin-bottom: 12px; }
+.mission-card {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 18px;
+    padding: 16px 18px;
+    text-align: left;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: #eee9ff;
+    margin-bottom: 26px;
+    max-width: 320px;
+}
+.mission-card b { color: #ffd43b; }
+.start-btn {
+    background: linear-gradient(180deg,#5ac8fa,#007AFF);
+    color: #fff; border: none;
+    padding: 16px 44px; font-size: 18px; font-weight: 700;
+    border-radius: 16px; cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0,122,255,0.5);
+    margin-bottom: 20px;
+}
+
+/* Branding chips */
+.brand-chip-dark, .brand-chip {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: .72rem; font-weight: 700; letter-spacing: .04em;
+    border-radius: 999px; padding: 5px 12px;
+}
+.brand-chip-dark {
+    color: #99f6e4; background: rgba(255,255,255,0.08);
+    border: 1.5px solid rgba(153,246,228,0.35);
+}
+.brand-chip {
+    color: var(--cs-teal-dark); background: #fff;
+    border: 1.5px solid #d1d5db;
+}
+.brand-chip-dark svg, .brand-chip svg { width: 14px; height: 14px; flex: none; }
+
+/* ===== APP STORE LIJST ===== */
+#viewList { position: absolute; inset: 0; display: none; flex-direction: column; }
+.scroll-area { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; background: var(--bg); }
+
+.large-header {
+    background: var(--white);
+    padding: 6px 20px 14px;
+    border-bottom: 0.5px solid var(--sep);
+}
+.list-title { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 12px; }
+.search-pill {
+    background: rgba(118,118,128,0.12);
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex; align-items: center; gap: 8px;
+    color: var(--gray); font-size: 17px;
+}
+
+.progress-chip {
+    margin: 14px 20px 4px;
+    background: #eef4ff;
+    border: 1px solid #cde0ff;
+    border-radius: 14px;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #0a3d91;
+    display: flex; align-items: center; gap: 10px;
+}
+.progress-track { flex: 1; height: 8px; background: #cde0ff; border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--blue); border-radius: 4px; transition: width 0.4s; }
+
+.section-header {
+    display:flex; justify-content: space-between; align-items: baseline;
+    padding: 20px 20px 8px;
+    font-size: 21px; font-weight: 700;
+}
+.section-count { font-size: 13px; color: var(--gray); font-weight: 500; }
+
+.app-row {
+    background: var(--white);
+    margin: 0 12px 10px;
+    border-radius: 18px;
+    padding: 12px 14px;
+    display: flex; align-items: center; gap: 14px;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    transition: transform 0.12s;
+}
+.app-row:active { transform: scale(0.98); }
+.app-icon {
+    width: 62px; height: 62px;
+    border-radius: 15px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; flex-shrink: 0;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+}
+.app-meta { flex: 1; min-width: 0; }
+.app-name { font-size: 17px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.app-sub { font-size: 13.5px; color: var(--gray); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.app-permcount { font-size: 12.5px; color: var(--gray); margin-top: 3px; }
+.chev { color: #c4c4c8; font-size: 20px; font-weight: 300; }
+
+.safety-note {
+    margin: 10px 20px 24px;
+    background: #FFF8E1;
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #8d7726;
+    text-align: center;
+}
+
+/* ===== APP DETAIL ===== */
+#viewDetail { position: absolute; inset: 0; display: none; flex-direction: column; }
+.detail-nav {
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 0.5px solid var(--sep);
+    padding: 10px 12px;
+    display: flex; align-items: center;
+    flex-shrink: 0; z-index: 20;
+}
+.back-btn { color: var(--blue); font-size: 17px; cursor: pointer; display: flex; align-items: center; }
+.nav-spacer { flex: 1; }
+.detail-scroll { flex: 1; overflow-y: auto; background: var(--white); }
+
+.detail-hero { padding: 20px 20px 8px; display: flex; gap: 16px; align-items: center; }
+.detail-hero .app-icon { width: 96px; height: 96px; font-size: 48px; border-radius: 22px; }
+.detail-name { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+.detail-dev { font-size: 14px; color: var(--blue); margin-top: 2px; }
+.detail-stats { font-size: 12.5px; color: var(--gray); margin-top: 5px; display:flex; gap:10px; }
+.open-btn {
+    margin: 14px 20px 4px;
+    background: var(--blue); color: #fff;
+    border: none; border-radius: 13px;
+    padding: 12px; font-size: 16px; font-weight: 600;
+    width: calc(100% - 40px); cursor: pointer;
+}
+.detail-desc { padding: 16px 20px 4px; font-size: 15px; line-height: 1.5; color: #1c1c1e; }
+
+.perm-section { padding: 18px 20px 8px; }
+.perm-title { font-size: 13px; font-weight: 700; color: var(--gray); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.4px; }
+.perm-subtitle { font-size: 13px; color: var(--gray); margin-bottom: 8px; }
+.perm-row {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 13px 0;
+    border-bottom: 0.5px solid rgba(60,60,67,0.15);
+}
+.perm-row:last-child { border-bottom: none; }
+.perm-info { flex: 1; }
+.perm-label { font-size: 16.5px; font-weight: 500; display: flex; align-items: center; gap: 7px; }
+.perm-desc { font-size: 13px; color: var(--gray); margin-top: 2px; }
+.perm-note-good {
+    margin-top: 8px;
+    background: #E8F9EE;
+    border-left: 3.5px solid var(--green);
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #17602f;
+    line-height: 1.4;
+}
+.switch {
+    width: 51px; height: 31px;
+    background: var(--green);
+    border-radius: 16px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.25s;
+    flex-shrink: 0;
+    margin-top: 3px;
+}
+.switch.off { background: #E9E9EB; }
+.knob {
+    position: absolute; width: 27px; height: 27px;
+    background: #fff; border-radius: 50%;
+    top: 2px; left: 2px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+    transition: transform 0.25s;
+}
+.switch.off .knob { transform: translateX(20px); }
+
+/* ANIMATIE VOOR GELDIGE RECHTEN (flits uit → aan) */
+@keyframes flashToggle {
+    0% { background: var(--green); }
+    40% { background: #E9E9EB; }
+    60% { background: #E9E9EB; }
+    100% { background: var(--green); }
+}
+.switch.flash { animation: flashToggle 0.6s ease-in-out; }
+
+@keyframes flashKnob {
+    0% { transform: translateX(0px); }
+    40% { transform: translateX(20px); }
+    60% { transform: translateX(20px); }
+    100% { transform: translateX(0px); }
+}
+.switch.flash .knob { animation: flashKnob 0.6s ease-in-out; }
+
+.delete-zone { padding: 10px 20px 30px; }
+.delete-btn {
+    width: 100%;
+    color: var(--red);
+    font-size: 16px; font-weight: 500;
+    background: #fff;
+    border: none;
+    border-radius: 14px;
+    padding: 14px;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+/* ===== TAB BAR ===== */
+.tab-bar {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(20px);
+    border-top: 0.5px solid var(--sep);
+    display: flex;
+    padding: 7px 0 26px;
+    z-index: 50;
+}
+.tab { flex: 1; text-align: center; font-size: 10px; color: var(--gray); cursor: pointer; }
+.tab .ti { font-size: 22px; display: block; margin-bottom: 2px; }
+.tab.active { color: var(--blue); }
+
+/* ===== VERWIJDER-BEVESTIGING (iOS sheet) ===== */
+.sheet-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 600;
+    display: none;
+    align-items: flex-end;
+}
+.sheet-overlay.active { display: flex; }
+.sheet {
+    background: #f2f2f7;
+    border-radius: 14px;
+    margin: 0 8px 10px;
+    overflow: hidden;
+    width: calc(100% - 16px);
+    animation: sheetIn 0.25s ease-out;
+}
+@keyframes sheetIn { from { transform: translateY(100%);} to { transform: translateY(0);} }
+.sheet-title {
+    background: rgba(250,250,250,0.85);
+    padding: 16px 20px;
+    text-align: center;
+    font-size: 13px; color: #4a4a4c; line-height: 1.4;
+    border-bottom: 0.5px solid var(--sep);
+}
+.sheet-title b { font-size: 15px; color: #000; display:block; margin-bottom:2px;}
+.sheet-actions > div {
+    padding: 15px;
+    text-align: center;
+    font-size: 17px;
+    background: rgba(250,250,250,0.85);
+    border-bottom: 0.5px solid var(--sep);
+    cursor: pointer;
+}
+.sheet-actions > div:last-child { border-bottom: none; }
+.sheet-del { color: var(--red); font-weight: 600; }
+
+/* ===== WIN OVERLAY — FULLSCREEN, CYBERSPEURTOCHT/PHISHINGDETECTIVE-STIJL ===== */
+.win-overlay {
+    position: fixed; inset: 0;
+    background: rgba(15,10,35,0.72);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 20px 14px;
+}
+.win-overlay.active { display: flex; }
+.win-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 24px 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 440px;
+    max-height: 92vh;
+    overflow-y: auto;
+    animation: popIn 0.45s cubic-bezier(0.2,1.4,0.4,1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+@keyframes popIn { from { transform: scale(0.75); opacity: 0;} to { transform: scale(1); opacity: 1;} }
+.win-icon { font-size: 52px; margin-bottom: 8px; }
+.win-title { font-size: 24px; font-weight: 800; color: var(--cs-teal); letter-spacing: 1px; margin-bottom: 10px; }
+.win-text { font-size: 14.5px; line-height: 1.55; color: #374151; margin-bottom: 16px; }
+
+/* Flag-paneel in Phishingdetective-stijl */
+.flag-panel {
+    background: linear-gradient(135deg, var(--cs-navy1) 0%, var(--cs-navy2) 100%);
+    border: 2px solid var(--cs-teal);
+    border-radius: 14px;
+    padding: 20px 16px;
+    margin: 0 0 16px;
+    text-align: center;
+    color: #fff;
+}
+.flag-label {
+    display: inline-block; font-size: 11px; font-weight: 800; color: var(--cs-navy1);
+    letter-spacing: 2px; text-transform: uppercase;
+    background: #fff; padding: 4px 14px; border-radius: 8px; margin-bottom: 12px;
+}
+.flag-code {
+    display: block;
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, 'Courier New', monospace;
+    font-size: 20px; font-weight: 800; color: #F1F5F9;
+    background: rgba(16,185,129,0.15);
+    border: 2px dashed var(--cs-teal);
+    border-radius: 10px;
+    padding: 13px 10px; letter-spacing: 1px;
+    word-break: break-all; user-select: all;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.flag-note { color: #94A3B8; font-size: 12.5px; margin: 10px 0 0; line-height: 1.5; }
+.copy-flag-btn {
+    background: var(--cs-teal); color: #fff; border: none; border-radius: 10px;
+    padding: 10px 20px; font: inherit; font-size: 14px; font-weight: 700;
+    cursor: pointer; margin-top: 12px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    transition: background 0.15s;
+}
+.copy-flag-btn:hover { background: var(--cs-teal-dark); transform: translateY(-1px); }
+
+/* Tips-panel */
+.tips-panel {
+    background: #F3F4F6;
+    border-radius: 12px;
+    padding: 14px 16px;
+    text-align: left;
+    margin-bottom: 16px;
+}
+.tips-panel h3 { font-size: 14px; margin: 0 0 8px; color: #374151; }
+.tips-panel ul { list-style: none; margin: 0; padding: 0; }
+.tips-panel li { font-size: 13.5px; color: #374151; line-height: 1.55; padding: 4px 0; }
+.tips-panel li b { color: #111827; }
+
+/* Knoppenbalk */
+.win-buttons { display: flex; gap: 10px; }
+.btn-outline {
+    flex: 1; background: #fff; color: var(--cs-teal);
+    border: 2px solid var(--cs-teal); border-radius: 10px;
+    padding: 11px 8px; font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+.btn-outline:hover { background: var(--cs-teal); color: #fff; }
+.btn-solid {
+    flex: 1; background: var(--cs-teal); color: #fff;
+    border: none; border-radius: 10px;
+    padding: 11px 8px; font: inherit; font-size: 13.5px; font-weight: 700; cursor: pointer;
+    transition: background 0.15s;
+}
+.btn-solid:hover { background: var(--cs-teal-dark); }
+
+.win-brand { margin-top: 16px; }
+
+/* ===== TOAST ===== */
+.toast {
+    position: absolute;
+    left: 50%; transform: translateX(-50%) translateY(20px);
+    bottom: 105px;
+    background: rgba(0,0,0,0.82);
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 14px;
+    font-size: 13.5px;
+    max-width: 330px;
+    text-align: center;
+    line-height: 1.4;
+    z-index: 650;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ===== CONFETTI ===== */
+#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 1500; }
+
+@media (max-width: 430px) {
+    .iphone { transform: scale(calc(100vw / 430)); transform-origin: center; }
+}
+@media (max-height: 860px) {
+    body { padding: 8px 6px; }
+    .iphone { height: calc(100vh - 24px); min-height: 620px; }
+}
+</style>
+</head>
+<body>
+
+<div class="iphone">
+<div class="screen-frame">
+    <div class="dynamic-island"></div>
+
+    <!-- STATUSBALK -->
+    <div class="status-bar" id="statusBar">
+        <div id="clock">09:41</div>
+        <div class="status-right">
+            <span>▲▲▲</span>
+            <div class="batt"><i></i></div>
+        </div>
+    </div>
+
+    <div class="views">
+
+        <!-- STARTSCHERM -->
+        <div id="viewStart">
+            <div class="detective-logo">🕵️‍♀️ 🔎</div>
+            <div class="mission-title">Cyber-speurders</div>
+            <div class="mission-subtitle">Er is iets mis met deze telefoon…</div>
+            <div class="mission-card">
+                <b>🔍 Jullie missie:</b><br>
+                1. Bekijk álle 26 apps op de telefoon<br>
+                2. <b>6 apps</b> vragen rechten die ze niet nodig hebben — zet die rechten <b>UIT</b><br>
+                3. Eén app is echte <b>spyware</b> — die moet je <b>verwijderen</b> van de telefoon<br>
+                4. Hebben jullie alles goed? Dan verschijnt de <b>geheime code</b>! 🎉
+            </div>
+            <button class="start-btn" onclick="startGame()">📱 Start onderzoek</button>
+            <span class="brand-chip-dark">
+                <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="12" fill="#10B981"/><circle cx="16" cy="16" r="6" fill="#fff"/><path d="M22 26l4 4" stroke="#10B981" stroke-width="3" stroke-linecap="round"/></svg>
+                Cyberspeurtocht
+            </span>
+        </div>
+
+        <!-- APPLIJST -->
+        <div id="viewList">
+            <div class="scroll-area">
+                <div class="large-header">
+                    <div class="list-title">Apps</div>
+                    <div class="search-pill">🔍 &nbsp;Zoek in apps, games en meer</div>
+                </div>
+
+                <div class="progress-chip">
+                    🕵️‍♀️ <span id="progressLabel">0 / 7</span>&nbsp;
+                    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+                </div>
+
+                <div class="section-header">
+                    <span>Geïnstalleerde apps</span>
+                    <span class="section-count" id="appCount">26 apps</span>
+                </div>
+                <div id="appListContainer"></div>
+
+                <div class="safety-note">ℹ️ Dit is een <strong>nep-telefoon</strong> voor de scouting-opkomst. Er worden geen echte apps geïnstalleerd.</div>
+            </div>
+            <!-- TAB BAR -->
+            <div class="tab-bar">
+                <div class="tab"><span class="ti">✨</span>Vandaag</div>
+                <div class="tab"><span class="ti">🕹️</span>Spellen</div>
+                <div class="tab active"><span class="ti">🅰️</span>Apps</div>
+                <div class="tab"><span class="ti">🔎</span>Zoeken</div>
+            </div>
+        </div>
+
+        <!-- APP DETAIL -->
+        <div id="viewDetail">
+            <div class="detail-nav">
+                <div class="back-btn" onclick="closeDetail()">‹&nbsp; Apps</div>
+                <div class="nav-spacer"></div>
+            </div>
+            <div class="detail-scroll" id="detailBody"></div>
+        </div>
+
+        <!-- VERWIJDER-BEVESTIGING -->
+        <div class="sheet-overlay" id="deleteSheet">
+            <div class="sheet">
+                <div class="sheet-title" id="sheetTitle"></div>
+                <div class="sheet-actions">
+                    <div class="sheet-del" id="sheetConfirm" onclick="confirmDeleteApp()">🗑️ Verwijder app</div>
+                    <div onclick="cancelDelete()">Annuleer</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast" id="toast"></div>
+
+    </div>
+</div>
+</div>
+
+<!-- ===== WIN SCHERM (fullscreen over de hele pagina, Phishingdetective-stijl) ===== -->
+<div class="win-overlay" id="winOverlay">
+    <div class="win-card">
+        <div class="win-icon">🔓🎉</div>
+        <div class="win-title">GESLAAGD!</div>
+        <p class="win-text">
+            Jullie hebben <strong>6 apps veiliger</strong> gemaakt door onnodige rechten uit te zetten,<br>
+            en de spyware <strong>GlowFlash</strong> van de telefoon gehaald!
+        </p>
+        <div class="flag-panel">
+            <span class="flag-label">GEVONDEN FLAG</span>
+            <code class="flag-code" id="codeDisplay"></code>
+            <p class="flag-note">Gebruik deze code om de opdracht af te ronden bij de gameleiding.</p>
+            <button class="copy-flag-btn" id="copyFlagBtn" type="button">📋 Kopieer flag</button>
+        </div>
+        <div class="tips-panel">
+            <h3>💡 Onthoud voor later:</h3>
+            <ul>
+                <li>👁️ <b>Kijk altijd naar de rechten</b> die een app vraagt bij het installeren.</li>
+                <li>🤔 <b>Past het recht bij de functie?</b> Een zaklamp heeft geen camera nodig!</li>
+                <li>🔐 <b>Twijfel je?</b> Geef gevoelige rechten zoals locatie en microfoon alleen als het écht nodig is.</li>
+                <li>🗑️ <b>Vertrouw je een app niet?</b> Verwijder hem gewoon — dat mag altijd.</li>
+            </ul>
+        </div>
+        <div class="win-buttons">
+            <button class="btn-outline" type="button" onclick="closeWin()">← Terug naar de telefoon</button>
+            <button class="btn-solid" type="button" onclick="resetAll()">🔄 Opnieuw spelen</button>
+        </div>
+        <div class="win-brand">
+            <span class="brand-chip">
+                <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="12" fill="#10B981"/><circle cx="16" cy="16" r="6" fill="#fff"/><path d="M22 26l4 4" stroke="#10B981" stroke-width="3" stroke-linecap="round"/></svg>
+                Cyberspeurtocht
+            </span>
+        </div>
+    </div>
+</div>
+
+<canvas id="confetti" aria-hidden="true"></canvas>
+<script>
+const EINDCODE = atob("TEJHe0FwcFByaXZhY3l9");
+
+/* ------------------------------------------------------------
+   PERM-WHY-DATA - Uitleg waarom een machtiging WEL normaal is
+   ------------------------------------------------------------ */
+const WHY_OK = {
+    'muziek': {
+        'Netwerk': 'Muziekstreamen en podcasts download je via internet.',
+        'Opslag': 'Nummers opslaan voor luisteren zonder netwerk.'
+    },
+    'fotoboek': {
+        "Foto's": 'Je foto\'s bekijken en bewerken binnen de app.',
+        'Camera': 'Nieuwe foto\'s maken met de app.'
+    },
+    'kaart': {
+        'Locatie': 'De route vindt je positie zodat je weet waar je bent.',
+        'Netwerk': 'Kaartdata downloaden over de netwerkgrens.'
+    },
+    'notities': {
+        'Opslag': 'Aantekeningen blijven bewaard.',
+        'Microfoon': 'Spraaknotities opnemen voor sneller typen.'
+    },
+    'kalender': {
+        'Agenda': 'Afspraken bekijken en bewerken.',
+        'Notificaties': 'Herinneringen afgeven op tijd.'
+    },
+    'post': {
+        'Netwerk': 'E-mailserver bereiken voor in- en uitvoer.',
+        'Notificaties': 'Direct weten als er mail binnenkomt.'
+    },
+    'chat': {
+        'Contacten': 'Vriendinnen uit je adresboek vinden met dezelfde app.',
+        'Camera': 'Direct een foto maken in de chat.',
+        'Microfoon': 'Voice-berichten opnemen.'
+    },
+    'radio': {
+        'Netwerk': 'Radiostreams ontvangen.',
+        'Notificaties': 'Herinneringen voor favoriete programma\'s.'
+    },
+    'video': {
+        'Camera': 'Filmpjes opnemen.',
+        'Microfoon': 'Geluid bij de video vastleggen.',
+        'Opslag': 'Gemaakte video\'s opslaan.'
+    },
+    'podcast': {
+        'Netwerk': 'Podcasts downloaden en streamen.',
+        'Opslag': 'Afleveringen bewaren om offline te luisteren.'
+    },
+    'kook': {
+        'Opslag': 'Favoriete recepten bewaren.',
+        'Netwerk': 'Nieuwe recepten ophalen.'
+    },
+    'hardloop': {
+        'Locatie': 'Route en afstand volgen met GPS.',
+        'Sensoren': 'Hartslag en beweging meten.'
+    },
+    'fiets': {
+        'Locatie': 'Volgt je fietsroute met GPS.',
+        'Netwerk': 'Fietsroutes ophalen.'
+    },
+    'sterren': {
+        'Locatie': 'Berekent sterrenbeelden op jouw plek.',
+        'Netwerk': 'Sterrenkaarten downloaden.'
+    },
+    'bloemen': {
+        'Camera': 'Foto van de bloem maken.',
+        'Locatie': 'Bepaalt welke bloemen in de omgeving groeien.',
+        'Netwerk': 'Bloem opzoeken in de online database.'
+    },
+    'verhalen': {
+        'Netwerk': 'Boeken downloaden.',
+        'Opslag': 'Offline lezen van opgeslagen boeken.'
+    },
+    'slaap': {
+        'Netwerk': 'Muziek streamen.',
+        'Notificaties': 'Bedtijd herinnering.'
+    },
+    'dj': {
+        'Opslag': 'Mixen bewaren.',
+        'Geluid': 'Muziek afspelen.'
+    },
+    'hartslag': {
+        'Sensoren': 'Hartslagmeting via sensoren.',
+        'Netwerk': 'Voortgang opslaan in de cloud.'
+    },
+    'horoscoop': {
+        'Netwerk': 'Nieuwe horoscopen downloaden.',
+        'Notificaties': 'Dagelijkse voorspelling herinneren.'
+    },
+    'glow': {
+        'Flitser': 'De flitser wordt gebruikt als zaklamp.'
+    }
+};
+
+const APP_DATA = [
+    /* --- SPYWARE APP (moet VERWIJDERD worden, telt niet mee in de 6) --- */
+    { id:'glow', name:'GlowFlash', icon:'🔦', grad:['#fff56b','#ff6b6b'], dev:'SuperFun Toys Inc.', cat:'Hulpmiddelen', size:'245,7 MB',
+      desc:'Super schattige zaklamp met leuke filters! Werkt heel snel, beloofd!',
+      spy:true,
+      perms:[
+        { n:'Flitser',   d:'Zet de flitser aan als lamp', on:true },
+        { n:'Camera',    d:"Foto's en video's opnemen", on:true, bad:true, w:'Een zaklamp is geen camera!' },
+        { n:'Microfoon', d:'Geluid opnemen', on:true, bad:true, w:'Een zaklamp maakt licht, geen geluid!' },
+        { n:'Contacten', d:'Toegang tot je adresboek', on:true, bad:true, w:'Een zaklamp hoeft niet te weten wie je vrienden zijn!' },
+        { n:'Locatie',   d:'Volgt waar je bent', on:true, bad:true, w:'Een zaklamp werkt overal even goed!' },
+        { n:"Foto's",    d:"Leest en wijzigt je foto's", on:true, bad:true, w:'Waarom zou een lamp in je foto\'s kijken?' },
+        { n:'Agenda',    d:'Leest je afspraken', on:true, bad:true, w:'Een zaklamp heeft geen kalender nodig!' }
+      ]},
+
+    /* --- 6 APPS MET TE VEEL RECHTEN (moeten gerepareerd worden) --- */
+    { id:'weer', name:'Weerwoordje', icon:'⛅', grad:['#59a5ff','#8ed0ff'], dev:'Sky Media', cat:'Weer', size:'31,2 MB',
+      desc:'Het weerbericht van vandaag, met leuke plaatjes van zonnetjes en wolkjes.',
+      perms:[
+        { n:'Locatie',   d:'Toont het weer op jouw plek', on:true },
+        { n:'Netwerk',   d:'Downloadt weergegevens', on:true },
+        { n:'Microfoon', d:'Geluid opnemen', on:true, bad:true, w:'Het weer praat niet terug — dit hoort niet!' },
+        { n:"Foto's",    d:"Lezen en wijzigen van foto's", on:true, bad:true, w:'Waarom zou een weerapp in je foto\'s kijken?' }
+      ]},
+    { id:'reken', name:'Reken Wonder', icon:'🔢', grad:['#2c3e50','#4ca1af'], dev:'SlimLeren', cat:'Onderwijs', size:'12,8 MB',
+      desc:'Oefen sommen en word een rekenkampioen!',
+      perms:[
+        { n:'Geluid',    d:'Speelt geluidjes af', on:true },
+        { n:'Contacten', d:'Toegang tot je adresboek', on:true, bad:true, w:'Een rekenmachine hoeft je vrienden niet te kennen!' },
+        { n:'Locatie',   d:'Volgt waar je bent', on:true, bad:true, w:'Sommetjes maken kan overal — locatie is niet nodig!' }
+      ]},
+    { id:'kleur', name:'Kleur Studio', icon:'🎨', grad:['#f7971e','#ffd200'], dev:'ArtKids', cat:'Creatief', size:'78,4 MB',
+      desc:'Teken en verf de mooiste kunstwerken op je telefoon.',
+      perms:[
+        { n:'Opslag',  d:'Slaat je tekeningen op', on:true },
+        { n:'Locatie', d:'Volgt waar je bent', on:true, bad:true, w:'Waar je woont heeft niks met tekenen te maken!' },
+        { n:'Camera',  d:"Foto's en video's opnemen", on:true, bad:true, w:'Tekenen doe je met je vinger, niet met een camera!' }
+      ]},
+    { id:'sticker', name:'Stickerland', icon:'😻', grad:['#ff9a9e','#fecfef'], dev:'StickySoft', cat:'Games', size:'54,1 MB',
+      desc:'Verzamel honderden schattige stickers en ruil ze met vriendinnen.',
+      perms:[
+        { n:'Opslag',    d:'Slaat je verzameling op', on:true },
+        { n:'Netwerk',   d:'Stickers downloaden', on:true },
+        { n:'Contacten', d:'Toegang tot je adresboek', on:true, bad:true, w:'Stickers ruilen kan zonder je adresboek te lezen!' },
+        { n:'Agenda',    d:'Leest je afspraken', on:true, bad:true, w:'Waarom zou een sticker-app je agenda willen lezen?' }
+      ]},
+    { id:'run', name:'Fun Run Feest', icon:'🏃‍♀️', grad:['#43e97b','#38f9d7'], dev:'PlayMore', cat:'Games', size:'89,3 MB',
+      desc:'Rennen, springen en dansen door supersnelle levels vol obstakels.',
+      perms:[
+        { n:'Netwerk', d:'Online multiplayer', on:true },
+        { n:'Geluid',  d:'Speelt spelmuziek af', on:true },
+        { n:'Camera',  d:"Foto's en video's opnemen", on:true, bad:true, w:'Voor rennen heb je geen camera nodig!' },
+        { n:'Locatie', d:'Volgt waar je bent', on:true, bad:true, w:'Het spel werkt overal — waarom zou het je volgen?' }
+      ]},
+    { id:'horoscoop', name:'Sterrenwijzer', icon:'✨', grad:['#a18cd1','#fbc2eb'], dev:'CosmicApps', cat:'Lifestyle', size:'42,3 MB',
+      desc:'Ontdek wat de sterren voor jou voorspellen — elke dag een nieuwe horoscoop!',
+      perms:[
+        { n:'Netwerk',      d:'Downloadt dagelijkse horoscopen', on:true },
+        { n:'Notificaties', d:'Herinnert je aan je voorspelling', on:true },
+        { n:'Contacten',   d:'Toegang tot je adresboek', on:true, bad:true, w:'Sterren hoeven niet te weten wie je vrienden zijn!' },
+        { n:'Locatie',     d:'Volgt waar je bent', on:true, bad:true, w:'Een horoscoop werkt overal ter wereld hetzelfde!' },
+        { n:"Foto's",      d:"Leest en wijzigt je foto's", on:true, bad:true, w:'Een horoscoop-app kijkt niet in je foto\'s!' }
+      ]},
+
+    /* ---- NORMALE APPS ---- */
+    { id:'muziek', name:'Muziek', icon:'🎵', grad:['#FA2D48','#C8102E'], dev:'Melody B.V.', cat:'Muziek', size:'45,2 MB',
+      desc:'Luister naar je favoriete nummers en maak playlists.',
+      perms:[
+        { n:'Netwerk', d:'Muziek streamen', on:true },
+        { n:'Opslag',  d:'Slaat nummers offline op', on:true }
+      ]},
+    { id:'fotoboek', name:'Fotoboek', icon:'🖼️', grad:['#4facfe','#00f2fe'], dev:'SnapLab', cat:'Fotografie', size:'128,5 MB',
+      desc:"Bewaar en bewerk je mooiste foto's met leuke filters.",
+      perms:[
+        { n:"Foto's", d:'Bekijken en bewerken van foto\'s', on:true },
+        { n:'Camera', d:'Nieuwe foto\'s maken', on:true }
+      ]},
+    { id:'kaart', name:'Kaart & Route', icon:'🗺️', grad:['#34e89e','#0f9b8e'], dev:'NavWorks', cat:'Reizen', size:'67,8 MB',
+      desc:'Vind de snelste route, ook naar het scoutingterrein!',
+      perms:[
+        { n:'Locatie', d:'Toont je positie op de kaart', on:true },
+        { n:'Netwerk', d:'Laadt kaartgegevens', on:true }
+      ]},
+    { id:'notities', name:'Notities', icon:'📝', grad:['#fff56b','#ffd43b'], dev:'QuickNote', cat:'Productiviteit', size:'23,4 MB',
+      desc:'Schrijf aantekeningen en geheime boodschappen.',
+      perms:[
+        { n:'Opslag',   d:'Slaat je notities op', on:true },
+        { n:'Microfoon', d:'Spraaknotities opnemen', on:true }
+      ]},
+    { id:'kalender', name:'Kalender', icon:'📅', grad:['#FA8C16','#FFC107'], dev:'PlanIt', cat:'Productiviteit', size:'34,5 MB',
+      desc:'Plan afspraken en vergeet nooit meer een opkomst.',
+      perms:[
+        { n:'Agenda',      d:'Bekijken en bewerken van afspraken', on:true },
+        { n:'Notificaties', d:'Herinnert je aan afspraken', on:true }
+      ]},
+    { id:'post', name:'Post', icon:'✉️', grad:['#007AFF','#5AC8FA'], dev:'MailCo', cat:'Productiviteit', size:'56,2 MB',
+      desc:'Lees en verstuur e-mails.',
+      perms:[
+        { n:'Netwerk',      d:'E-mails ophalen en versturen', on:true },
+        { n:'Notificaties', d:'Waarschuwt bij nieuwe mail', on:true }
+      ]},
+    { id:'chat', name:'ChatChat', icon:'💬', grad:['#25D366','#128C7E'], dev:'TalkWorks', cat:'Sociale apps', size:'102,3 MB',
+      desc:"Stuur berichtjes, foto's en voice-berichten naar je vriendinnen.",
+      perms:[
+        { n:'Contacten', d:'Vindt vriendinnen met een account', on:true },
+        { n:'Camera',    d:"Stuurt foto's vanuit de chat", on:true },
+        { n:'Microfoon', d:'Voice-berichten opnemen', on:true }
+      ]},
+    { id:'radio', name:'Radio FM', icon:'📻', grad:['#7F7FD5','#91EAE4'], dev:'WaveCast', cat:'Muziek', size:'28,6 MB',
+      desc:'Luister live naar je favoriete radiostation.',
+      perms:[
+        { n:'Netwerk',      d:'Radiostreams beluisteren', on:true },
+        { n:'Notificaties', d:'Vertelt wanneer je favoriete show begint', on:true }
+      ]},
+    { id:'video', name:'Videokes', icon:'🎬', grad:['#c471f5','#fa71cd'], dev:'ClipFun', cat:'Fotografie', size:'210,9 MB',
+      desc:'Maak grappige korte filmpjes met effecten.',
+      perms:[
+        { n:'Camera',    d:'Filmpjes opnemen', on:true },
+        { n:'Microfoon', d:'Geluid bij je film opnemen', on:true },
+        { n:'Opslag',    d:'Filmpjes opslaan', on:true }
+      ]},
+    { id:'podcast', name:'Podcast+', icon:'🎙️', grad:['#667eea','#764ba2'], dev:'StoryTunes', cat:'Nieuws', size:'61,0 MB',
+      desc:'Luister naar spannende verhalen en podcasts, ook offline.',
+      perms:[
+        { n:'Netwerk', d:'Afleveringen downloaden', on:true },
+        { n:'Opslag',  d:'Slaat afleveringen op om offline te luisteren', on:true }
+      ]},
+    { id:'kook', name:'Kookboek', icon:'👩‍🍳', grad:['#f6d365','#fda085'], dev:'YumRecipes', cat:'Eten & drinken', size:'48,3 MB',
+      desc:'Duizenden recepten om zelf te koken en bakken.',
+      perms:[
+        { n:'Opslag',  d:'Slaat favoriete recepten op', on:true },
+        { n:'Netwerk', d:'Nieuwe recepten ophalen', on:true }
+      ]},
+    { id:'hardloop', name:'Hardloopschema', icon:'👟', grad:['#ff512f','#dd2476'], dev:'FitStep', cat:'Gezondheid', size:'72,7 MB',
+      desc:'Volg je runs en word elke dag een beetje sneller.',
+      perms:[
+        { n:'Locatie', d:'Meet je hardlooproute', on:true },
+        { n:'Sensoren', d:'Telt je stappen en hartslag', on:true }
+      ]},
+    { id:'fiets', name:'Fiets Buddy', icon:'🚲', grad:['#11998e','#38ef7d'], dev:'TwoWheelz', cat:'Reizen', size:'41,5 MB',
+      desc:'De beste fietsroutes in de buurt, ook voor mountainbikes.',
+      perms:[
+        { n:'Locatie', d:'Volgt je fietstocht', on:true },
+        { n:'Netwerk', d:'Laadt fietsroutes op', on:true }
+      ]},
+    { id:'sterren', name:'Sterrenkijker', icon:'🔭', grad:['#141e30','#243b55'], dev:'SkyWatch', cat:'Onderwijs', size:'83,9 MB',
+      desc:'Ontdek sterrenbeelden aan de nachtelijke hemel.',
+      perms:[
+        { n:'Locatie', d:'Berekent welke sterren jij ziet', on:true },
+        { n:'Netwerk', d:'Downloadt sterrenkaarten', on:true }
+      ]},
+    { id:'bloemen', name:'Bloem Herkenner', icon:'🌸', grad:['#ee9ca7','#ffdde1'], dev:'PlantPal', cat:'Onderwijs', size:'36,8 MB',
+      desc:'Maak een foto van een bloem en ontdek welke het is!',
+      perms:[
+        { n:'Camera',  d:'Foto van de bloem maken', on:true },
+        { n:'Locatie', d:'Checkt welke bloemen hier groeien', on:true },
+        { n:'Netwerk', d:'Zoekt de bloem op in de database', on:true }
+      ]},
+    { id:'verhalen', name:'Biblio Verhalen', icon:'📚', grad:['#cc2b5e','#753a88'], dev:'BookWorld', cat:'Boeken', size:'95,4 MB',
+      desc:'Lees en luister naar duizenden verhalen.',
+      perms:[
+        { n:'Netwerk', d:'Boeken downloaden', on:true },
+        { n:'Opslag',  d:'Slaat boeken offline op', on:true }
+      ]},
+    { id:'slaap', name:'Slaapmix', icon:'🌙', grad:['#4e54c8','#8f94fb'], dev:'DreamSounds', cat:'Gezondheid', size:'19,2 MB',
+      desc:'Rustgevende muziek om heerlijk te dromen.',
+      perms:[
+        { n:'Netwerk',      d:'Haalt muziek op', on:true },
+        { n:'Notificaties', d:'Herinnert je aan je bedtijd', on:true }
+      ]},
+    { id:'dj', name:'DJ Mixer', icon:'🎧', grad:['#fc4a1a','#f7b733'], dev:'BeatLab', cat:'Muziek', size:'88,1 MB',
+      desc:'Maak je eigen liedjes en mix als een echte DJ.',
+      perms:[
+        { n:'Opslag', d:'Slaat je mixen op', on:true },
+        { n:'Geluid', d:'Speelt je muziek af', on:true }
+      ]},
+    { id:'hartslag', name:'Hartslagmeter', icon:'❤️', grad:['#ff5f6d','#ffc371'], dev:'PulseTech', cat:'Gezondheid', size:'25,6 MB',
+      desc:'Meet je hartslag na het sporten of klimmen.',
+      perms:[
+        { n:'Sensoren', d:'Meet je hartslag', on:true },
+        { n:'Netwerk',  d:'Slaat je voortgang op in de cloud', on:true }
+      ]}
+];
+
+let apps = [];
+let pendingDelete = null;
+let won = false;
+
+/* ---------- HULPFUNCTIES ---------- */
+function resetState() {
+    apps = APP_DATA.map(a => ({...a, installed:true, perms:a.perms.map(p => ({...p}))}));
+    won = false;
+}
+
+function startGame() {
+    document.getElementById('viewStart').style.display = 'none';
+    document.getElementById('viewList').style.display = 'flex';
+    renderList();
+    updateProgress();
+}
+
+function renderList() {
+    const container = document.getElementById('appListContainer');
+    container.innerHTML = '';
+    const installed = apps.filter(a => a.installed);
+    installed.sort((a,b) => a.name.localeCompare(b.name,'nl'));
+    installed.forEach(app => {
+        const row = document.createElement('div');
+        row.className = 'app-row';
+        row.onclick = () => openDetail(app.id);
+        row.innerHTML = `
+            <div class="app-icon" style="background:linear-gradient(135deg, ${app.grad[0]}, ${app.grad[1]})">${app.icon}</div>
+            <div class="app-meta">
+                <div class="app-name">${app.name}</div>
+                <div class="app-sub">${app.dev} • ${app.cat}</div>
+                <div class="app-permcount">🔓 ${app.perms.length} machtigingen</div>
+            </div>
+            <div class="chev">›</div>`;
+        container.appendChild(row);
+    });
+    document.getElementById('appCount').textContent = installed.length + ' apps';
+}
+
+function openDetail(id) {
+    const app = apps.find(a => a.id === id);
+    if (!app) return;
+    document.getElementById('viewList').style.display = 'none';
+    const detail = document.getElementById('viewDetail');
+    detail.style.display = 'flex';
+
+    const permRows = app.perms.map((p, i) => `
+        <div class="perm-row">
+            <div class="perm-info">
+                <div class="perm-label">🔐 ${p.n}</div>
+                <div class="perm-desc">${p.d}</div>
+                ${(!p.on && p.bad) ? `<div class="perm-note-good">✅ Goed gezien, speurder! ${p.w}</div>` : ''}
+            </div>
+            <div class="switch ${p.on ? '' : 'off'}" onclick="togglePerm('${app.id}', ${i})"><div class="knob"></div></div>
+        </div>`).join('');
+
+    document.getElementById('detailBody').innerHTML = `
+        <div class="detail-hero">
+            <div class="app-icon" style="background:linear-gradient(135deg, ${app.grad[0]}, ${app.grad[1]})">${app.icon}</div>
+            <div>
+                <div class="detail-name">${app.name}</div>
+                <div class="detail-dev">${app.dev}</div>
+                <div class="detail-stats"><span>⭐ 4,5</span><span>${app.cat}</span><span>${app.size}</span></div>
+            </div>
+        </div>
+        <button class="open-btn" onclick="showToast('Dit is een nep-app, hij opent niet echt 😉')">Openen</button>
+        <div class="detail-desc">${app.desc}</div>
+        <div class="perm-section">
+            <div class="perm-title">App-machtigingen (${app.perms.length})</div>
+            <div class="perm-subtitle">Denk goed na: welke rechten horen bij deze app — en welke niet?</div>
+            ${app.perms.length === 0 ? '<div class="perm-subtitle">Deze app vraagt geen machtigingen. Slim!' : permRows}
+        </div>
+        <div class="delete-zone">
+            <button class="delete-btn" onclick="askDelete('${app.id}')">🗑️ Verwijder deze app</button>
+        </div>`;
+    document.querySelector('.detail-scroll').scrollTop = 0;
+}
+
+function closeDetail() {
+    document.getElementById('viewDetail').style.display = 'none';
+    document.getElementById('viewList').style.display = 'flex';
+}
+
+/* TOGGLE MET DRIE EFFECTEN: uitleg toast, flits animatie, niet uitzetten */
+function togglePerm(appId, idx) {
+    const app = apps.find(a => a.id === appId);
+    const p = app.perms[idx];
+
+    // GEEN slechte machtiging (bad=false, dus dit is een normaal recht)
+    if (!p.bad) {
+        // 1. Toast uitleg tonen
+        const whyText = WHY_OK[appId] && WHY_OK[appId][p.n] || 'Deze machtiging hoort bij de functie van deze app.';
+        showToast(`👍 Deze machtiging hoort hier! ${whyText}`);
+
+        // 2. Schakelaar element vinden en flits-animatie starten (uit → meteen weer aan)
+        let targetSwitch = null;
+        document.querySelectorAll('.perm-row').forEach((row, ri) => {
+            const sw = row.querySelector('.switch');
+            if (sw && ri === idx) targetSwitch = sw;
+        });
+        if (targetSwitch) {
+            targetSwitch.classList.add('flash');
+            setTimeout(() => targetSwitch.classList.remove('flash'), 650);
+        }
+        return; // Recht blijft aan!
+    }
+
+    // Slechte machtiging → mag wel uitgezet worden
+    if (p.bad) {
+        p.on = !p.on;
+        openDetail(appId); // herlaad detail met feedback
+        if (!p.on) updateProgress();
+    }
+}
+
+/* ---------- VERWIJDEREN ---------- */
+function askDelete(appId) {
+    const app = apps.find(a => a.id === appId);
+    pendingDelete = appId;
+    document.getElementById('sheetTitle').innerHTML =
+        `<b>${app.name} verwijderen?</b>Deze app en al haar gegevens worden van deze telefoon verwijderd.`;
+    document.getElementById('deleteSheet').classList.add('active');
+}
+function cancelDelete() {
+    pendingDelete = null;
+    document.getElementById('deleteSheet').classList.remove('active');
+}
+function confirmDeleteApp() {
+    const app = apps.find(a => a.id === pendingDelete);
+    cancelDelete();
+    if (app.spy) {
+        app.installed = false;
+        closeDetail();
+        renderList();
+        updateProgress();
+    } else {
+        showToast(`${app.name} hoort gewoon bij de telefoon en is veilig! Alleen de échte spyware mag weg. 🕵️‍♀️`);
+    }
+}
+
+/* ---------- VOORTGANG & WIN ----------
+   7 taken in totaal: 6 apps repareren + 1 spyware verwijderen */
+const TOTAL_TASKS = 7;
+
+function tasksDone() {
+    // 6 apps (exclusief de spyware) waarvan ALLÉÉN de onnodige rechten uitstaan
+    const fixable = apps.filter(a => !a.spy && a.perms.some(p => p.bad));
+    const fixedApps = fixable
+        .filter(a => a.perms.filter(p => p.bad).every(p => !p.on)).length;
+
+    // De spyware (GlowFlash) is verwijderd — verwijderen geldt als alle rechten weghalen
+    const spyRemoved = !apps.find(a => a.spy).installed;
+
+    return { fixedApps, spyRemoved, total: fixedApps + (spyRemoved ? 1 : 0) };
+}
+
+function updateProgress() {
+    const t = tasksDone();
+    document.getElementById('progressLabel').textContent = `${t.total} / ${TOTAL_TASKS}`;
+    document.getElementById('progressFill').style.width = (t.total / TOTAL_TASKS * 100) + '%';
+    if (t.total === TOTAL_TASKS && !won) {
+        won = true;
+        document.getElementById('codeDisplay').textContent = EINDCODE;
+        setTimeout(() => {
+            document.getElementById('winOverlay').classList.add('active');
+            launchConfetti();
+        }, 500);
+    }
+}
+
+/* Win-scherm sluiten (terug naar de telefoon, spel blijft gespeeld) */
+function closeWin() {
+    document.getElementById('winOverlay').classList.remove('active');
+}
+
+function resetAll() {
+    document.getElementById('winOverlay').classList.remove('active');
+    document.getElementById('viewList').style.display = 'none';
+    document.getElementById('viewDetail').style.display = 'none';
+    document.getElementById('viewStart').style.display = 'flex';
+    resetState();
+}
+
+/* ---------- FLAG KOPIËREN ---------- */
+const copyFlagBtn = document.getElementById('copyFlagBtn');
+if (copyFlagBtn) {
+    copyFlagBtn.addEventListener('click', function () {
+        const flag = EINDCODE;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(flag).then(() => {
+                const orig = this.textContent;
+                this.textContent = "✅ Gekopieerd!";
+                setTimeout(() => this.textContent = "📋 Kopieer flag", 2000);
+            }).catch(() => {
+                window.prompt("Kopieer de flag:", flag);
+            });
+        } else {
+            window.prompt("Kopieer de flag:", flag);
+        }
+    });
+}
+
+/* ---------- CONFETTI ---------- */
+function launchConfetti() {
+    const canvas = document.getElementById('confetti');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const colors = ["#10B981", "#0D9488", "#007AFF", "#fbbf24", "#e879f9", "#60a5fa", "#34C759"];
+    const pieces = [];
+
+    for (let i = 0; i < 220; i++) {
+        pieces.push({
+            x: Math.random() * canvas.width,
+            y: -20 - Math.random() * canvas.height,
+            w: 6 + Math.random() * 7,
+            h: 8 + Math.random() * 8,
+            c: colors[Math.floor(Math.random() * colors.length)],
+            vy: 2 + Math.random() * 3.5,
+            vx: -1.5 + Math.random() * 3,
+            rot: Math.random() * 360,
+            vr: -6 + Math.random() * 12
+        });
+    }
+
+    let frames = 0;
+    function anim() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(function(p) {
+            p.y += p.vy;
+            p.x += p.vx;
+            p.rot += p.vr;
+            if (p.y > canvas.height + 20) {
+                p.y = -20;
+                p.x = Math.random() * canvas.width;
+            }
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.rot * Math.PI / 180);
+            ctx.fillStyle = p.c;
+            ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            ctx.restore();
+        });
+        frames++;
+        if (frames < 600) {
+            requestAnimationFrame(anim);
+        } else {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    }
+    anim();
+}
+
+/* ---------- TOAST & KLOK ---------- */
+let toastTimer;
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+function updateClock() {
+    const now = new Date();
+    document.getElementById('clock').textContent =
+        String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+}
+setInterval(updateClock, 10000);
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
+
+resetState();
+updateClock();
+</script>
+</body>
+</html>
