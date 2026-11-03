@@ -59,6 +59,12 @@ Zoek de geheime code verborgen in de broncode van de website.
 Wil je het spel zelf hosten? Je kunt de HTML-bestanden eenvoudig en gratis deployen op Cloudflare Workers. 
 Alternatief kun je de bestanden lokaal opslaan op laptops en openen in elke moderne browser. Geen server nodig!
 
+## 📷 Voorbeelden
+
+<img width="2548" height="1378" alt="Cyberspeurtocht Profielbeschermer" src="https://github.com/user-attachments/assets/b1cdc097-0e8c-4996-910e-663139ebdaf7" />
+<img width="2548" height="1348" alt="Cyberspeurtocht Privacy Auditor" src="https://github.com/user-attachments/assets/0ee98c47-2541-46bc-91d7-7d7df3f97d16" />
+<img width="2548" height="1378" alt="Cyberspeurtocht Phishing Detective" src="https://github.com/user-attachments/assets/a9bc97e7-d449-4d85-a2d7-22448e3f7d23" />
+
 ## ⚖️ Licentie & Disclaimer
 - **Gebruik:** Deze bestanden zijn gratis te gebruiken, aan te passen en te verbeteren door iedereen (vooral scoutinggroepen).
 - **Commercieel gebruik:** Niet toegestaan zonder uitdrukkelijke toestemming.
