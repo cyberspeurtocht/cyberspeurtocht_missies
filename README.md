@@ -1,5 +1,7 @@
 # 🕵️‍♀️ Cyberspeurtocht
 
+<img width="1024" height="1024" alt="cyberspeurtocht" src="https://github.com/user-attachments/assets/48797781-9bbe-46ef-9508-6d46d19de1c7" />
+
 Welkom bij **Cyberspeurtocht**, een interactieve webapplicatie ontworpen om scouting-kinderen op een speelse manier kennis te laten maken met de digitale wereld. 
 
 Deze speurtocht combineert plezier met leren: kinderen spelen actief mee, oefenen praktische vaardigheden en leren hoe ze veilig kunnen navigeren in de online omgeving. Ze leren gevaren herkennen, kritisch nadenken over informatie en begrijpen hoe privacy en beveiliging werken.
