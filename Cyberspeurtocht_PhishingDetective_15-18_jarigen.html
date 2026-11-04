@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚩</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyberspeurtocht – Phishingdetective</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary-teal:#16857e;
+  --primary-teal-dark:#116a65;
+  --primary-teal-light:#1fa39a;
+  --accent-pink:#e11d48;
+  --accent-pink-light:#fda4af;
+  --bg-page:#f9fafb;
+  --bg-white:#ffffff;
+  --bg-soft:#f3f4f6;
+  --border:#e5e7eb;
+  --text-heading:#1f2937;
+  --text-primary:#374151;
+  --text-secondary:#6b7280;
+  --text-muted:#9ca3af;
+  --success-green:#059669;
+  --warning-orange:#d97706;
+  --danger-red:#dc2626;
+  --shadow-sm:0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --radius-sm:6px;
+  --radius-md:8px;
+  --radius-lg:12px;
+  --radius-xl:16px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:var(--bg-page);
+  color:var(--text-primary);
+  height:100vh;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+
+.app{
+  display:flex;
+  flex:1;
+  min-height:0;
+  padding-bottom:80px;
+}
+
+.sidebar{
+  width:240px;
+  background:var(--bg-white);
+  border-right:1px solid var(--border);
+  padding:16px 12px;
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:700;
+  font-size:18px;
+  color:var(--primary-teal);
+  padding:8px 12px 20px;
+  margin-bottom:8px;
+  border-bottom:1px solid var(--border);
+}
+
+.brand svg{
+  width:28px;
+  height:28px;
+  flex-shrink:0;
+}
+
+.navbtn{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 16px;
+  border:none;
+  background:none;
+  font-size:14px;
+  font-weight:500;
+  color:var(--text-primary);
+  cursor:pointer;
+  border-radius:var(--radius-md);
+  text-align:left;
+  width:100%;
+  transition:all 0.15s ease;
+}
+
+.navbtn:hover{
+  background:var(--bg-soft);
+  color:var(--primary-teal);
+}
+
+.navbtn.active{
+  background:rgba(22,133,126,0.1);
+  font-weight:600;
+  color:var(--primary-teal);
+  box-shadow:0 1px 2px rgba(0,0,0,0.05);
+}
+
+.navbtn .count{
+  font-size:12px;
+  color:var(--text-secondary);
+  background:var(--bg-soft);
+  padding:2px 8px;
+  border-radius:12px;
+  font-weight:500;
+}
+
+.sidebar-tip{
+  margin-top:auto;
+  font-size:12px;
+  color:var(--text-secondary);
+  padding:16px 14px;
+  border-top:2px dashed var(--border);
+  line-height:1.6;
+  background:linear-gradient(to bottom,var(--bg-white),var(--bg-soft));
+  border-radius:var(--radius-md);
+  margin:8px 6px 0;
+}
+
+.sidebar-tip strong{
+  color:var(--accent-pink);
+  display:block;
+  margin-bottom:6px;
+  font-size:11px;
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+}
+
+/* ===== HEADER / BRANDING ===== */
+main{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+
+.topbar{
+  background:var(--bg-white);
+  border-bottom:1px solid var(--border);
+  padding:16px 24px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  flex-shrink:0;
+  box-shadow:var(--shadow-sm);
+}
+
+.search{
+  flex:1;
+  max-width:500px;
+  background:var(--bg-soft);
+  border:2px solid transparent;
+  border-radius:var(--radius-lg);
+  padding:12px 20px;
+  font-size:14px;
+  outline:none;
+  color:var(--text-heading);
+  transition:all 0.2s ease;
+  font-weight:500;
+}
+
+.search::placeholder{
+  color:var(--text-muted);
+}
+
+.search:focus{
+  background:var(--bg-white);
+  border-color:var(--primary-teal);
+  box-shadow:0 0 0 3px rgba(22,133,126,0.1);
+}
+
+.badge-game{
+  margin-left:auto;
+  font-size:12px;
+  font-weight:700;
+  color:var(--accent-pink);
+  background:rgba(225,29,72,0.08);
+  border:2px solid var(--accent-pink);
+  padding:6px 14px;
+  border-radius:var(--radius-xl);
+  white-space:nowrap;
+  letter-spacing:0.3px;
+}
+
+/* ===== EMAIL LIST & READING PANES ===== */
+.content{
+  display:grid;
+  grid-template-columns:minmax(280px,42%) 1fr;
+  flex:1;
+  min-height:0;
+}
+
+.list-pane{
+  overflow-y:auto;
+  background:var(--bg-white);
+  border-right:1px solid var(--border);
+}
+/* ===== EMAILLIJST (flex-layout, kan niet breken) ===== */
+.email-row{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+  transition:background 0.15s ease;
+}
+.email-row:hover{background:var(--bg-soft)}
+.email-row:hover:not(.selected){box-shadow:inset 3px 0 0 var(--primary-teal)}
+.email-row.selected{background:rgba(22,133,126,0.08);box-shadow:inset 3px 0 0 var(--primary-teal)}
+
+.email-row .num{
+  flex-shrink:0;
+  font-size:11px;
+  font-weight:700;
+  color:var(--text-muted);
+  background:var(--bg-soft);
+  border-radius:var(--radius-sm);
+  padding:3px 6px;
+  text-align:center;
+  margin-top:2px;
+  min-width:44px;
+}
+
+.email-row .row-main{
+  flex:1;
+  min-width:0;
+}
+
+.email-row .row-top{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.email-row .from{
+  flex:1;
+  min-width:0;
+  font-size:14px;
+  font-weight:700;
+  color:var(--text-heading);
+  line-height:1.3;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.email-row .time{
+  flex-shrink:0;
+  font-size:11px;
+  color:var(--text-muted);
+  font-weight:500;
+}
+
+.email-row .subj{
+  margin-top:3px;
+  font-size:13px;
+  font-weight:500;
+  color:var(--text-primary);
+  line-height:1.4;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.email-row.unread .from{font-weight:700}
+.email-row.unread .subj{font-weight:700;color:var(--text-heading)}
+
+.email-row.reported{background:var(--bg-soft);opacity:0.75}
+.email-row.reported .from,
+.email-row.reported .subj{text-decoration:line-through;color:var(--text-muted)}
+.email-row.reported .subj::after{
+  content:" ✓ gemeld";
+  color:var(--success-green);
+  font-weight:700;
+  text-decoration:none;
+  font-size:11px;
+}
+
+.empty-folder{
+  padding:48px 24px;
+  text-align:center;
+  color:var(--text-secondary);
+  font-size:14px;
+}
+/* ===== READ PANE ===== */
+.read-pane{
+  overflow-y:auto;
+  background:var(--bg-white);
+  padding:32px 40px;
+}
+
+.read-empty{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  height:100%;
+  color:var(--text-secondary);
+  gap:16px;
+  font-size:15px;
+  text-align:center;
+}
+
+.read-empty .big{
+  font-size:56px;
+  opacity:0.6;
+}
+
+.mail-header h2{
+  font-size:20px;
+  margin-bottom:16px;
+  line-height:1.3;
+  color:var(--text-heading);
+  font-weight:700;
+}
+
+.mail-meta{
+  display:flex;
+  align-items:flex-start;
+  gap:16px;
+  padding:16px 0;
+  border-bottom:2px solid var(--border);
+  margin-bottom:24px;
+  background:var(--bg-soft);
+  border-radius:var(--radius-lg);
+  padding:16px 20px;
+}
+
+.avatar{
+  width:44px;
+  height:44px;
+  border-radius:12px;
+  background:var(--primary-teal);
+  color:#fff;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  font-size:17px;
+  box-shadow:var(--shadow-sm);
+}
+
+.avatar.phish{
+  background:var(--danger-red);
+  box-shadow:0 0 0 2px rgba(220,38,38,0.2);
+}
+
+.meta-from{
+  font-size:14px;
+  font-weight:700;
+  color:var(--text-heading);
+}
+
+.meta-mail{
+  font-size:12px;
+  color:var(--text-secondary);
+  word-break:break-all;
+  margin-top:2px;
+}
+
+.mail-body{
+  font-size:15px;
+  line-height:1.8;
+  color:var(--text-primary);
+}
+
+.mail-body p{
+  margin-bottom:16px;
+}
+
+.mail-body ul{
+  margin:0 0 16px 24px;
+  line-height:1.8;
+}
+
+.phish-warn{
+  background:linear-gradient(to bottom,#fef2f2,#fee2e2);
+  border-left:4px solid var(--danger-red);
+  padding:16px 18px;
+  border-radius:var(--radius-md);
+  font-weight:600;
+  color:#991b1b;
+  margin:0 0 18px;
+  box-shadow:var(--shadow-sm);
+}
+
+.nice-box{
+  background:rgba(22,133,126,0.08);
+  border-left:4px solid var(--primary-teal);
+  padding:14px 16px;
+  border-radius:var(--radius-md);
+  font-size:14px;
+  line-height:1.7;
+  margin:0 0 16px;
+  color:var(--text-primary);
+}
+
+.official-box{
+  background:var(--bg-soft);
+  border:1px solid var(--border);
+  padding:18px 20px;
+  border-radius:var(--radius-lg);
+  font-size:14px;
+  line-height:1.7;
+  margin:10px 0 20px;
+  color:var(--text-primary);
+}
+
+.mail-link{
+  color:var(--primary-teal);
+  text-decoration:underline;
+  cursor:pointer;
+  font-weight:500;
+  transition:color 0.15s;
+}
+
+.mail-link:hover{
+  color:var(--primary-teal-dark);
+}
+
+.phish-btn{
+  display:inline-block;
+  background:var(--danger-red);
+  color:#fff;
+  padding:14px 28px;
+  border:none;
+  border-radius:var(--radius-lg);
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  margin:10px 0 18px;
+  box-shadow:var(--shadow-md);
+  transition:all 0.15s;
+  text-decoration:none;
+}
+
+.phish-btn:hover{
+  background:#b91c1c;
+  transform:translateY(-1px);
+  box-shadow:var(--shadow-lg);
+}
+
+.cta-btn{
+  display:inline-block;
+  background:var(--primary-teal);
+  color:#fff;
+  padding:12px 24px;
+  border:none;
+  border-radius:var(--radius-lg);
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  margin:8px 0 16px;
+  box-shadow:var(--shadow-sm);
+  transition:all 0.15s;
+}
+
+.cta-btn:hover{
+  background:var(--primary-teal-dark);
+  transform:translateY(-1px);
+}
+
+.signature{
+  font-size:13px;
+  color:var(--text-secondary);
+  line-height:1.6;
+  border-top:1px solid var(--border);
+  padding-top:14px;
+  margin-top:8px;
+}
+
+.mail-footer-note{
+  font-size:11px;
+  color:var(--text-muted);
+  margin-top:28px;
+  border-top:1px dashed var(--border);
+  padding-top:14px;
+  line-height:1.5;
+}
+
+.back-btn{
+  display:none;
+  border:1px solid var(--border);
+  background:var(--bg-white);
+  color:var(--text-heading);
+  padding:10px 16px;
+  border-radius:var(--radius-md);
+  font-size:13px;
+  font-weight:500;
+  cursor:pointer;
+  margin-bottom:16px;
+  transition:all 0.15s;
+}
+
+.back-btn:hover{
+  background:var(--bg-soft);
+  border-color:var(--primary-teal);
+  color:var(--primary-teal);
+}
+
+.statusbar{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:64px;
+  background:var(--text-heading);
+  color:#f3f4f6;
+  font-size:12px;
+  font-family:Consolas,'Courier New',monospace;
+  padding:6px 16px;
+  display:none;
+  z-index:400;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  border-top:2px solid var(--primary-teal);
+  box-shadow:var(--shadow-lg);
+}
+
+.statusbar.show{
+  display:block;
+}
+
+.report-phish-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  background:var(--warning-orange);
+  color:#fff;
+  padding:14px 28px;
+  border:none;
+  border-radius:var(--radius-lg);
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  margin:14px 0 18px;
+  box-shadow:var(--shadow-md);
+  transition:all 0.15s;
+}
+
+.report-phish-btn:hover{
+  background:#b45309;
+  transform:translateY(-1px);
+  box-shadow:var(--shadow-lg);
+}
+
+.answer-bar{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  background:var(--bg-white);
+  border-top:2px solid var(--primary-teal);
+  padding:16px 24px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;
+  z-index:500;
+  box-shadow:0 -4px 20px rgba(0,0,0,0.08);
+}
+
+.progress-icon{
+  font-size:22px;
+}
+
+.progress-text{
+  font-size:15px;
+  font-weight:600;
+  color:var(--text-heading);
+}
+
+.progress-hint{
+  margin-left:auto;
+  font-size:12px;
+  color:var(--text-secondary);
+  background:var(--bg-soft);
+  padding:6px 12px;
+  border-radius:var(--radius-md);
+}
+
+/* ===== MODALS & OVERLAYS ===== */
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(15, 23, 42, 0.8);
+  backdrop-filter:blur(4px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:900;
+  padding:20px;
+}
+
+.modal-overlay.show{
+  display:flex;
+}
+
+.modal-card{
+  background:var(--bg-white);
+  border-radius:var(--radius-xl);
+  max-width:620px;
+  width:100%;
+  padding:36px 32px;
+  text-align:center;
+  animation:popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-height:85vh;
+  overflow-y:auto;
+  box-shadow:var(--shadow-lg);
+  border:1px solid var(--border);
+}
+
+@keyframes popIn{
+  from{transform:scale(0.7);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+.modal-card .icon{
+  font-size:64px;
+  margin-bottom:16px;
+}
+
+.modal-card h2{
+  color:var(--primary-teal);
+  font-size:26px;
+  margin-bottom:8px;
+  font-weight:800;
+  letter-spacing:-0.5px;
+}
+
+.modal-card .sub{
+  color:var(--text-secondary);
+  font-size:14px;
+  margin-bottom:24px;
+  line-height:1.6;
+}
+
+.modal-card ul{
+  text-align:left;
+  font-size:14px;
+  line-height:1.8;
+  color:var(--text-primary);
+  background:var(--bg-soft);
+  border-radius:var(--radius-lg);
+  padding:20px 20px 20px 36px;
+  margin-bottom:24px;
+  border:1px solid var(--border);
+}
+
+.modal-card li{
+  margin-bottom:8px;
+}
+
+.again{
+  background:var(--primary-teal);
+  color:#fff;
+  border:none;
+  border-radius:var(--radius-lg);
+  padding:14px 32px;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:var(--shadow-md);
+  transition:all 0.15s;
+  margin-top:12px;
+}
+
+.again:hover{
+  background:var(--primary-teal-dark);
+  transform:translateY(-1px);
+  box-shadow:var(--shadow-lg);
+}
+
+#confetti{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:1000;
+}
+
+/* ===== FLAG PANEL (WIN SCREEN) ===== */
+.flag-panel{
+  background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);
+  border:2px solid var(--primary-teal);
+  border-radius:var(--radius-xl);
+  padding:24px 20px;
+  margin:24px 0;
+  text-align:center;
+  box-shadow:var(--shadow-lg);
+  position:relative;
+  overflow:hidden;
+}
+
+.flag-panel::before{
+  content:"🏁";
+  position:absolute;
+  top:14px;
+  left:18px;
+  font-size:24px;
+  filter:brightness(1.2);
+}
+
+.flag-label{
+  display:block;
+  font-size:11px;
+  font-weight:700;
+  color:var(--primary-teal);
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-bottom:12px;
+  background:var(--bg-white);
+  display:inline-block;
+  padding:4px 14px;
+  border-radius:var(--radius-md);
+}
+
+#flag-output{
+  display:block;
+  font-family:'Consolas','Monaco','Courier New',monospace;
+  font-size:20px;
+  font-weight:700;
+  color:#f1f5f9;
+  background:rgba(22,133,126,0.15);
+  border:2px dashed var(--primary-teal);
+  border-radius:var(--radius-lg);
+  padding:16px 14px;
+  letter-spacing:1px;
+  word-break:break-all;
+  user-select:all;
+  text-shadow:0 2px 4px rgba(0,0,0,0.3);
+}
+
+.flag-note{
+  font-size:13px;
+  color:#94a3b8;
+  margin:12px 0 0;
+  line-height:1.5;
+}
+
+.copy-flag-btn{
+  background:var(--primary-teal);
+  color:#fff;
+  border:none;
+  border-radius:var(--radius-lg);
+  padding:10px 20px;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  margin-top:12px;
+  transition:all 0.15s;
+  box-shadow:var(--shadow-sm);
+}
+
+.copy-flag-btn:hover{
+  background:var(--primary-teal-dark);
+  transform:translateY(-1px);
+}
+
+/* ===== PHISHING WARNING OVERLAY ===== */
+.phish-warning-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(220,38,38,0.92);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:1100;
+  animation:flicker 0.3s ease-out;
+}
+
+.phish-warning-overlay.show{
+  display:flex;
+}
+
+.phish-warning-card{
+  background:var(--bg-white);
+  border-radius:var(--radius-xl);
+  max-width:620px;
+  width:92%;
+  padding:40px 32px;
+  text-align:center;
+  animation:popWarn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:var(--shadow-lg);
+  border:3px solid #ef4444;
+}
+
+@keyframes popWarn{
+  from{transform:scale(0.6);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+@keyframes flicker{
+  0%{opacity:0.9}
+  50%{opacity:1}
+  100%{opacity:1}
+}
+
+.phish-warning-icon{
+  font-size:64px;
+  margin-bottom:16px;
+}
+
+.phish-warning-title{
+  color:var(--danger-red);
+  font-size:24px;
+  font-weight:800;
+  margin-bottom:16px;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+  line-height:1.2;
+}
+
+.phish-warning-message{
+  color:var(--text-primary);
+  font-size:16px;
+  line-height:1.7;
+  margin-bottom:24px;
+  background:#fef2f2;
+  border:2px solid #fecaca;
+  border-radius:var(--radius-lg);
+  padding:20px 20px;
+}
+
+.phish-url-display{
+  font-family:'Consolas','Courier New',monospace;
+  font-size:13px;
+  color:#991b1b;
+  background:#fff1f2;
+  border:2px dashed #f87171;
+  border-radius:var(--radius-md);
+  padding:12px 14px;
+  margin:16px 0;
+  word-break:break-all;
+  font-weight:600;
+  text-align:left;
+}
+
+.phish-warning-tips{
+  text-align:left;
+  background:var(--bg-soft);
+  border-radius:var(--radius-lg);
+  padding:20px 20px 20px 32px;
+  margin:20px 0;
+  font-size:14px;
+  line-height:1.8;
+  color:var(--text-primary);
+  border:1px solid var(--border);
+}
+
+.phish-warning-tips strong{
+  color:var(--primary-teal);
+}
+
+.close-warning-btn{
+  background:var(--primary-teal);
+  color:#fff;
+  border:none;
+  border-radius:var(--radius-lg);
+  padding:16px 36px;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:var(--shadow-md);
+  transition:all 0.15s;
+}
+
+.close-warning-btn:hover{
+  background:var(--primary-teal-dark);
+  transform:translateY(-1px);
+  box-shadow:var(--shadow-lg);
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:820px){
+  .app{
+    flex-direction:column;
+    padding-bottom:130px;
+  }
+  
+  .sidebar{
+    width:100%;
+    flex-direction:row;
+    overflow-x:auto;
+    align-items:center;
+    padding:10px;
+    border-right:none;
+    border-bottom:1px solid var(--border);
+    gap:2px;
+  }
+  
+  .brand,.sidebar-tip{
+    display:none;
+  }
+  
+  .navbtn{
+    width:auto;
+    white-space:nowrap;
+    padding:10px 14px;
+  }
+  
+  .badge-game{
+    display:none;
+  }
+  
+  .content{
+    grid-template-columns:1fr;
+  }
+  
+  .read-pane{
+    position:fixed;
+    inset:0;
+    top:0;
+    z-index:600;
+    display:none;
+    padding:16px;
+    background:var(--bg-white);
+    overflow-y:auto;
+  }
+  
+  .read-pane.open{
+    display:block;
+  }
+  
+  .back-btn{
+    display:inline-block;
+  }
+  
+  .statusbar{
+    bottom:96px;
+    font-size:10px;
+  }
+  
+  .answer-bar{
+    padding:12px 16px;
+  }
+  
+  .progress-hint{
+    display:none;
+  }
+  
+  .phish-warning-title{
+    font-size:20px;
+  }
+  
+  .phish-warning-message{
+    font-size:14px;
+  }
+  
+  .email-row{
+    grid-template-columns:44px 1fr;
+  }
+  
+  .email-row .time{
+    display:none;
+  }
+  
+  .modal-card{
+    padding:28px 20px;
+  }
+  
+  .modal-card h2{
+    font-size:22px;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="12" fill="#16857e"/>
+        <circle cx="16" cy="16" r="6" fill="white"/>
+        <path d="M22 26l4 4" stroke="#16857e" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      Cyberspeurtocht
+    </div>
+    <button class="navbtn active" data-folder="inbox">
+      📥 Postvak IN 
+      <span class="count" id="cnt-inbox"></span>
+    </button>
+    <button class="navbtn" data-folder="sent">
+      📤 Verzonden 
+      <span class="count" id="cnt-sent"></span>
+    </button>
+    <button class="navbtn" data-folder="drafts">
+      📝 Concepten 
+      <span class="count" id="cnt-drafts"></span>
+    </button>
+    <button class="navbtn" data-folder="spam">
+      🚫 Spam 
+      <span class="count" id="cnt-spam"></span>
+    </button>
+    <div class="sidebar-tip">
+      <strong>🎯 MISSIE</strong>
+      Er zitten <strong>3 phishingmails</strong> verstopt in je Postvak IN.<br><br>
+      Denk je er één gevonden te hebben? Open de mail en klik op <strong>🚩 Phishing Melden</strong>. Meld alle 3 om te winnen!
+    </div>
+  </aside>
+  
+  <main>
+    <div class="topbar">
+      <input class="search" id="searchBox" type="text" placeholder="🔍 Zoek in e-mails...">
+      <span class="badge-game">🎮 VIND 3 PHISHINGMAILS</span>
+    </div>
+    
+    <div class="content">
+      <section class="list-pane" id="listPane"></section>
+      <section class="read-pane" id="readPane">
+        <div class="read-empty">
+          <span class="big">✉️</span>
+          Selecteer een e-mail om hem te lezen.<br>
+          Let op afzenders, links, knoppen en taalgebruik…
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<div class="statusbar" id="statusbar"></div>
+
+<div class="answer-bar">
+  <span class="progress-icon" id="progIcon">🔍</span>
+  <span class="progress-text" id="progressDisplay">Phishingmails gemeld: 0 / 3</span>
+  <span class="progress-hint">💡 Tips: check afzenderdomein, hover over links, let op spelfouten.</span>
+</div>
+
+<div class="modal-overlay" id="winModal">
+  <div class="modal-card">
+    <div class="icon">🔓</div>
+    <h2>ACCESS GRANTED</h2>
+    <p class="sub">Je hebt alle 3 phishingmails gevonden en gemeld! Het account van Sanne is weer veilig. 🎉</p>
+    
+    <div class="flag-panel">
+      <span class="flag-label">GEVONDEN FLAG</span>
+      <code id="flag-output"></code>
+      <p class="flag-note">Gebruik deze code om de opdracht af te ronden bij de gameleiding.</p>
+      <button class="copy-flag-btn" id="copyFlagBtn" type="button">📋 Kopieer flag</button>
+    </div>
+    
+    <ul>
+      <li>📭 <strong>Afzenderdomein checken</strong> — nepdomeinen lijken op echte maar hebben kleine verschillen</li>
+      <li>⏳ <strong>Valse haast</strong> — "binnen 2 uur" is een klassieke paniekmaker</li>
+      <li>✏️ <strong>Spelfouten</strong> — "accound", "DRINGENT", "GEDTECTEERD" zijn rode vlaggen</li>
+      <li>🖱️ <strong>Links checken</strong> — hoveren laat de echte URL zien; http:// (zonder s) is onveilig</li>
+      <li>🎭 <strong>Valse afzender</strong> — een echt bedrijf mailt nooit vanaf een look-alike domein</li>
+    </ul>
+    
+    <button class="again" id="backToInboxBtn" type="button">← Terug naar je Postvak IN</button>
+    <button class="again" onclick="location.reload()" style="margin-left:10px">Opnieuw spelen 🔁</button>
+  </div>
+</div>
+
+<!-- ===== PHISHING LINK WARNING OVERLAY ===== -->
+<div class="phish-warning-overlay" id="phishWarningOverlay">
+  <div class="phish-warning-card">
+    <div class="phish-warning-icon">⚠️</div>
+    <h2 class="phish-warning-title">WAARSCHUWING! DIT IS EEN PHISHING LINK</h2>
+    <p class="phish-warning-message">
+      Klik nooit zomaar op een link in een verdachte e-mail! Oplichters maken nep-websites die lijken op echte bedrijven om je persoonsgegevens te stelen.
+    </p>
+    <div class="phish-url-display" id="phishWarningURL"></div>
+    <div class="phish-warning-tips">
+      <strong>🔒 Wat moet je wel doen?</strong><br>
+      • Controleer altijd het afzenderdomein (bijv. @bedrijf.nl)<br>
+      • Hover over links om de echte URL te zien<br>
+      • Geen HTTPS? Niet aanklikken!<br>
+      • Twijfel je? Meld de mail als phishing
+    </div>
+    <button class="close-warning-btn" id="closeWarningBtn" type="button">Begrepen, ik leer hier van ✅</button>
+  </div>
+</div>
+
+<canvas id="confetti"></canvas>
+<script>
+/* ===== CTF Flag (base64-gecodeerd) =====
+   TEJHe1BoaXNoaW5nRGV0ZWN0aWV9 = LBG{PhishingDetectie} */
+const FLAG_B64 = "TEJHe1BoaXNoaW5nRGV0ZWN0aWV9";
+
+function decodeFlag(){ return atob(FLAG_B64); }
+function showFlag(){ document.getElementById("flag-output").textContent = decodeFlag(); }
+
+document.getElementById("copyFlagBtn").addEventListener("click", function () {
+  const flag = decodeFlag();
+  const btn = this;
+  function feedback(){ btn.textContent = "✅ Gekopieerd!"; setTimeout(function(){ btn.textContent = "📋 Kopieer flag"; }, 2500); }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(flag).then(feedback).catch(function(){ window.prompt("Kopieer de flag:", flag); });
+  } else { window.prompt("Kopieer de flag:", flag); }
+});
+
+document.getElementById("backToInboxBtn").addEventListener("click", function () {
+  document.getElementById("winModal").classList.remove("show");
+});
+
+/* ===== GROTE RODE PHISHING-LINK WAARSCHUWING ===== */
+function showPhishWarning(url){
+  document.getElementById("phishWarningURL").textContent = "🔗 " + url;
+  document.getElementById("phishWarningOverlay").classList.add("show");
+}
+document.getElementById("closeWarningBtn").addEventListener("click", function () {
+  document.getElementById("phishWarningOverlay").classList.remove("show");
+});
+document.addEventListener("keydown", function(ev){
+  if(ev.key === "Escape"){ document.getElementById("phishWarningOverlay").classList.remove("show"); }
+});
+
+function L(u,t){return '<a class="mail-link" data-url="'+u+'" href="#">'+t+'</a>'}
+function pad(n){return String(n).padStart(2,"0")}
+
+/* ===== 20 RUIS-E-MAILS ===== */
+/* ===== 37 RUIS-E-MAILS VOOR 15-18 JARIGEN ===== */
+const NOISE=[
+{from:"Magister",mail:"noreply@magister.net",subj:"Eindexamenrooster 2026 is gepubliceerd",unread:true,
+body:"<p>Beste Sanne,</p><p>Het <strong>eindexamenrooster</strong> voor het schooljaar 2025-2026 is nu beschikbaar. Je eerste examen is <strong>Nederlands</strong> op maandag 11 mei om 09:00 uur in lokaal 204.</p><p>Bekijk het volledige rooster: "+L("https://accounts.magister.net/rooster/eindexamen/2026","Magister -> Examenrooster")+".</p><div class='signature'>Magister | Schoolmaster Software BV</div>"},
+{from:"Discord",mail:"notifications@discord.com",subj:"Nieuw bericht in: Gaming Squad",unread:true,
+body:"<p><strong>Lars#4207</strong> stuurde een bericht in <strong>#gaming-squad</strong>: \"Wie doet mee met de Valorant tournament vanavond om 20:00? Prijs: gratis pizza!\"</p><p>Reageren: "+L("https://discord.com/channels/@me","Discord -> DMs")+".</p>"},
+{from:"ING Bank",mail:"student@ing.nl",subj:"Je studentenrekening: maandelijkse update",
+body:"<p>Beste Sanne, hier is je maandoverzicht voor april 2026.</p><div class='official-box'><strong>Studentenrekening</strong><br>Saldo: € 487,35<br>Laatste transacties: € 15,00 (Albert Heijn), € 8,99 (Netflix), € 25,00 (Coolblue)</div><p>Bekijk alle transacties in de ING app of via "+L("https://mijn.ing.nl/prive/overzicht","mijn.ing.nl")+".</p><div class='signature'>ING Bank N.V. - Amsterdam</div>"},
+{from:"Spotify",mail:"receipt@spotify.com",subj:"Bevestiging: Spotify Premium Student",
+body:"<p>Hoi Sanne,</p><p>Je abonnement <strong>Spotify Premium Student</strong> is verlengd voor € 5,99 per maand. Volgende betaling: 15 mei 2026.</p><p>Beheer je abonnement: "+L("https://www.spotify.com/nl/account/subscription","spotify.com -> Abonnement")+".</p><div class='signature'>Spotify AB - Stockholm, Sweden</div>"},
+{from:"School - Decaan",mail:"decaan@obsdewijzer.nl",subj:"Belangrijke info: studiekeuzeavond 20 mei",unread:true,
+body:"<p>Beste leerlingen van 4 HAVO/VWO,</p><p>Op <strong>dinsdag 20 mei</strong> organiseren we een <strong>studiekeuzeavond</strong> van 19:00-21:30 uur. Er zijn presentaties van verschillende HBO en WO opleidingen.</p><p>Aanmelden: "+L("https://www.obsdewijzer.nl/studiekeuze/avond2026","schoolwebsite")+".</p><div class='signature'>Decanaat OBS De Wijzer</div>"},
+{from:"Coolblue",mail:"order@coolblue.nl",subj:"Je bestelling #CB-9845321 is onderweg!",unread:true,
+body:"<p>Hoi Sanne,</p><p>Je bestelling <strong>#CB-9845321</strong> (Logitech G203 gaming muis) is verzonden! Verwachte leverdatum: <strong>morgen</strong> tussen 09:00 en 17:00 uur.</p><p>Track & trace: "+L("https://www.coolblue.nl/tracktrace/CB-9845321","coolblue.nl -> Track & Trace")+".</p><div class='signature'>Coolblue B.V. - Rotterdam</div>"},
+{from:"TikTok",mail:"noreply@tiktok.com",subj:"Nieuwe volgers en likes deze week!",
+body:"<p>Hoi @SanneJansen,</p><p>Je video \"Mijn ochtendroutine voor school\" heeft <strong>127 nieuwe likes</strong> en <strong>8 nieuwe volgers</strong> ontvangen! Blijf creeren!</p><p>Bekijk je analytics: "+L("https://www.tiktok.com/@SanneJansen/analytics","tiktok.com -> Analytics")+".</p>"},
+{from:"NS - Dutch Railways",mail:"info@ns.nl",subj:"Je OV-chipkaart: saldo te laag",
+body:"<p>Beste Sanne,</p><p>Je <strong>OV-chipkaart</strong> heeft een saldo van € 2,45. Dit is te laag om in te checken. Laad je kaart op via "+L("https://www.ov-chipkaart.nl/opladen","ov-chipkaart.nl -> Opladen")+".</p><div class='signature'>NS Dutch Railways</div>"},
+{from:"Mama",mail:"m.jansen@werkmail.nl",subj:"Niet vergeten: afspraak tandarts woensdag",
+body:"<p>Hé Sanne,</p><p>Niet vergeten: je hebt <strong>woensdag om 15:30 uur</strong> een afspraak bij de tandarts. Ik haal je op na school. Liefs, mama 💐</p>"},
+{from:"Steam",mail:"noreply@steampowered.com",subj:"Weekend Deal: tot 70% korting!",unread:true,
+body:"<p>Sanne,</p><p>Het <strong>Steam Weekend Deal</strong> event is nu live! Tot <strong>zondag 23:59</strong> krijg je tot 70% korting op honderden games.</p><p>Shop nu: "+L("https://store.steampowered.com/sale/weekenddeal","steampowered.com -> Weekend Deal")+".</p>"},
+{from:"Netflix",mail:"notifications@netflix.com",subj:"Nieuwe series: One Piece (Live Action) nu beschikbaar",
+body:"<p>Hoi Sanne,</p><p>De <strong>live-action versie van One Piece</strong> is nu beschikbaar op Netflix! Alle 8 afleveringen van Seizoen 1 staan klaar.</p><p>Bekijk nu: "+L("https://www.netflix.com/title/81212709","netflix.com -> One Piece")+".</p>"},
+{from:"Papa",mail:"p.jansen@werkmail.nl",subj:"Auto: tankbeurt zaterdag",
+body:"<p>Sanne,</p><p>Ik ben zaterdag de auto aan het onderhouden. Kun jij rond <strong>14:00 uur</strong> even naar de tankstation rijden om benzine te halen? Ik geef je € 20,- voor de moeite. Liefs, papa</p>"},
+{from:"Instagram",mail:"noreply@mail.instagram.com",subj:"Nour heeft je gestagged in een Story",unread:true,
+body:"<p><strong>@nour_vb</strong> heeft je gestagged in haar Story: \"Klaar voor het schoolfeest!\"</p><p>Bekijk de Story: "+L("https://www.instagram.com/stories/nour_vb","instagram.com -> Story")+".</p>"},
+{from:"Bol.com",mail:"klantenservice@bol.com",subj:"Bevestiging: Boek \"De donkere kant van AI\" besteld",
+body:"<p>Beste Sanne,</p><p>Je bestelling voor het boek <strong>\"De donkere kant van AI: Hoe algoritmes onze wereld beinvloeden\"</strong> is bevestigd. Verwachte leverdatum: 18 mei 2026.</p><p>Besteloverzicht: "+L("https://www.bol.com/bestellingen/overzicht","bol.com -> Mijn bestellingen")+".</p><div class='signature'>Bol.com B.V.</div>"},
+{from:"YouTube",mail:"noreply@youtube.com",subj:"MrBeast uploadde: \"Ik geef $1.000.000 weg!\"",unread:true,
+body:"<p><strong>MrBeast</strong> heeft zojuist een nieuwe video geupload: \"Ik geef $1.000.000 weg aan een gelukkige kijker!\"</p><p>Bekijk de video: "+L("https://www.youtube.com/watch?v=dQw4w9WgXcQ","youtube.com -> MrBeast")+".</p>"},
+{from:"School - Mentor",mail:"mentor@obsdewijzer.nl",subj:"Herinnering: profielwerkstuk deadline 1 juni",
+body:"<p>Beste Sanne,</p><p>Dit is een herinnering dat de <strong>deadline voor je profielwerkstuk</strong> op <strong>zondag 1 juni 2026</strong> is. Zorg dat alles tijdig is ingeleverd.</p><p>Inleveren: "+L("https://accounts.magister.net/inleveren/profielwerkstuk","Magister -> Inleveren")+".</p><div class='signature'>Mentor 4 HAVO B</div>"},
+{from:"Discord - Gaming Squad",mail:"notifications@discord.com",subj:"Uitnodiging: Valorant Scrim Toernooi",
+body:"<p><strong>Lars#4207</strong> heeft je uitgenodigd voor het <strong>Valorant Scrim Toernooi</strong> op zaterdag 24 mei!</p><p>Details:<br>• Start: 14:00 uur<br>• Format: 5v5<br>• Prijzen: 1e plaats: € 50,- cadeaubon</p><p>Aanmelden: "+L("https://discord.gg/gamingsquad","discord.gg -> Toernooi")+".</p>"},
+{from:"ING Bank",mail:"alerts@ing.nl",subj:"Transactie: € 45,00 afgeschreven bij MediaMarkt",unread:true,
+body:"<p>Beste Sanne,</p><p>Er is zojuist een betaling van <strong>€ 45,00</strong> afgeschreven bij <strong>MediaMarkt</strong> met je ING debit card (**** **** **** 1234).</p><p>Datum: 15 mei 2026, 14:32<br>Locatie: MediaMarkt Rotterdam<br>Rekening: NL91 INGB 0001 2345 67</p><p>Herken je deze transactie niet? Meld het dan direct via "+L("https://mijn.ing.nl/veiligheid/melden","mijn.ing.nl -> Valse transactie melden")+".</p><div class='signature'>ING Bank N.V.</div>"},
+{from:"Netflix",mail:"notifications@netflix.com",subj:"Je wachtwoord is gewijzigd",
+body:"<p>Hoi Sanne,</p><p>Je <strong>Netflix-wachtwoord</strong> is zojuist gewijzigd op 15 mei 2026 om 15:45 uur.</p><p>Als jij dit niet hebt gedaan, <strong>klik dan hier</strong> om je account te beveiligen: "+L("https://www.netflix.com/nl/YourAccount","netflix.com -> Accountbeveiliging")+".</p><div class='signature'>Netflix, Inc.</div>"},
+{from:"Papa",mail:"p.jansen@werkmail.nl",subj:"Vraagje: kun je zaterdag werken in de winkel?",
+body:"<p>Hé Sanne,</p><p>De winkel waar ik parttime werk zoekt iemand voor <strong>zaterdag 24 mei</strong>. € 12,- per uur, van 10:00 tot 16:00. Interesse? Laat het me weten! Liefs, papa</p>"},
+{from:"School - Bibliotheek",mail:"bibliotheek@obsdewijzer.nl",subj:"Herinnering: geleende boeken terugbrengen",
+body:"<p>Beste Sanne,</p><p>Dit is een herinnering dat je de volgende boeken <strong>voor 20 mei 2026</strong> moet terugbrengen:</p><ul><li>De ontdekking van de hemel - Harry Mulisch</li><li>De elementen van stijl - William Strunk Jr.</li><li>Python voor beginners - Mark Lutz</li></ul><p>Boete: € 0,50 per dag per boek.</p><div class='signature'>Schoolbibliotheek OBS De Wijzer</div>"},
+{from:"TikTok",mail:"creators@tiktok.com",subj:"Je account is geverifieerd! ✅",
+body:"<p>Gefeliciteerd @SanneJansen!</p><p>Je TikTok-account is nu <strong>geverifieerd</strong> met het blauwe vinkje! Dit betekent dat je toegang hebt tot exclusieve functies.</p><p>Bekijk je verifieerde status: "+L("https://www.tiktok.com/@SanneJansen/verified","tiktok.com -> Verified")+".</p>"},
+{from:"Steam",mail:"noreply@steampowered.com",subj:"Je vriend Sem heeft je een cadeau gestuurd!",unread:true,
+body:"<p>Sanne,</p><p><strong>Sem</strong> heeft je een cadeau gestuurd op Steam! Open het cadeau om te zien wat het is.</p><p>Cadeau openen: "+L("https://store.steampowered.com/account/gifts","steampowered.com -> Mijn cadeaus")+".</p><div class='signature'>Steam Support</div>"},
+{from:"Mama",mail:"m.jansen@werkmail.nl",subj:"Recept: lasagne voor vanavond",
+body:"<p>Hé Sanne,</p><p>Ik maak vanavond lasagne. Kun jij de <strong>groenten snijden</strong> als je thuis komt? Ik heb paprika, courgette en ui nodig. Dankje! Liefs, mama 💐</p>"},
+{from:"Discord",mail:"notifications@discord.com",subj:"Nieuw bericht in: School Groep 4HAVO-B",
+body:"<p><strong>Juf De Wit</strong> stuurde een bericht in <strong>#huiswerk</strong>: \"Herinnering: het verslag over de Industriele Revolutie moet morgen ingeleverd worden!\"</p><p>Reageren: "+L("https://discord.com/channels/@me","Discord -> DMs")+".</p>"},
+{from:"Coolblue",mail:"order@coolblue.nl",subj:"Retourbevestiging: Logitech toetsenbord",
+body:"<p>Hoi Sanne,</p><p>Je retourzending voor het <strong>Logitech K120 toetsenbord</strong> (bestelling #CB-9812345) is ontvangen. Het bedrag van <strong>€ 29,99</strong> wordt binnen 3-5 werkdagen teruggestort.</p><p>Retourstatus: "+L("https://www.coolblue.nl/retour/CB-9812345","coolblue.nl -> Retourstatus")+".</p><div class='signature'>Coolblue B.V.</div>"},
+{from:"Instagram",mail:"noreply@mail.instagram.com",subj:"Nieuwe follower: @gaming_lars",unread:true,
+body:"<p><strong>@gaming_lars</strong> volgt je nu op Instagram!</p><p>Bekijk profiel: "+L("https://www.instagram.com/gaming_lars","instagram.com -> @gaming_lars")+".</p>"},
+{from:"NS - Dutch Railways",mail:"info@ns.nl",subj:"Je reisinformatie: Amsterdam - Rotterdam",
+body:"<p>Beste Sanne,</p><p>Je reisinformatie voor <strong>zaterdag 17 mei</strong>:</p><div class='official-box'><strong>Vertrek: Amsterdam Centraal 10:15<br>Aankomst: Rotterdam Centraal 11:02<br>Trein: IC Direct 1245<br>Duur: 47 minuten<br>Prijs: € 12,50 (2e klas)</strong></div><p>Bekijk live vertragingen: "+L("https://www.ns.nl/reisinformatie","ns.nl -> Live info")+".</p><div class='signature'>NS Dutch Railways</div>"},
+{from:"YouTube",mail:"noreply@youtube.com",subj:"Aanbevolen: Tech Quickie - Hoe werkt een VPN?",
+body:"<p><strong>Tech Quickie</strong> heeft een nieuwe video: \"Hoe werkt een VPN en waarom zou je er een gebruiken?\"</p><p>Bekijk de video: "+L("https://www.youtube.com/watch?v=example123","youtube.com -> Tech Quickie")+".</p>"},
+{from:"School - Administratie",mail:"administratie@obsdewijzer.nl",subj:"Betaling schoolkosten 2026-2027",
+body:"<p>Geachte ouders/verzorgers,</p><p>De <strong>schoolkosten voor het schooljaar 2026-2027</strong> bedragen <strong>€ 225,-</strong>. Dit bedrag kan in een keer of in 3 termijnen worden betaald.</p><p>Betalingsinformatie: "+L("https://www.obsdewijzer.nl/betalingen/2026-2027","schoolwebsite -> Betalingen")+".</p><div class='signature'>Administratie OBS De Wijzer</div>"},
+{from:"Spotify",mail:"receipt@spotify.com",subj:"Nieuwe playlist: \"Study Vibes\" door @nour_vb",unread:true,
+body:"<p>Hoi Sanne,</p><p><strong>@nour_vb</strong> heeft een nieuwe playlist gedeeld: <strong>\"Study Vibes\"</strong> met 42 nummers voor betere concentratie tijdens het leren.</p><p>Luister nu: "+L("https://open.spotify.com/playlist/37i9dQZF1DX4SBhX3QwqJp","spotify.com -> Study Vibes")+".</p>"},
+{from:"Papa",mail:"p.jansen@werkmail.nl",subj:"Belangrijk: auto APK keuring",
+body:"<p>Sanne,</p><p>De auto moet <strong>vandaag nog</strong> naar de garage voor de APK keuring. Ik ben tot 17:00 uur op werk. Kun jij de auto naar <strong>Garage De Vries</strong> brengen? De sleutels liggen in de keukenlade.</p><p>Garage: "+L("https://www.garagedevries.nl/afspraak","garagedevries.nl")+".</p><p>Liefs, papa</p>"},
+{from:"TikTok - Creator Fund",mail:"creators@tiktok.com",subj:"Je verdient nu geld met je content! €",
+body:"<p>Gefeliciteerd @SanneJansen!</p><p>Je hebt je aangesloten bij het <strong>TikTok Creator Fund</strong>! Je eerste uitbetaling van <strong>€ 12,45</strong> is onderweg en wordt binnen 3-5 werkdagen gestort.</p><p>Bekijk je verdiensten: "+L("https://www.tiktok.com/creators/fund","tiktok.com -> Creator Fund")+".</p>"},
+{from:"Mama",mail:"m.jansen@werkmail.nl",subj:"Noodgeval: sleutel vergeten",
+body:"<p>SANNE! 🚨</p><p>Ik heb mijn sleutels <strong>binnen laten liggen</strong> en de deur zit op slot. Jij hebt toch een sleutel? Ik sta voor de deur. HELP! 😢</p><p>Mama</p>"},
+{from:"Discord - Memes Channel",mail:"notifications@discord.com",subj:"Nieuwe meme: \"When the teacher says...\"",
+body:"<p><strong>@Memelord69</strong> heeft een nieuwe meme gepost in <strong>#dank-memes</strong>: \"When the teacher says open your books to page 42 but you forgot your book at home\" 😂</p><p>Bekijk de meme: "+L("https://discord.com/channels/@me","Discord -> #dank-memes")+".</p>"}
+{from:"School - Rooster",mail:"rooster@obsdewijzer.nl",subj:"Roosterwijziging: gym les verplaatst",
+body:"<p>Beste Sanne,</p><p>De gymles van <strong>donderdag 3e uur</strong> is verplaatst naar <strong>vrijdag 2e uur</strong> in de kleine gymzaal.</p><p>Bekijk het aangepaste rooster: "+L("https://accounts.magister.net/rooster/wijzigingen","Magister -> Roosterwijzigingen")+".</p>"},
+{from:"Twitter",mail:"notifications@twitter.com",subj:"Je bent getagd in een tweet door @LarsGaming",
+body:"<p><strong>@LarsGaming</strong> heeft je getagd in een tweet: \"Wie doet er mee met de LAN party volgende week? @SanneJansen \"</p><p>Bekijk de tweet: "+L("https://twitter.com/LarsGaming/status/123456789","twitter.com -> Tweet")+".</p>"},
+];
+
+/* ===== DE 3 PHISHINGMAILS - oplopende moeilijkheid ===== */
+
+/* NIVEAU 1 - MAKKELIJK: spelfouten, http://, extreme haast, nepdomein */
+const PHISH_EASY={
+from:"Netfliix Support",mail:"support@netfliix-account-verifieer.com",subj:"DRINGEND: Uw account wordt geblokkeerd!",unread:true,
+body:'<p>Beste klant,</p><p>Wij hebben <strong>verdachte aktiviteit</strong> gedetecteerd op uw Netfliix account. Om uw gegevens te beschermen moet u uw account <strong>omiddelijk</strong> verifiëren.</p><p class="phish-warn">\u26a0\ufe0f WAARSCHUWING: Doet u dit niet binnen <strong>1 uur</strong>, dan wordt uw account permanent geblokkeerd!</p><p>Verifieer nu via: '+L("http://netfliix-account-verifieer.com/login?user=sanne123","netfliix-account-verifieer.com")+'</p><button class="phish-btn" data-url="http://netfliix-account-verifieer.com/login?user=sanne123">Verifieer account nu \u00bb</button><p>Met vriendelijke groet,<br>Netfliix Klantenservice<br><small>(deze mail is gevarifieerd door onze server)</small></p>'};
+
+/* NIVEAU 2 - MOEILIJK: perfecte taal, https, nepdomein dat lijkt op echt */
+const PHISH_MEDIUM={
+from:"Rabobank Beveiliging",mail:"beveiliging@rabobank-secure.nl",subj:"Beveiligingsalert: nieuwe inlogpoging",unread:true,
+body:'<p>Beste Sanne,</p><p>Er is zojuist een inlogpoging gedetecteerd op je Rabobank account vanaf een onbekend apparaat (IP: 185.143.221.45, locatie: Moskou, Rusland).</p><p class="phish-warn">\ud83d\udd12 Als jij dit niet was, moet je je account <strong>direct</strong> beveiligen om fraude te voorkomen.</p><p>Beveilig je account via: '+L("https://rabobank-secure.nl/veiligheid/verifieer?account=sanne.jansen","www.rabobank.nl/veiligheid")+'</p><button class="phish-btn" data-url="https://rabobank-secure.nl/veiligheid/verifieer?account=sanne.jansen">Account beveiligen \u00bb</button><p>Log in met je gebruikersnaam en wachtwoord om de inlogpoging te bevestigen.</p><p>Met vriendelijke groet,<br>Rabobank Beveiligingsteam</p>'};
+
+/* NIVEAU 3 - ZEER MOEILIJK: perfecte taal, HTTPS, echt ogend domein, persoonlijke info */
+const PHISH_HARD={
+from:"Steam Support Team",mail:"support@steam-community.net",subj:"Bevestiging: Je account is geselecteerd voor bèta-testen!",unread:true,
+body:'<p>Hallo Sanne,</p><p>Gefeliciteerd! Je Steam-account (<strong>SanneJansen</strong>) is geselecteerd om deel te nemen aan ons <strong>exclusieve bèta-testprogramma</strong> voor de nieuwe game "Cyberpunk 2077: Phantom Liberty DLC".</p><p>Als bèta-tester ontvang je:</p><ul><li>Gratis toegang tot de DLC (waarde: \u20ac 29,99)</li><li>Exclusieve in-game items</li><li>Je naam in de credits</li></ul><p>Om deel te nemen moet je je account verifiëren via onderstaande link. <strong>Alleen de eerste 500 aanmeldingen worden geaccepteerd!</strong></p><p>'+L("https://steam-community.net/beta/signup?user=SanneJansen","store.steampowered.com/beta")+'</p><button class="phish-btn" data-url="https://steam-community.net/beta/signup?user=SanneJansen">Doe mee aan bèta-test \u00bb</button><p>Met vriendelijke groet,<br>Steam Support Team<br>Valves Corporation</p>'};
+
+/* ===== Inplanten: makkelijk op #12, middel op #25, moeilijk op #35 ===== */
+/* ===== VERZONDEN ===== */
+const SENT=[
+{from:"Aan: Juf Marije",mail:"m.dewit@obsdewijzer.nl",subj:"re: ziek gister (ECHT deze keer)",
+body:"<p>Beste juf Marije, ik was écht ziek, dat zweer ik op mijn hamster Biscuit. Mijn moeder kan dit beamen. Mag ik de rekenblaadjes meenemen? Gezond groetend, Sanne</p>"},
+{from:"Aan: Noor",mail:"noor.van.dijk@gmail.com",subj:"SOS armband voor morgen + dringend knutselnood",
+body:"<p>NOOR. Noodgeval niveau 3. 1. Blauwe kraaltjes kwijt. 2. Breng morgen je glitters mee. Antwoord SNEL. Sanne 🚨</p>"},
+{from:"Aan: Roblox Support",mail:"support@roblox.com",subj:"HELP ik heb per ongeluk mijn pet weggegeven",
+body:"<p>Beste Roblox Support, gisteren deed ik een trade en nu is mijn PET WEG (Meneer Snuggels, van mijn verjaardag). Kunt u de trade terugdraaien? Hoogachtende, Sanne 💔</p>"},
+{from:"Aan: Directie OBS De Wijzer",mail:"directie@obsdewijzer.nl",subj:"Formele klacht over de soep van dinsdag",
+body:"<p>Geachte directie, hierbij dien ik een officiële klacht in over de soep van dinsdag. Niet over de smaak (die was prima) maar over de TEMPERATUUR. Hoogachtende, Sanne Jansen en medeondertekenaars</p>"}
+];
+
+/* ===== CONCEPTEN ===== */
+const DRAFTS=[
+{from:"Concept (tegen mezelf)",mail:"bewaren: niet verzenden",subj:"Verjaardagslijstje (NIET OPENEN JUUL, IK ZIE JE KIJKEN)",
+body:"<p>- glow-in-the-dark sterren ⭐<br>- PAARDRIJDEN (cursus) (heel belangrijk)<br>- glitterlijm, vooral groen<br>- sokken?? nee. nooit sokken.</p>"},
+{from:"Concept aan: Mama (op kantoor)",mail:"m.jansen@kantoormail.nl",subj:"klein vraagje over zaterdag (beloof dat je rustig blijft)",
+body:"<p>Hoi mama, allereerst: met mij is alles goed en niemand is gewond. Ten tweede: de watervaste stift blijkt NIET watervast op de bank van oma. [concept bewaard]</p>"},
+{from:"Concept aan: Nour (vaatwacht-genoot)",mail:"nour.scouting@gmail.com",subj:"PLAN: hoe overleven we de vaatwacht op kamp",
+body:"<p>Nour — STRIKT GEHEIM vaatwachtplan: Stap 1: ik spoel, jij sorteert. Stap 2: zingen tijdens het werk. Stap 3 schrappen we.</p>"}
+];
+
+/* ===== SPAM — overduidelijke rommel ===== */
+const SPAM=[
+{from:"🎰 LUCKY WINNER CASINO",mail:"winner-64721@loterij-fastwin-info.info",subj:"GEFELICITEERD!!! U bent gekozen als LUCKY WINNER!!!!",
+body:"<p>U heeft GEWELDIGE PRIJS gewonnen in onze loterij waarvan u niet wist dat u meedeed!!! "+L("http://loterij-fastwin-info.info/claim/PRIJS-NOW.html","★ CLAIM UW PRIJS NU ★")+"</p><p class='nice-box'>💡 Je kunt geen prijs winnen in een loterij waar je nooit aan hebt meegedaan!</p>"},
+{from:"👑 PRINS VAN FARAWAYLAND",mail:"prins.tarek1987@definitief-niet-opgelicht.xyz",subj:"Ik heb 10 miljoen voor jou maar heb eerst klein bedrag nodig",
+body:"<p>Ik ben een prins uit een ver land en jij bent de ENIGE die ik vertrouw. Ik wil je 10 miljoen euro geven, maar ik heb eerst €50 nodig voor de bankpapiertjes. Stuur ook je wachtwoord. De prins 👑</p><p class='nice-box'>💡 Een wachtwoord stuur je NOOIT naar wie dan ook!</p>"},
+{from:"🃏 STAFFELENDE SUPERMARK-AANBIEDING",mail:"aanbieding@super-kortingsbonnen-vandaag.download",subj:"AL 53 KEER DOORGESTUURD = 53 JAAR GELUK (breek de ketting niet!!)",
+body:"<p>Stuur hem naar 10 vrienden en je krijgt een kortingsbon van €50 van de supermarkt. "+L("http://super-kortingsbonnen-vandaag.download/bon-50eu","KOOPON MET KORTING")+"</p><p class='nice-box'>💡 Kettingsmails met beloftes zijn altijd onzin — delete!</p>"},
+{from:"🐈 MENEER FLUFFY'S ZAKELIJKE VOORSTEL",mail:"m.fluffy@kat-zakelijk-enterprise.party",subj:"Miauw (vertaald: zakelijk partnerschip aangeboden)",
+body:"<p>Meneer Fluffy biedt u een premium partnerschap aan in zijn lucratieve kattenvoer-imperium. Investering: €12. "+L("http://kat-zakelijk-enterprise.party/partner","WORD PARTNER VAN MENEER FLUFFY")+"</p><p class='nice-box'>💡 De eerlijkste mail in deze map — de afzender is in ieder geval een kat. 🐱</p>"}
+];
+
+/* ===== Inplanten: makkelijk op #8, middel op #14, moeilijk op #19 ===== */
+const PHISH_LIST=[PHISH_EASY,PHISH_MEDIUM,PHISH_HARD];
+const PHISH_SLOTS=[11,24,34];
+const inbox=[];let ni=0;
+for(let si=0;si<PHISH_SLOTS.length;si++){
+  while(inbox.length<PHISH_SLOTS[si]&&ni<NOISE.length){
+    inbox.push(Object.assign({},NOISE[ni],{phish:false,time:pad(7+(ni%13))+":"+pad((ni*17)%60)}));ni++;
+  }
+  inbox.push(Object.assign({},PHISH_LIST[si],{phish:true,time:pad(2+si)+":14"}));
+}
+while(ni<NOISE.length){
+  inbox.push(Object.assign({},NOISE[ni],{phish:false,time:pad(7+(ni%13))+":"+pad((ni*17)%60)}));ni++;
+}
+
+const FOLDERS={inbox:inbox,sent:SENT,drafts:DRAFTS,spam:SPAM};
+["inbox","sent","drafts","spam"].forEach(function(f){document.getElementById("cnt-"+f).textContent=FOLDERS[f].length});
+
+/* ===== STATE ===== */
+let reportedCount=0;
+let selectedIdx=-1,currentFolder="inbox",searchTerm="";
+const listPane=document.getElementById("listPane"),readPane=document.getElementById("readPane"),statusbar=document.getElementById("statusbar");
+const TOTAL_PHISH=inbox.filter(m=>m.phish).length;
+
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+
+function updateProgress(){
+document.getElementById("progressDisplay").textContent="Phishingmails gemeld: "+reportedCount+" / "+TOTAL_PHISH;
+if(reportedCount>=TOTAL_PHISH){
+  showFlag();
+  setTimeout(function(){document.getElementById("winModal").classList.add("show");launchConfetti()},600);
+}
+}
+
+let savedFolderLastOpened="inbox";
+function openMail(i){
+selectedIdx=i;savedFolderLastOpened=currentFolder;
+const m=FOLDERS[currentFolder][i];
+if(m.unread&&!m.reported)m.unread=false;
+const isPhish=currentFolder==="inbox"&&m.phish;
+readPane.innerHTML='<button class="back-btn" onclick="closeRead()">← Terug</button>'
++'<div class="mail-header"><h2>'+m.subj+'</h2></div>'
++'<div class="mail-meta"><div class="avatar'+(isPhish?" phish":"")+'">'+esc(m.from.charAt(0).toUpperCase())+'</div>'
++'<div><div class="meta-from">'+esc(m.from)+'</div><div class="meta-mail">'+esc(m.mail)+'</div></div></div>'
++'<div class="mail-body">'+m.body+'</div>'
++'<div class="mail-actions"></div>'
++'<div class="mail-footer-note">E-mail #'+(i+1)+(currentFolder==="inbox"?" · Postvak IN":" · "+currentFolder)+(m.time?" · "+m.time:"")+'</div>';
+readPane.classList.add("open");
+
+const actions=readPane.querySelector(".mail-actions");
+if(currentFolder==="inbox"){
+if(m.reported){
+actions.innerHTML='<p style="color:#059669;font-weight:700;">🚩 Je hebt deze mail gemeld als phishing. Goed gedaan!</p>';
+}else{
+const btn=document.createElement("button");
+btn.className="report-phish-btn";
+btn.textContent="🚩 Phishing Melden";
+btn.onclick=function(){reportPhish(i)};
+actions.appendChild(btn);
+}
+}
+
+readPane.querySelectorAll(".mail-link,.phish-btn,.cta-btn").forEach(function(el){
+const url=el.dataset.url;if(!url)return;
+const unsafe=url.indexOf("http://")===0?"   ⚠️ Onveilig adres!":"";
+el.addEventListener("mouseenter",function(){statusbar.textContent="🔗 "+url+unsafe;statusbar.classList.add("show")});
+el.addEventListener("mouseleave",function(){statusbar.classList.remove("show")});
+el.addEventListener("touchstart",function(){statusbar.textContent="🔗 "+url+unsafe;statusbar.classList.add("show");setTimeout(function(){statusbar.classList.remove("show")},3500)},{passive:true});
+el.addEventListener("click",function(ev){
+ev.preventDefault();
+if(el.classList.contains("phish-btn") || isPhish){ showPhishWarning(url); return; }
+statusbar.textContent="🔗 "+url+"   (Oefening — link gaat nergens naartoe)";
+statusbar.classList.add("show");
+setTimeout(function(){statusbar.classList.remove("show")},3000);
+});
+});
+renderList();
+}
+
+function reportPhish(i){
+const m=inbox[i];
+m.reported=true;m.unread=false;
+if(m.phish){
+reportedCount++;
+openMail(i);
+updateProgress();
+}else{
+const actions=readPane.querySelector(".mail-actions");
+actions.innerHTML='<p style="color:#b06000;font-weight:700;">🤔 Hmm, deze mail blijkt NIET phishing te zijn. Kijk nog eens goed: klopt de afzender, de link en de toon? Blijf zoeken!</p>';
+setTimeout(function(){if(currentFolder==="inbox"&&selectedIdx===i)openMail(i)},3500);
+m.reported=false;m.unread=false;
+}
+renderList();
+}
+
+function renderList(){
+listPane.innerHTML="";
+let shown=0;
+FOLDERS[currentFolder].forEach(function(m,i){
+if(searchTerm&&(m.from+" "+m.mail+" "+m.subj).toLowerCase().indexOf(searchTerm)===-1)return;
+shown++;
+const row=document.createElement("div");
+let cls="email-row";
+if(m.unread&&currentFolder==="inbox"&&!m.reported)cls+=" unread";
+if(currentFolder==="inbox"&&m.reported)cls+=" reported";
+if(i===selectedIdx&&currentFolder===savedFolderLastOpened)cls+=" selected";
+row.className=cls;
+row.innerHTML='<span class="num">#'+(i+1)+'</span><div class="row-main"><div class="row-top"><span class="from">'+esc(m.from)+'</span><span class="time">'+(m.time||"")+'</span></div><div class="subj">'+esc(m.subj)+'</div></div>';row.addEventListener("click",function(){openMail(i)});
+listPane.appendChild(row);
+});
+if(!shown)listPane.innerHTML='<div class="empty-folder">Geen e-mails hier. 📭<br>'+(currentFolder==="inbox"?"De missie speelt zich af in je Postvak IN!":"Ga terug naar je Postvak IN!")+'</div>';
+}
+
+function closeRead(){readPane.classList.remove("open");selectedIdx=-1;renderList()}
+
+document.querySelectorAll(".navbtn").forEach(function(b){
+b.addEventListener("click",function(){
+document.querySelectorAll(".navbtn").forEach(function(x){x.classList.remove("active")});
+b.classList.add("active");currentFolder=b.dataset.folder;selectedIdx=-1;closeRead();renderList();
+})});
+document.getElementById("searchBox").addEventListener("input",function(e){searchTerm=e.target.value.trim().toLowerCase();renderList()});
+
+/* ===== CONFETTI ===== */
+function launchConfetti(){
+const canvas=document.getElementById("confetti"),ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+const colors=["#16857e","#e11d48","#059669","#fbbf24","#e879f9","#60a5fa"],pieces=[];
+for(let i=0;i<220;i++)pieces.push({x:Math.random()*canvas.width,y:-20-Math.random()*canvas.height,w:6+Math.random()*7,h:8+Math.random()*8,c:colors[Math.floor(Math.random()*colors.length)],vy:2+Math.random()*3.5,vx:-1.5+Math.random()*3,rot:Math.random()*360,vr:-6+Math.random()*12});
+let frames=0;(function anim(){ctx.clearRect(0,0,canvas.width,canvas.height);
+pieces.forEach(function(p){p.y+=p.vy;p.x+=p.vx;p.rot+=p.vr;
+if(p.y>canvas.height+20){p.y=-20;p.x=Math.random()*canvas.width}
+ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);ctx.fillStyle=p.c;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore()});
+frames++;if(frames<480)requestAnimationFrame(anim);else ctx.clearRect(0,0,canvas.width,canvas.height)})();
+}
+
+renderList();
+updateProgress();
+</script>
+</body>
+</html>
