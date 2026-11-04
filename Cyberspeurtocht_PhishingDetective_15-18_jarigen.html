@@ -1227,6 +1227,8 @@ from:"Steam Support Team",mail:"support@steam-community.net",subj:"Bevestiging: 
 body:'<p>Hallo Sanne,</p><p>Gefeliciteerd! Je Steam-account (<strong>SanneJansen</strong>) is geselecteerd om deel te nemen aan ons <strong>exclusieve bèta-testprogramma</strong> voor de nieuwe game "Cyberpunk 2077: Phantom Liberty DLC".</p><p>Als bèta-tester ontvang je:</p><ul><li>Gratis toegang tot de DLC (waarde: \u20ac 29,99)</li><li>Exclusieve in-game items</li><li>Je naam in de credits</li></ul><p>Om deel te nemen moet je je account verifiëren via onderstaande link. <strong>Alleen de eerste 500 aanmeldingen worden geaccepteerd!</strong></p><p>'+L("https://steam-community.net/beta/signup?user=SanneJansen","store.steampowered.com/beta")+'</p><button class="phish-btn" data-url="https://steam-community.net/beta/signup?user=SanneJansen">Doe mee aan bèta-test \u00bb</button><p>Met vriendelijke groet,<br>Steam Support Team<br>Valves Corporation</p>'};
 
 /* ===== Inplanten: makkelijk op #12, middel op #25, moeilijk op #35 ===== */
+const PHISH_LIST=[PHISH_EASY,PHISH_MEDIUM,PHISH_HARD];
+const PHISH_SLOTS=[11,24,34];
 /* ===== VERZONDEN ===== */
 const SENT=[
 {from:"Aan: Juf Marije",mail:"m.dewit@obsdewijzer.nl",subj:"re: ziek gister (ECHT deze keer)",
@@ -1262,8 +1264,6 @@ body:"<p>Meneer Fluffy biedt u een premium partnerschap aan in zijn lucratieve k
 ];
 
 /* ===== Inplanten: makkelijk op #8, middel op #14, moeilijk op #19 ===== */
-const PHISH_LIST=[PHISH_EASY,PHISH_MEDIUM,PHISH_HARD];
-const PHISH_SLOTS=[11,24,34];
 const inbox=[];let ni=0;
 for(let si=0;si<PHISH_SLOTS.length;si++){
   while(inbox.length<PHISH_SLOTS[si]&&ni<NOISE.length){
