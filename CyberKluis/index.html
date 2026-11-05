@@ -346,6 +346,25 @@ footer strong{color:var(--primary-teal);font-weight:700}
 }
 #levelToast.show{transform:translate(-50%,0)}
 #levelToast .feit{display:block;font-weight:400;font-size:13px;color:#a7f3d0;margin-top:4px}
+#dorianMsg{
+  position:fixed;left:16px;bottom:24px;max-width:min(320px,80vw);z-index:800;
+  background:var(--bg-white);border:2px solid var(--primary-teal);border-radius:var(--radius-lg);
+  border-bottom-left-radius:4px;padding:12px 16px;font-size:14px;line-height:1.5;color:var(--text-primary);
+  box-shadow:var(--shadow-lg);transform:translateX(-130%);transition:transform 0.3s ease;
+}
+#dorianMsg.show{transform:translateX(0)}
+#dorianMsg .who{display:block;font-size:11px;font-weight:800;letter-spacing:1px;color:var(--primary-teal);text-transform:uppercase;margin-bottom:4px}
+.hacker.clickable{cursor:pointer;user-select:none}
+.hacker.clickable:hover{transform:scale(1.15)}
+.hacker.hit{animation:hit 0.2s ease}
+@keyframes hit{50%{transform:scale(0.8) rotate(-8deg)}}
+.pas .badge{flex-direction:column;height:auto;width:auto;min-width:46px;padding:4px 6px;border-radius:var(--radius-md)}
+.pas .badge .st{font-size:9px;letter-spacing:1px;color:var(--warning-orange);margin-top:2px}
+.portal-lock{
+  max-width:380px;margin:0 auto;background:var(--bg-white);border:2px solid var(--primary-teal);
+  border-radius:var(--radius-xl);padding:28px 22px;text-align:center;box-shadow:var(--shadow-md);
+}
+.portal-lock .big-lock{font-size:52px;display:block;margin-bottom:10px;animation:bob 2s ease-in-out infinite}
 </style>
 </head>
 <body>
@@ -487,6 +506,7 @@ footer strong{color:var(--primary-teal);font-weight:700}
         <div class="crack-box bad">
           <span class="hacker" id="hack1">💻</span>
           <h3>Los wachtwoord (8 tekens)</h3>
+          <p style="font-size:13px;color:var(--text-secondary);margin-bottom:6px">🖱️ Minigame: klik zo vaak mogelijk op de 💻 om de kraker te vertragen!</p>
           <div class="pw-mini" id="crackPw1"></div>
           <div class="bar"><div class="bar-fill" id="bar1"></div></div>
           <div class="crack-result" id="res1"></div>
@@ -577,9 +597,26 @@ footer strong{color:var(--primary-teal);font-weight:700}
           <div class="opts" id="leakOpts"></div>
           <p class="feedback" id="fbLeak"></p>
           <div class="explain" id="leakExplain">✅ Precies! Vervang alléén het wachtwoord van GezichtBoek in de kluis. GameBox en SchoolPortaal zijn veilig, want elk account heeft een uniek wachtwoord.</div>
-          <div class="btn-row" style="justify-content:flex-start"><button class="btn" id="btnFinish" type="button" disabled>Open het portaal van Dorian →</button></div>
+          <div class="btn-row" style="justify-content:flex-start"><button class="btn" id="btnFinish" type="button" disabled>Naar het geheime portaal →</button></div>
         </div>
         <p class="lead" style="margin-top:18px;font-size:14px;text-align:center">Zo werken echte passwordmanagers (zoals Proton Pass, Bitwarden en 1Password) ook: één hoofdwachtwoordzin, en alle accounts veilig. 🔒</p>
+      </div>
+
+      <!-- stap E: portaal ontgrendelen met hoofdwachtwoordzin -->
+      <div class="step" id="vaultE">
+        <div class="portal-lock">
+          <span class="big-lock">🚪</span>
+          <h2 style="font-size:19px">Het geheime portaal van Dorian</h2>
+          <p class="lead" style="font-size:14px;margin:8px 0 16px">Één slot nog: typ je <strong>hoofdwachtwoordzin</strong> om het portaal te ontgrendelen. Dit is de enige zin die je zelf moet onthouden!</p>
+          <form id="formPortal" autocomplete="off">
+            <div class="field" style="margin:0 0 8px">
+              <label for="inPortal">Hoofdwachtwoordzin</label>
+              <input type="text" id="inPortal" placeholder="Typ je hoofdwachtwoordzin…" autocomplete="off" autocapitalize="off" spellcheck="false">
+            </div>
+            <p class="feedback" id="fbPortal"></p>
+            <div class="btn-row" style="justify-content:center"><button class="btn" id="btnUnlock" type="submit">🔓 Ontgrendel het portaal</button></div>
+          </form>
+        </div>
       </div>
     </div>
   </section>
@@ -608,6 +645,7 @@ footer strong{color:var(--primary-teal);font-weight:700}
 </div>
 
 <div id="levelToast"></div>
+<div id="dorianMsg"><span class="who">🕶️ Dorian</span><span id="dorianText"></span></div>
 
 <canvas id="confetti"></canvas>
 <script>
@@ -670,7 +708,10 @@ const state = {
   phrase: genPhrase(),
   peeks1:0, fails1:0, peeks2:0, fails2:0,
   t1Start:null, t1End:null, t2Start:null, t2End:null,
-  vaultPws:{}
+  vaultPws:{},
+  badges:[], stars:[0,0,0,0,0,0,0],
+  quizFails:0, hackClicks:0, leakFails:0, portalFails:0,
+  missionStart:null
 };
 
 /* ===== NAVIGATIE + progress-dots ===== */
@@ -681,6 +722,23 @@ for(let i=1;i<=7;i++){
   d.className = "pdot"; d.id = "pdot"+i;
   progress.appendChild(d);
 }
+const DORIAN = {
+  s2:"Onthoud het goed… ik kijk mee! 🕶️",
+  s3:"Klaar? Nu iets wat véél makkelijker te onthouden is…",
+  s4:"Denk aan het plaatje in je hoofd! 🖼️",
+  sCompare:"Kijk eens aan — wat valt je op? 👀",
+  s5:"Tijd om te zien hoe sterk ze écht zijn… 💻",
+  s6:"Even checken of het je écht zit. Quiz! 🧠",
+  s7:"De CyberKluis staat klaar. Jij bent de sleutel. 🔐"
+};
+let dorianTimer = null;
+function showDorian(text){
+  const m = document.getElementById("dorianMsg");
+  document.getElementById("dorianText").textContent = text;
+  m.classList.add("show");
+  clearTimeout(dorianTimer);
+  dorianTimer = setTimeout(function(){ m.classList.remove("show"); }, 4200);
+}
 function go(id){
   screens.forEach(s => document.getElementById(s).classList.remove("active"));
   document.getElementById(id).classList.add("active");
@@ -690,6 +748,7 @@ function go(id){
     d.classList.toggle("done", i < lvl || (id === "sCompare" && i === 4));
     d.classList.toggle("current", i === lvl && id !== "sCompare" && lvl > 0);
   }
+  if(DORIAN[id]) showDorian(DORIAN[id]);
   window.scrollTo({top:0});
 }
 
@@ -704,23 +763,29 @@ const FEITJES = [
   "Uniek per account: één lek raakt maar één van je accounts.",
   "Echte passwordmanagers werken precies zoals de CyberKluis!"
 ];
-state.badges = [];
-state.missionStart = null;
-function renderPas(el){
+function renderPas(el, withStars){
   el.innerHTML = "";
   BADGES.forEach(function(b,i){
     const s = document.createElement("span");
     s.className = "badge" + (state.badges[i] ? " earned" : "");
-    s.textContent = state.badges[i] ? b : "❔";
     s.title = "Level " + (i+1);
+    const e = document.createElement("span"); e.textContent = state.badges[i] ? b : "❔";
+    s.appendChild(e);
+    if(withStars){
+      const st = document.createElement("span");
+      st.className = "st";
+      st.textContent = state.stars[i] ? "⭐".repeat(state.stars[i]) : "";
+      s.appendChild(st);
+    }
     el.appendChild(s);
   });
 }
-renderPas(document.getElementById("pasBadges"));
+function setStars(n, s){ state.stars[n-1] = s; }
+renderPas(document.getElementById("pasBadges"), false);
 let toastTimer = null;
 function levelDone(n){
   state.badges[n-1] = true;
-  renderPas(document.getElementById("pasBadges"));
+  renderPas(document.getElementById("pasBadges"), false);
   const t = document.getElementById("levelToast");
   t.innerHTML = "🎉 Level " + n + " gehaald!" + '<span class="feit">💡 ' + FEITJES[n-1] + "</span>";
   t.classList.add("show");
@@ -825,6 +890,10 @@ function showCompare(){
   const stars = (totalPeeks === 0 && totalFails === 0) ? 3 : (totalPeeks <= 2 && totalFails <= 2) ? 2 : 1;
   document.getElementById("stars").innerHTML =
     "⭐".repeat(stars) + '<span class="dim">' + "⭐".repeat(3-stars) + "</span>";
+  const s12 = (state.peeks1 + state.fails1 === 0) ? 3 : (state.peeks1 + state.fails1 <= 2) ? 2 : 1;
+  const s34 = (state.peeks2 + state.fails2 === 0) ? 3 : (state.peeks2 + state.fails2 <= 2) ? 2 : 1;
+  setStars(1, s12); setStars(2, s12); setStars(3, s34); setStars(4, s34);
+  renderPas(document.getElementById("pasBadges"), false);
   go("sCompare");
 }
 document.getElementById("btnCompare").addEventListener("click", function(){ go("s5"); runCrack(); });
@@ -835,18 +904,35 @@ function runCrack(){
   if(crackRan) return; crackRan = true;
   document.getElementById("crackPw1").textContent = state.pw;
   document.getElementById("crackPw2").textContent = state.phrase.text;
-  document.getElementById("hack1").classList.add("blink");
+  const hack1 = document.getElementById("hack1");
+  hack1.classList.add("blink","clickable");
   document.getElementById("hack2").classList.add("blink");
+  hack1.title = "Klik om de kraker te vertragen!";
+  hack1.addEventListener("click", function(){
+    state.hackClicks++;
+    hack1.classList.remove("hit"); void hack1.offsetWidth; hack1.classList.add("hit");
+    const bar = document.getElementById("bar1");
+    const cur = parseFloat(getComputedStyle(bar).animationDuration) || 4;
+    bar.style.animationDuration = (cur + 1.2) + "s";
+  });
   requestAnimationFrame(function(){
     document.getElementById("bar1").classList.add("fast");
     document.getElementById("bar2").classList.add("slow");
     document.getElementById("barPin").classList.add("instant");
   });
-  setTimeout(function(){ document.getElementById("res1").textContent = "💥 Gekraakt in enkele uren!"; }, 4100);
+  setTimeout(function(){
+    document.getElementById("res1").textContent = state.hackClicks >= 5
+      ? "🛡️ Goed vertraagd! Nu pas gekraakt na dagen… (" + state.hackClicks + " kliks)"
+      : "💥 Gekraakt in enkele uren! (slechts " + state.hackClicks + " kliks)";
+  }, 4300);
   setTimeout(function(){ document.getElementById("res2").textContent = "🐌 Duizenden jaren bezig… nog geen 1% gekraakt!"; }, 5200);
   setTimeout(function(){ document.getElementById("resPin").textContent = "💥 10.000 combinaties = gekraakt in 1 seconde!"; }, 1100);
 }
-document.getElementById("btnL5").addEventListener("click", function(){ go("s6"); levelDone(5); renderQuiz(); });
+document.getElementById("btnL5").addEventListener("click", function(){
+  setStars(5, state.hackClicks >= 8 ? 3 : state.hackClicks >= 4 ? 2 : 1);
+  renderPas(document.getElementById("pasBadges"), false);
+  go("s6"); levelDone(5); renderQuiz();
+});
 
 /* ===== LEVEL 6: mini-quiz (meerdere correcte antwoorden mogelijk) ===== */
 const QUIZ = [
@@ -917,10 +1003,13 @@ function renderQuiz(){
       btn.onclick = function(){
         if(quizIdx === QUIZ.length-1){
           document.getElementById("btnL6").disabled = false;
+          setStars(6, state.quizFails === 0 ? 3 : state.quizFails <= 2 ? 2 : 1);
+          renderPas(document.getElementById("pasBadges"), false);
           go("s7"); levelDone(6);
         } else { quizIdx++; renderQuiz(); }
       };
     } else {
+      state.quizFails++;
       box.querySelectorAll(".opt.sel").forEach(function(el){ el.classList.remove("shake"); void el.offsetWidth; el.classList.add("shake"); });
       fb.textContent = "Nog niet helemaal — kijk nog eens goed! 🔍"; fb.className = "feedback no";
     }
@@ -935,10 +1024,6 @@ function genVaultPw(){
   let s = "";
   for(let i=0;i<18;i++) s += chars[Math.floor(Math.random()*chars.length)];
   return s;
-}
-function step(id){
-  ["vaultA","vaultB","vaultC","vaultD"].forEach(function(s){ document.getElementById(s).classList.remove("active"); });
-  document.getElementById(id).classList.add("active");
 }
 document.getElementById("btnGenMaster").addEventListener("click", function(){
   document.getElementById("inMaster").value = genPhrase().text;
@@ -1010,6 +1095,7 @@ function renderLeak(){
         fb.textContent = "✅ Precies goed!"; fb.className = "feedback ok";
         document.getElementById("btnFinish").disabled = false;
       } else {
+        state.leakFails++;
         el.classList.add("wrong"); el.querySelector(".box").textContent = "✗";
         fb.textContent = "Denk na: juist omdat elk account uniek is… probeer het opnieuw 🤔"; fb.className = "feedback no";
       }
@@ -1017,20 +1103,33 @@ function renderLeak(){
     box.appendChild(el);
   });
 }
-document.getElementById("btnFinish").addEventListener("click", function(){
-  levelDone(7);
-  document.getElementById("pasFinal").innerHTML = "";
-  BADGES.forEach(function(b){
-    const s = document.createElement("span");
-    s.className = "badge earned"; s.textContent = b;
-    document.getElementById("pasFinal").appendChild(s);
-  });
-  const secsTotal = state.missionStart ? Math.max(1, Math.round((Date.now()-state.missionStart)/1000)) : 0;
-  const mm = Math.floor(secsTotal/60), ss = secsTotal%60;
-  document.getElementById("totalTime").textContent = "⏱️ Totale missietijd: " + mm + " min " + ss + " sec — knap gedaan!";
-  document.getElementById("flag-output").textContent = decodeFlag();
-  document.getElementById("winModal").classList.add("show");
-  launchConfetti();
+function step(id){
+  ["vaultA","vaultB","vaultC","vaultD","vaultE"].forEach(function(s){ document.getElementById(s).classList.remove("active"); });
+  document.getElementById(id).classList.add("active");
+}
+document.getElementById("btnFinish").addEventListener("click", function(){ step("vaultE"); document.getElementById("inPortal").focus(); });
+document.getElementById("formPortal").addEventListener("submit", function(e){
+  e.preventDefault();
+  const inp = document.getElementById("inPortal"), fb = document.getElementById("fbPortal");
+  if(normalize(inp.value) === normalize(document.getElementById("inMaster").value)){
+    fb.textContent = "🔓 Portaal ontgrendeld!"; fb.className = "feedback ok";
+    setTimeout(function(){
+      setStars(7, (state.leakFails + state.portalFails) === 0 ? 3 : (state.leakFails + state.portalFails) <= 1 ? 2 : 1);
+      levelDone(7);
+      renderPas(document.getElementById("pasFinal"), true);
+      const totalStars = state.stars.reduce(function(a,b){ return a+b; }, 0);
+      const secsTotal = state.missionStart ? Math.max(1, Math.round((Date.now()-state.missionStart)/1000)) : 0;
+      const mm = Math.floor(secsTotal/60), ss = secsTotal%60;
+      document.getElementById("totalTime").textContent = "⏱️ Totale missietijd: " + mm + " min " + ss + " sec · ⭐ " + totalStars + "/21 sterren — knap gedaan!";
+      document.getElementById("flag-output").textContent = decodeFlag();
+      document.getElementById("winModal").classList.add("show");
+      launchConfetti();
+    }, 700);
+  } else {
+    state.portalFails++;
+    inp.classList.remove("shake"); void inp.offsetWidth; inp.classList.add("shake");
+    fb.textContent = "Hmm, dat is niet je hoofdwachtwoordzin… denk eraan: deze beschermt je hele kluis! 🤔"; fb.className = "feedback no";
+  }
 });
 
 /* ===== FLAG kopiëren ===== */
