@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GezichtBoek – Privacy Challenge</title>
-<meta name="description" content="Oefen met geavanceerde privacy-instellingen voor 15-18 jarigen. Help Lars zijn profiel veilig en professioneel in te richten.">
+<meta name="description" content="Oefen met privacy-instellingen voor 15-18 jarigen in de GezichtBoek Privacy Challenge.">
 <style>
 /* ===== Kleuren (zelfde als de originele site) ===== */
 :root {
@@ -92,7 +92,7 @@ button { cursor: pointer; border: 0; background: none; }
 .row-panel { padding: 0 1rem 1rem; background: color-mix(in srgb, var(--muted) 40%, transparent); }
 .row-panel > p { margin-bottom: .5rem; }
 select { width: 100%; padding: .6rem .75rem; border: 1px solid var(--border); border-radius: .5rem; background: var(--card); }
-.fb { display: none; gap: .5rem; margin-top: .75rem; padding: .75rem; border: 1px solid var(--border); border-radius: .5rem; background: var(--card); font-size: .875rem; }
+.fb { display: flex; gap: .5rem; margin-top: .75rem; padding: .75rem; border: 1px solid var(--border); border-radius: .5rem; background: var(--card); font-size: .875rem; }
 .fb-ok { border-color: var(--success); background: color-mix(in srgb, var(--success) 10%, var(--card)); }
 .fb-warn { border-color: var(--warning); background: color-mix(in srgb, var(--warning) 15%, var(--card)); }
 
@@ -174,7 +174,7 @@ fieldset{border:0;margin:0;min-width:0}
 .opt:has(input:checked){border-color:var(--primary);background:var(--secondary);font-weight:600}
 .opt:has(input:focus-visible){outline:2px solid var(--ring);outline-offset:2px}
 .opt input{width:1.1rem;height:1.1rem;accent-color:var(--primary);margin:0}
-.opt:has(input:checked) + .fb { display: flex; }
+.opt:has(input:checked)+.fb{display:flex}
 .fb-info{background:var(--card)}
 .segs{display:flex;gap:3px;background:none}
 .segs span{flex:1;background:var(--muted);border-radius:999px;transition:background .3s}
@@ -251,16 +251,17 @@ form:has(#p-apps:checked) label[for="p-apps"]{background:var(--secondary)}
 form:has(#p-apps:focus-visible) label[for="p-apps"]{outline:2px solid var(--ring)}
 form:has(#p-gegevens:checked) .panel-gegevens{display:block}
 form:has(#p-gegevens:checked) label[for="p-gegevens"]{background:var(--secondary)}
-form:has(#p-gegevens:focus-visible) label[for="p-gegevens"]{outline:2px solid var(--ring)}
 
-/* ===== Categorie
 form:has(#p-werk:checked) .panel-werk{display:block}
 form:has(#p-werk:checked) label[for="p-werk"]{background:var(--secondary)}
 form:has(#p-werk:focus-visible) label[for="p-werk"]{outline:2px solid var(--ring)}
+
 form:has(#p-relatie:checked) .panel-relatie{display:block}
 form:has(#p-relatie:checked) label[for="p-relatie"]{background:var(--secondary)}
 form:has(#p-relatie:focus-visible) label[for="p-relatie"]{outline:2px solid var(--ring)}
- voltooid: account (incl. naam) ===== */
+form:has(#p-gegevens:focus-visible) label[for="p-gegevens"]{outline:2px solid var(--ring)}
+
+/* ===== Categorie voltooid: account (incl. naam) ===== */
 form:has(#o-name-o0:checked):has(#o-posts-friends:checked):has(#o-private-private:checked):has(#o-friendlist-me:checked):has(#o-search-no:checked):has(#o-bday-o2:checked):has(#o-school-o1:checked,#o-school-o2:checked):has(#o-frq-o1:checked) .cat-account{--done:1}
 form:has(#o-name-o0:checked):has(#o-posts-friends:checked):has(#o-private-private:checked):has(#o-friendlist-me:checked):has(#o-search-no:checked):has(#o-bday-o2:checked):has(#o-school-o1:checked,#o-school-o2:checked):has(#o-frq-o1:checked) .seg-0{background:var(--success)}
 /* ===== Categorie voltooid: berichten (incl. oude berichten + leesbevestigingen) ===== */
@@ -274,10 +275,18 @@ form:has(#o-online-none:checked):has(#o-location-ask:checked,#o-location-never:c
 form:has(#o-online-none:checked):has(#o-location-ask:checked,#o-location-never:checked):has(#o-autoloc-no:checked) .seg-3{background:var(--success)}
 /* ===== Categorie voltooid: beveiliging ===== */
 form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security{--done:1}
+
+/* ===== Categorie voltooid: werk en opleiding ===== */
+form:has(#o-werkervaring-onlyme:checked):has(#o-werkgever-onlyme:checked) .cat-werk{--done:1}
+form:has(#o-werkervaring-onlyme:checked):has(#o-werkgever-onlyme:checked) .seg-5{background:var(--success)}
+
+/* ===== Categorie voltooid: relaties en privacy ===== */
+form:has(#o-relatie-onlyme:checked):has(#o-familie-onlyme:checked) .cat-relatie{--done:1}
+form:has(#o-relatie-onlyme:checked):has(#o-familie-onlyme:checked) .seg-6{background:var(--success)}
 form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .seg-4{background:var(--success)}
 
 /* ===== GESLAAGD: modal tonen als ALLES veilig staat ===== */
-form:has(#o-name-o0:checked):has(#o-posts-friends:checked):has(#o-private-private:checked):has(#o-friendlist-me:checked):has(#o-search-no:checked):has(#o-bday-o2:checked):has(#o-school-o1:checked,#o-school-o2:checked):has(#o-frq-o1:checked):has(#o-dm-friends:checked):has(#o-comments-friends:checked):has(#o-stories-friends:checked,#o-stories-list:checked):has(#o-past-o1:checked):has(#o-read-o0:checked):has(#o-tagwho-friends:checked):has(#o-tagreview-yes:checked):has(#o-mention-friends:checked,#o-mention-none:checked):has(#o-online-none:checked):has(#o-location-ask:checked,#o-location-never:checked):has(#o-autoloc-no:checked):has(#o-2fa-on:checked):has(#o-loginalert-on:checked):has(#o-studie-onlyme:checked):has(#o-werkgever-onlyme:checked):has(#o-relatie-onlyme:checked):has(#o-familie-onlyme:checked) .win-overlay{display:flex}
+form:has(#o-name-o0:checked):has(#o-posts-friends:checked):has(#o-private-private:checked):has(#o-friendlist-me:checked):has(#o-search-no:checked):has(#o-bday-o2:checked):has(#o-school-o1:checked,#o-school-o2:checked):has(#o-frq-o1:checked):has(#o-dm-friends:checked):has(#o-comments-friends:checked):has(#o-stories-friends:checked,#o-stories-list:checked):has(#o-past-o1:checked):has(#o-read-o0:checked):has(#o-tagwho-friends:checked):has(#o-tagreview-yes:checked):has(#o-mention-friends:checked,#o-mention-none:checked):has(#o-online-none:checked):has(#o-location-ask:checked,#o-location-never:checked):has(#o-autoloc-no:checked):has(#o-2fa-on:checked):has(#o-loginalert-on:checked):has(#o-werkervaring-onlyme:checked):has(#o-werkgever-onlyme:checked):has(#o-relatie-onlyme:checked):has(#o-familie-onlyme:checked) .win-overlay{display:flex}
 
 form:has(#o-name-o0:checked):has(#o-posts-friends:checked):has(#o-private-private:checked):has(#o-friendlist-me:checked):has(#o-search-no:checked):has(#o-bday-o2:checked):has(#o-school-o1:checked,#o-school-o2:checked):has(#o-frq-o1:checked) .cat-account .mark::before{content:"✅"}
 form:has(#o-name-o0:checked):has(#o-posts-friends:checked):has(#o-private-private:checked):has(#o-friendlist-me:checked):has(#o-search-no:checked):has(#o-bday-o2:checked):has(#o-school-o1:checked,#o-school-o2:checked):has(#o-frq-o1:checked) .cat-account .status::before{content:"Afgerond";color:var(--success)}
@@ -288,6 +297,12 @@ form:has(#o-tagwho-friends:checked):has(#o-tagreview-yes:checked):has(#o-mention
 form:has(#o-online-none:checked):has(#o-location-ask:checked,#o-location-never:checked):has(#o-autoloc-no:checked) .cat-activity .mark::before{content:"✅"}
 form:has(#o-online-none:checked):has(#o-location-ask:checked,#o-location-never:checked):has(#o-autoloc-no:checked) .cat-activity .status::before{content:"Afgerond";color:var(--success)}
 form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security .mark::before{content:"✅"}
+
+form:has(#o-werkervaring-onlyme:checked):has(#o-werkgever-onlyme:checked) .cat-werk .mark::before{content:"u2705"}
+form:has(#o-werkervaring-onlyme:checked):has(#o-werkgever-onlyme:checked) .cat-werk .status::before{content:"Afgerond";color:var(--success)}
+
+form:has(#o-relatie-onlyme:checked):has(#o-familie-onlyme:checked) .cat-relatie .mark::before{content:"u2705"}
+form:has(#o-relatie-onlyme:checked):has(#o-familie-onlyme:checked) .cat-relatie .status::before{content:"Afgerond";color:var(--success)}
 form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security .status::before{content:"Afgerond";color:var(--success)}
 </style>
 </head>
@@ -340,7 +355,7 @@ form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security .status:
     <h1 class="display">Instellingen en privacy</h1>
     <div class="mobile-only mt">
       <div class="card pad mission">
-        <h2>🎯 Missie: help Lars</h2>
+        <h2>🎯 Missie: help Sanne</h2>
         <p class="small muted">Zet alle 7 onderdelen op veilig</p>
         <div class="bar segs" aria-hidden="true"><span class="seg-0"></span><span class="seg-1"></span><span class="seg-2"></span><span class="seg-3"></span><span class="seg-4"></span><span class="seg-5"></span><span class="seg-6"></span></div>
         <ul class="checklist">
@@ -377,6 +392,8 @@ form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security .status:
       <h2>Doelgroep en zichtbaarheid</h2>
       <p class="small muted">Bepaal wie kan zien wat je deelt.</p>
       <ul>
+        <li><label class="nav-item" for="p-werk"><span class="ico" aria-hidden="true">🎓</span><span>Werk en opleiding</span></label></li>
+        <li><label class="nav-item" for="p-relatie"><span class="ico" aria-hidden="true">💑</span><span>Relaties en privacy</span></label></li>
         <li><label class="nav-item" for="p-profielgegevens"><span class="ico" aria-hidden="true">👤</span><span>Profielgegevens</span></label></li>
         <li><label class="nav-item" for="p-vinden"><span class="ico" aria-hidden="true">🔍</span><span>Hoe mensen je vinden en contact met je opnemen</span></label></li>
         <li><label class="nav-item" for="p-berichten"><span class="ico" aria-hidden="true">📰</span><span>Berichten</span></label></li>
@@ -386,8 +403,6 @@ form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security .status:
         <li><label class="nav-item" for="p-chat"><span class="ico" aria-hidden="true">💬</span><span>Chatberichten</span></label></li>
         <li><label class="nav-item" for="p-account-privacy"><span class="ico" aria-hidden="true">🔒</span><span>Accountprivacy</span></label></li>
         <li><label class="nav-item" for="p-blokkeren"><span class="ico" aria-hidden="true">🚫</span><span>Blokkeren</span></label></li>
-        <li><label class="nav-item" for="p-werk"><span class="ico" aria-hidden="true">🎓</span><span>Werk en opleiding</span></label></li>
-        <li><label class="nav-item" for="p-relatie"><span class="ico" aria-hidden="true">👥</span><span>Relaties en privacy</span></label></li>
       </ul>
     </div>
     <div class="group">
@@ -497,7 +512,7 @@ form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security .status:
 
         <div class="mobile-only mt">
           <div class="card pad mission">
-            <h2>🎯 Missie: help Lars</h2>
+            <h2>🎯 Missie: help Sanne</h2>
             <p class="small muted">Zet alle 7 onderdelen op veilig</p>
             <div class="bar segs" aria-hidden="true"><span class="seg-0"></span><span class="seg-1"></span><span class="seg-2"></span><span class="seg-3"></span><span class="seg-4"></span><span class="seg-5"></span><span class="seg-6"></span></div>
             <ul class="checklist">
@@ -1110,34 +1125,34 @@ form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security .status:
           </details>
         </div>
       </section>
+    </div>
 
+    <!-- SIDE MISSION (desktop) -->
       <!-- ===== WERK EN OPLEIDING ===== -->
       <section class="page-panel panel-werk">
         <label class="back" for="p-none">↩ Instellingen en privacy</label>
         <div class="card">
-          <div class="card-head"><h1 class="display">Werk en opleiding</h1><p class="small muted">Instellingen voor studie en werk.</p></div>
-
+          <div class="card-head"><h1 class="display">Werk en opleiding</h1><p class="small muted">Wie ziet je werk- en opleidingsinformatie.</p></div>
           <details class="row">
-            <summary class="row-head"><span class="grow"><span class="b block">Wie kan mijn studie/opleiding zien?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <summary class="row-head"><span class="grow"><span class="b block">Wie kan mijn werkervaring zien?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
             <fieldset class="row-panel">
-              <p class="small muted">Je huidige studie of opleiding.</p>
-              <label class="opt"><input type="radio" name="s-studie" id="o-studie-everyone" value="everyone"><span>Iedereen</span></label>
-              <div class="fb fb-warn"><span aria-hidden="true">⚠️</span><p><strong>Let op:</strong> Onbekenden kunnen zien welke studie je volgt.</p></div>
-              <label class="opt"><input type="radio" name="s-studie" id="o-studie-friends" value="friends"><span>Vrienden</span></label>
-              <div class="fb fb-warn"><span aria-hidden="true">⚠️</span><p><strong>Let op:</strong> Vrienden kunnen je studie zien. 'Alleen ik' is privacyvriendelijker.</p></div>
-              <label class="opt"><input type="radio" name="s-studie" id="o-studie-onlyme" value="onlyme"><span>Alleen ik</span></label>
-              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Je studie is alleen voor jou zichtbaar.</p></div>
+              <p class="small muted">Kies wie je werkverleden mag zien.</p>
+              <label class="opt"><input type="radio" name="s-werkervaring" id="o-werkervaring-everyone" value="everyone"><span>Iedereen</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">🚡</span><p><strong>Let op:</strong> Onbekenden kunnen dan zien waar je hebt gewerkt.</p></div>
+              <label class="opt"><input type="radio" name="s-werkervaring" id="o-werkervaring-friends" value="friends"><span>Vrienden</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">🚡</span><p><strong>Let op:</strong> Beter, maar 'Alleen ik' geeft meer privacy.</p></div>
+              <label class="opt"><input type="radio" name="s-werkervaring" id="o-werkervaring-onlyme" value="onlyme"><span>Alleen ik</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Je werkervaring is alleen voor jou zichtbaar.</p></div>
             </fieldset>
           </details>
-
           <details class="row">
-            <summary class="row-head"><span class="grow"><span class="b block">Wie kan mijn werkgever zien?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <summary class="row-head"><span class="grow"><span class="b block">Wie kan mijn huidige werkgever zien?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
             <fieldset class="row-panel">
-              <p class="small muted">Waar je werkt of stage loopt.</p>
+              <p class="small muted">Kies wie mag zien waar je nu werkt.</p>
               <label class="opt"><input type="radio" name="s-werkgever" id="o-werkgever-everyone" value="everyone"><span>Iedereen</span></label>
-              <div class="fb fb-warn"><span aria-hidden="true">⚠️</span><p><strong>Let op:</strong> Onbekenden kunnen zien waar je werkt.</p></div>
+              <div class="fb fb-warn"><span aria-hidden="true">🚡</span><p><strong>Let op:</strong> Onbekenden kunnen zien waar je werkt.</p></div>
               <label class="opt"><input type="radio" name="s-werkgever" id="o-werkgever-friends" value="friends"><span>Vrienden</span></label>
-              <div class="fb fb-warn"><span aria-hidden="true">⚠️</span><p><strong>Let op:</strong> Vrienden kunnen je werkgever zien.</p></div>
+              <div class="fb fb-warn"><span aria-hidden="true">🚡</span><p><strong>Let op:</strong> Beter, maar 'Alleen ik' geeft meer privacy.</p></div>
               <label class="opt"><input type="radio" name="s-werkgever" id="o-werkgever-onlyme" value="onlyme"><span>Alleen ik</span></label>
               <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Je werkgever is alleen voor jou zichtbaar.</p></div>
             </fieldset>
@@ -1149,43 +1164,37 @@ form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security .status:
       <section class="page-panel panel-relatie">
         <label class="back" for="p-none">↩ Instellingen en privacy</label>
         <div class="card">
-          <div class="card-head"><h1 class="display">Relaties en privacy</h1><p class="small muted">Persoonlijke informatie over relaties.</p></div>
-
+          <div class="card-head"><h1 class="display">Relaties en privacy</h1><p class="small muted">Wie ziet je persoonlijke relatie-informatie.</p></div>
           <details class="row">
             <summary class="row-head"><span class="grow"><span class="b block">Wie kan mijn relatiestatus zien?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
             <fieldset class="row-panel">
-              <p class="small muted">Of je single, in een relatie, getrouwd etc. bent.</p>
+              <p class="small muted">Kies wie je relatiestatus mag zien.</p>
               <label class="opt"><input type="radio" name="s-relatie" id="o-relatie-everyone" value="everyone"><span>Iedereen</span></label>
-              <div class="fb fb-warn"><span aria-hidden="true">⚠️</span><p><strong>Let op:</strong> Iedereen kan dan zien of je een relatie hebt.</p></div>
+              <div class="fb fb-warn"><span aria-hidden="true">🚡</span><p><strong>Let op:</strong> Onbekenden kunnen dan je relatiestatus zien.</p></div>
               <label class="opt"><input type="radio" name="s-relatie" id="o-relatie-friends" value="friends"><span>Vrienden</span></label>
-              <div class="fb fb-warn"><span aria-hidden="true">⚠️</span><p><strong>Let op:</strong> Vrienden kunnen je relatiestatus zien.</p></div>
+              <div class="fb fb-warn"><span aria-hidden="true">🚡</span><p><strong>Let op:</strong> Beter, maar 'Alleen ik' geeft meer privacy.</p></div>
               <label class="opt"><input type="radio" name="s-relatie" id="o-relatie-onlyme" value="onlyme"><span>Alleen ik</span></label>
-              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Je relatiestatus is privé.</p></div>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Je relatiestatus is alleen voor jou zichtbaar.</p></div>
             </fieldset>
           </details>
-
           <details class="row">
             <summary class="row-head"><span class="grow"><span class="b block">Wie kan mijn familieleden zien?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
             <fieldset class="row-panel">
-              <p class="small muted">Leden van je familie die je hebt toegevoegd.</p>
+              <p class="small muted">Kies wie je familie-informatie mag zien.</p>
               <label class="opt"><input type="radio" name="s-familie" id="o-familie-everyone" value="everyone"><span>Iedereen</span></label>
-              <div class="fb fb-warn"><span aria-hidden="true">⚠️</span><p><strong>Let op:</strong> Onbekenden kunnen zien wie je familieleden zijn.</p></div>
+              <div class="fb fb-warn"><span aria-hidden="true">🚡</span><p><strong>Let op:</strong> Onbekenden kunnen dan zien wie je familie is.</p></div>
               <label class="opt"><input type="radio" name="s-familie" id="o-familie-friends" value="friends"><span>Vrienden</span></label>
-              <div class="fb fb-warn"><span aria-hidden="true">⚠️</span><p><strong>Let op:</strong> Vrienden kunnen je familieleden zien.</p></div>
+              <div class="fb fb-warn"><span aria-hidden="true">🚡</span><p><strong>Let op:</strong> Beter, maar 'Alleen ik' geeft meer privacy.</p></div>
               <label class="opt"><input type="radio" name="s-familie" id="o-familie-onlyme" value="onlyme"><span>Alleen ik</span></label>
-              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Je familieleden zijn privé.</p></div>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Je familieleden zijn alleen voor jou zichtbaar.</p></div>
             </fieldset>
           </details>
         </div>
       </section>
-
-    </div>
-
-    <!-- SIDE MISSION (desktop) -->
     <div class="side-mission">
       <div class="sticky">
         <div class="card pad mission">
-          <h2>🎯 Missie: help Lars</h2>
+          <h2>🎯 Missie: help Sanne</h2>
           <p class="small muted">Zet alle 7 onderdelen op veilig</p>
           <div class="bar segs" aria-hidden="true"><span class="seg-0"></span><span class="seg-1"></span><span class="seg-2"></span><span class="seg-3"></span><span class="seg-4"></span><span class="seg-5"></span><span class="seg-6"></span></div>
           <ul class="checklist">
@@ -1194,6 +1203,8 @@ form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security .status:
             <li class="cat cat-tags"><span class="mark" aria-hidden="true"></span><span><span class="b">Tags en vermeldingen</span><span class="small status"></span></span></li>
             <li class="cat cat-activity"><span class="mark" aria-hidden="true"></span><span><span class="b">Activiteit en locatie</span><span class="small status"></span></span></li>
             <li class="cat cat-security"><span class="mark" aria-hidden="true"></span><span><span class="b">Beveiliging</span><span class="small status"></span></span></li>
+            <li class="cat cat-werk"><span class="mark" aria-hidden="true"></span><span><span class="b">Werk en opleiding</span><span class="small status"></span></span></li>
+            <li class="cat cat-relatie"><span class="mark" aria-hidden="true"></span><span><span class="b">Relaties en privacy</span><span class="small status"></span></span></li>
           </ul>
           <aside class="tip"><strong>💬 Word je online lastiggevallen?</strong> Schakel een vertrouwde volwassene in, blokkeer of meld de persoon en bewaar bewijs.</aside>
         </div>
@@ -1209,7 +1220,7 @@ form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security .status:
     <button class="win-close" type="button" id="winClose" aria-label="Sluiten">×</button>
     <div class="emoji" aria-hidden="true">🎉</div>
     <h1 class="win-title">GESLAAGD!</h1>
-    <p class="win-sub">Je hebt alle privacy-instellingen op veilig gezet. Sanne's account is nu veel beter beschermd! 🎊</p>
+    <p class="win-sub">Je hebt alle privacy-instellingen op veilig gezet. Sanne's account is nu veel beter beschermd! 🎉</p>
     
     <div class="flag-panel">
       <span class="flag-label">GEVONDEN FLAG</span>
@@ -1237,7 +1248,7 @@ form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security .status:
 
 <script>
 /* ===== FLAG (base64: LBG{Privacyinstellingen}) ===== */
-const FLAG_B64 = "TEJHe1Byb2Zlc3Npb25lZWxEnV9WZWlsaWc9";
+const FLAG_B64 = "TEJHe1ByaXZhY3lDaGFsbGVuZ2UxNS0xOH0=";
 var K = "GezichtBoek-progress-v2";
 
 function decodeFlag(){ return atob(FLAG_B64); }
@@ -1267,7 +1278,7 @@ function launchConfetti(){
 }
 
 /* ===== COMPLETIE-CHECK (identiek aan de CSS-voorwaarden) ===== */
-var REQ=["o-name-o0","o-posts-friends","o-private-private","o-friendlist-me","o-search-no","o-bday-o2","o-frq-o1","o-dm-friends","o-comments-friends","o-past-o1","o-read-o0","o-tagwho-friends","o-tagreview-yes","o-online-none","o-autoloc-no","o-2fa-on","o-loginalert-on","o-studie-onlyme","o-werkgever-onlyme","o-relatie-onlyme","o-familie-onlyme"];
+var REQ=["o-name-o0","o-posts-friends","o-private-private","o-friendlist-me","o-search-no","o-bday-o2","o-frq-o1","o-dm-friends","o-comments-friends","o-past-o1","o-read-o0","o-tagwho-friends","o-tagreview-yes","o-online-none","o-autoloc-no","o-2fa-on","o-loginalert-on","o-werkervaring-onlyme","o-werkgever-onlyme","o-relatie-onlyme","o-familie-onlyme"];
 var REQ_ANY=[["o-school-o1","o-school-o2"],["o-stories-friends","o-stories-list"],["o-mention-friends","o-mention-none"],["o-location-ask","o-location-never"]];
 var won=false;
 
