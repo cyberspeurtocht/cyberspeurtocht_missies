@@ -1,6 +1,6 @@
 # 🎨 AI-afbeeldingen — NepnieuwsJager 15-18 (Explorers)
 
-Bij `NepnieuwsJager_15_18.html` horen 8 afbeeldingen. Sla elk gegenereerd bestand op in de map:
+Bij `NepnieuwsJager_15_18.html` horen 11 afbeeldingen. Sla elk gegenereerd bestand op in de map:
 
 ```
 Explorers/images/
@@ -20,6 +20,9 @@ met exact onderstaande bestandsnaam. De app laadt `images/post-XX.jpg` automatis
 | `images/post-06.jpg` | 16 — Noa (wedstrijd gewonnen) | Photorealistic action shot of a youth football match on a green pitch, players in colored kits, evening floodlights, 16:9, no text, no logos, no recognizable faces |
 | `images/post-07.jpg` | 20 — Kai (puppy's) | Photorealistic photo of a cute golden retriever puppy sitting in green grass, sunny day, shallow depth of field, 16:9, no text, no logos |
 | `images/post-08.jpg` | 22 — Lynn (filmavond) | Photorealistic cozy living room in the evening, TV glowing, bowl of popcorn on the couch, warm dim light, 16:9, no text, no logos, no people |
+| `images/post-09.jpg` | 27 — Fé (samenvatting biologie) | Photorealistic close-up of an open biology textbook with highlighter marks and handwritten notes on a school desk, soft daylight, 16:9, no text, no logos |
+| `images/post-10.jpg` | 34 — Jesse (gaming-setup) | Photorealistic photo of a tidy gaming desk setup with monitor, RGB keyboard and headset in a teenage bedroom, evening light, 16:9, no text, no logos, no people |
+| `images/post-11.jpg` | 39 — Mama (BBQ) | Photorealistic backyard barbecue on a summer evening, grill with food, string lights, garden table with salads, warm colors, 16:9, no text, no logos, no recognizable faces |
 
 ## Tips voor het genereren
 

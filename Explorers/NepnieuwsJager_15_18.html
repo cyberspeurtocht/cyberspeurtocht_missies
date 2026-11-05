@@ -190,7 +190,7 @@ body{font-family:Segoe UI,Helvetica,Arial,sans-serif;background:var(--bg);color:
   <div class="progress-pill" role="status" aria-live="polite">
     <span class="flag" aria-hidden="true">🕵️‍♀️</span>
     <span class="label">Nepnieuws gevonden:</span>
-    <span class="count" id="pcount">0/2</span>
+    <span class="count" id="pcount">0/4</span>
     <div class="pbar"><div class="pbar-fill" id="pfill"></div></div>
   </div>
   <span class="avatar mini-avatar" id="me-avatar" data-e="🕵️‍♀️" data-c="8" role="img" aria-label="Jouw profielfoto"></span>
@@ -248,7 +248,7 @@ body{font-family:Segoe UI,Helvetica,Arial,sans-serif;background:var(--bg);color:
       <div class="cs-vic-kicker">🕵️‍♀️ Cyberspeurtocht.app</div>
       <div class="confetti">🎉🎊🏆🎊🎉</div>
       <h2 id="vic-title">GESLAAGD!</h2>
-      <p>Je hebt beide nepnieuwsberichten in de feed gevonden en gerapporteerd. Wat ben jij een scherpe online-speurder!</p>
+      <p>Je hebt alle vier de nepnieuwsberichten in de feed gevonden en gerapporteerd. Wat ben jij een scherpe online-speurder!</p>
     </div>
     <div class="modal-pad">
       <div class="cs-score">
@@ -311,7 +311,7 @@ function initMiniAvatars(){
   }
 }
 
-/* DATASET: 25 berichten. Nr. 4 (makkelijk) en nr. 21 (erg moeilijk) zijn NEP.
+/* DATASET: 40 berichten. Nr. 4 (makkelijk), nr. 31 (gemiddeld), nr. 21 (moeilijk) en nr. 37 (erg moeilijk) zijn NEP.
    img = pad naar lokale foto (images/post-XX.jpg). Ontbreekt het bestand,
    dan verschijnt automatisch de emoji-fallback.
    Zie NepnieuwsJager_15_18_afbeeldingen.md voor de AI-prompts per bestand. */
@@ -340,10 +340,25 @@ var posts = [
 {id:22,author:"Lynn de Graaf",rel:"Vriendin",time:"4 dagen geleden",text:"Vanavond filmavond bij mij! 🎬 Popcorn staat klaar en de nieuwe serie is gedownload. Wie komt er?",img:"images/post-08.jpg",photo:{e:"🍿",c1:"#ff9a5a",c2:"#ffd86f"},likes:44,comments:12,why:"Persoonlijke uitnodiging van een vriendin. Niks om te checken."},
 {id:23,author:"Gemeente Rivierenland",rel:"Officiële organisatie",time:"5 dagen geleden",text:"Zaterdag 18 oktober is de najaarsmarkt op het dorpsplein, van 10:00 tot 17:00. Gratis entree. Het volledige programma staat op onze gemeentewebsite.",likes:81,comments:16,source:"gemeenterivierenland.nl",why:"Officiële gemeente met datum, tijden en verwijzing naar de eigen website — dubbel te checken."},
 {id:24,author:"Thom van Rijn",rel:"Klasgenoot",time:"6 dagen geleden",text:"Iemand zin om volgende week mee te rijden naar de open dag in Utrecht? Ik rij en heb nog twee plekken vrij.",likes:26,comments:9,why:"Een gewoon carpool-voorstel van een klasgenoot; open dagen staan op de site van de opleiding."},
-{id:25,author:"Oom Rob",rel:"Familie",time:"1 week geleden",text:"25 jaar geleden opende ik mijn eigen fietsenwinkel! 🚲 Bedankt voor al die jaren. Zaterdag: gratis banden oppompen voor iedereen.",likes:189,comments:38,why:"Persoonlijk jubileum van familie; het aanbod is ter plekke in de winkel te verifiëren."}
+{id:25,author:"Oom Rob",rel:"Familie",time:"1 week geleden",text:"25 jaar geleden opende ik mijn eigen fietsenwinkel! 🚲 Bedankt voor al die jaren. Zaterdag: gratis banden oppompen voor iedereen.",likes:189,comments:38,why:"Persoonlijk jubileum van familie; het aanbod is ter plekke in de winkel te verifiëren."},
+{id:26,author:"Daan Koster",rel:"Vriend",time:"1 week geleden",text:"Die show gisteren was bizar goed 🎸 Ik hoor nog steeds oordoppen in mijn oren. Volgend jaar gaan we met z'n allen weer!",likes:63,comments:14,why:"Persoonlijke concert-ervaring van een vriend. Artiesten kondigen tours aan via officiële kanalen en ticketplatforms."},
+{id:27,author:"Fé van Loon",rel:"Klasgenoot",time:"1 week geleden",text:"Iemand die de samenvatting van biologie hoofdstuk 5 heeft?? Ik was er die dag niet en de toets komt eraan 😬",img:"images/post-09.jpg",photo:{e:"📖",c1:"#a8c0ff",c2:"#3f2b96"},likes:22,comments:18,why:"Een hulpvraag van een klasgenoot. Samenvattingen delen is normaal schoolgedrag; er staat geen nieuwsfeit in."},
+{id:28,author:"SetupWorld",rel:"Advertentie",time:"1 week geleden",text:"Gaming setups in de aanbieding: van bureau tot LED-strip. Alleen dit weekend 20% korting in de webshop!",likes:37,comments:4,source:"setupworld.nl",why:"Duidelijke advertentie met een concrete korting en eigen webshop. Checkbaar, commercieel, geen nieuwsclaim."},
+{id:29,author:"Nationale Nieuwslijn",rel:"Nieuwsbron",time:"1 week geleden",text:"Het RIVM publiceert volgende maand een nieuw rapport over de gezondheidseffecten van vapen bij jongeren. Tot die tijd adviseert het RIVM terughoudendheid.",likes:88,comments:19,source:"nationaalnieuwslijn.nl",why:"Nieuwsbron die verwijst naar een echt, komend RIVM-rapport — dat rapport verschijnt met datum en bestandsnaam op rivm.nl. Controleerbaar."},
+{id:30,author:"Noa Vermeulen",rel:"Teamgenoot",time:"2 weken geleden",text:"Training viel vandaag uit vanwege onweer ⛈️ Volgende week staat er een extra tactische training gepland. Check de app van de club!",likes:41,comments:8,why:"Mededeling van een teamgenoot; trainingstijden zijn te verifiëren in de clubapp en op de site van de club."},
+{id:31,author:"DUO Nieuws",rel:"Officiële dienst",time:"2 weken geleden",text:"Goed nieuws voor studenten!! Vanaf september wordt de aanvullende beurs VERDUBBELD voor alle hbo- en wo-studenten. Het ministerie heeft dit vandaag bevestigd in een persbericht. Check je mailbox!",sharedFrom:"Dienst Uitvoering Onderwijs",source:"duo-nieuws.net",likes:1204,comments:356,fake:true,signals:["DUO communiceert via duo.nl en Mijn DUO — niet via een vage socialmedia-pagina.","Het domein 'duo-nieuws.net' is geen officiële overheidssite; officiële sites van DUO eindigen op duo.nl.","Er wordt verwezen naar een 'persbericht' zonder datum en zonder link — persberichten van de overheid staan op Rijksoverheid.nl.","Geen enkele betrouwbare bron (NOS, nu.nl, DUO zelf) bevestigt de verdubbeling van de aanvullende beurs.","1.204 likes zijn geen bewijs: dit bericht speelt in op geldzorgen van studenten, waardoor het snel wordt gedeeld.","Check het altijd bij de bron zelf: duo.nl of Mijn DUO."]},
+{id:32,author:"Kai Willems",rel:"Neef",time:"2 weken geleden",text:"De puppy's mogen bijna naar hun nieuwe baasjes!! 🐶 Nog twee beschikbaar. Wie kent een goed adres?",likes:57,comments:21,why:"Persoonlijke update van familie over hun eigen hond. Niets te checken."},
+{id:33,author:"ExamensTips",rel:"Studiepage",time:"2 weken geleden",text:"Wist je dat je beter leert in blokjes van 25 minuten met 5 minuten pauze? De Pomodoro-techniek — probeer het deze week eens!",likes:176,comments:29,source:"examentips.nl",why:"Algemeen studieadvies van een bekende studiepage. Het zijn tips, geen nieuwsfeiten."},
+{id:34,author:"Jesse Bakker",rel:"Klasgenoot",time:"2 weken geleden",text:"Nieuwe gaming-setup binnen!! 🎮🎧 Eindelijk geen lag meer. Wie speelt er vanavond een potje mee?",img:"images/post-10.jpg",photo:{e:"🎮",c1:"#fbc2eb",c2:"#a6c1ee"},likes:69,comments:24,why:"Persoonlijke update van een klasgenoot over zijn eigen setup. Games en hardware zijn te checken bij de officiële platformen."},
+{id:35,author:"Gemeente Rivierenland",rel:"Officiële organisatie",time:"3 weken geleden",text:"Zondag 26 oktober: rommelmarkt op het dorpsplein, van 09:00 tot 14:00. Inschrijven kan via de gemeentewebsite. Gratis entree voor kinderen.",likes:52,comments:7,source:"gemeenterivierenland.nl",why:"Officiële gemeente met datum, tijden en aanmeldmogelijkheid op de eigen website — dubbel te checken."},
+{id:36,author:"Thom van Rijn",rel:"Klasgenoot",time:"3 weken geleden",text:"Iemand die volgende week meegaat naar de open dag in Amsterdam? Trein vertrekt 9:15 vanaf ons station.",likes:18,comments:6,why:"Een gewoon carpool-voorstel van een klasgenoot; open dagen staan op de website van de opleiding."},
+{id:37,author:"Gezondheid & Jongeren",rel:"Onderzoeksplatform",time:"3 weken geleden",text:"RIVM-onderzoek bevestigt: vapen is net zo schadelijk als sigaretten roken bij jongeren. Het RIVM adviseert daarom een totaalverbod op vape-aroma's. Lees het volledige rapport via de link in onze bio.",sharedFrom:"Nieuws voor Jongeren",source:"gezondheid-jongeren-nieuws.nl",likes:2317,comments:641,fake:true,signals:["Het bericht claimt een RIVM-onderzoek maar linkt er niet naar — echte RIVM-rapporten staan altijd op rivm.nl met datum en bestandsnaam.","'Net zo schadelijk als roken' is een stellige conclusie; het echte RIVM-rapport (zie het bericht van Nationale Nieuwslijn hierboven) is genuanceerder en adviseert terughoudendheid.","Het domein 'gezondheid-jongeren-nieuws.nl' lijkt op een nieuwsnaam, maar is niet van het RIVM of een erkende nieuwssite.","Geen auteur, geen datum en geen persbericht; het RIVM communiceert via rivm.nl en Rijksoverheid.nl.","Geen betrouwbare nieuwsbron (NOS, nu.nl, NTR) meldt dit 'totaalverbod' — een echt verbod staat óók in het gewone nieuws.","2.317 likes en 641 reacties zijn geen bewijs: angst voor vapen leeft breed, maar viraal is niet hetzelfde als waar.","Attributie aan een echt, bekend instituut (RIVM) maakt een bericht extra geloofwaardig — check dáárom juist die berichten extra goed bij de bron zelf."]},
+{id:38,author:"Lotte Jansen",rel:"Vriendin",time:"3 weken geleden",text:"Net terug van een dagje strand met de meiden 🏖️ Beste dag van de vakantie. Volgend jaar maar weer!",likes:74,comments:16,why:"Persoonlijke vakantie-update van een vriendin. Niets te checken."},
+{id:39,author:"Mama",rel:"Familie",time:"3 weken geleden",text:"Zaterdag BBQ in de tuin! 🎉 Wie neemt een salade mee en wie regelt de muziek? Laat maar weten!",img:"images/post-11.jpg",photo:{e:"🍖",c1:"#ff9a5a",c2:"#f6d365"},likes:61,comments:22,why:"Je eigen moeder met een concrete, checkbare uitnodiging voor zaterdag."},
+{id:40,author:"Oom Rob",rel:"Familie",time:"1 maand geleden",text:"Volgende week is er SALE in de winkel — 25% korting op alle accessoires! 🚲 Kom langs!",likes:143,comments:25,why:"Persoonlijk bericht van familie; de actie is ter plekke in de winkel te verifiëren."}
 ];
 /* ===== App-logica ===== */
-var MAX_FAKE = 2;
+var MAX_FAKE = 4;
 var foundCount = 0;
 var reported = {};
 var liked = {};
@@ -518,7 +533,7 @@ function showSuccess(post){
   body.innerHTML = "<div class='icon-big'>🎯</div><h2 class='ok-title' id='feedback-title'>Goed gesignaleerd!</h2>" +
     "<p>Je vond een bericht dat niet klopte. Dit waren de signalen die je had kunnen opmerken:</p>" +
     "<ul class='signal-list'>" + list + "</ul>" +
-    "<p class='tiny-note'>Nepnieuws gevonden: <b>" + foundCount + "/" + MAX_FAKE + "</b> — blijf zoeken naar het andere bericht!</p>";
+    "<p class='tiny-note'>Nepnieuws gevonden: <b>" + foundCount + "/" + MAX_FAKE + "</b> — blijf zoeken naar de andere berichten!</p>";
   openOverlay("feedback-overlay");
 }
 function showTrust(post){
