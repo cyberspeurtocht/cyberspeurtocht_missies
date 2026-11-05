@@ -92,7 +92,7 @@ button { cursor: pointer; border: 0; background: none; }
 .row-panel { padding: 0 1rem 1rem; background: color-mix(in srgb, var(--muted) 40%, transparent); }
 .row-panel > p { margin-bottom: .5rem; }
 select { width: 100%; padding: .6rem .75rem; border: 1px solid var(--border); border-radius: .5rem; background: var(--card); }
-.fb { display: flex; gap: .5rem; margin-top: .75rem; padding: .75rem; border: 1px solid var(--border); border-radius: .5rem; background: var(--card); font-size: .875rem; }
+.fb { display: none; gap: .5rem; margin-top: .75rem; padding: .75rem; border: 1px solid var(--border); border-radius: .5rem; background: var(--card); font-size: .875rem; }
 .fb-ok { border-color: var(--success); background: color-mix(in srgb, var(--success) 10%, var(--card)); }
 .fb-warn { border-color: var(--warning); background: color-mix(in srgb, var(--warning) 15%, var(--card)); }
 
@@ -174,7 +174,7 @@ fieldset{border:0;margin:0;min-width:0}
 .opt:has(input:checked){border-color:var(--primary);background:var(--secondary);font-weight:600}
 .opt:has(input:focus-visible){outline:2px solid var(--ring);outline-offset:2px}
 .opt input{width:1.1rem;height:1.1rem;accent-color:var(--primary);margin:0}
-.opt:has(input:checked)+.fb{display:flex}
+.opt:has(input:checked) + .fb { display: flex; }
 .fb-info{background:var(--card)}
 .segs{display:flex;gap:3px;background:none}
 .segs span{flex:1;background:var(--muted);border-radius:999px;transition:background .3s}
@@ -277,7 +277,7 @@ form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security{--done:1
 form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .seg-4{background:var(--success)}
 
 /* ===== GESLAAGD: modal tonen als ALLES veilig staat ===== */
-form:has(#o-name-o0:checked):has(#o-posts-friends:checked):has(#o-private-private:checked):has(#o-friendlist-me:checked):has(#o-search-no:checked):has(#o-bday-o2:checked):has(#o-school-o1:checked,#o-school-o2:checked):has(#o-frq-o1:checked):has(#o-dm-friends:checked):has(#o-comments-friends:checked):has(#o-stories-friends:checked,#o-stories-list:checked):has(#o-past-o1:checked):has(#o-read-o0:checked):has(#o-tagwho-friends:checked):has(#o-tagreview-yes:checked):has(#o-mention-friends:checked,#o-mention-none:checked):has(#o-online-none:checked):has(#o-location-ask:checked,#o-location-never:checked):has(#o-autoloc-no:checked):has(#o-2fa-on:checked):has(#o-loginalert-on:checked):has(#o-opleiding-everyone:checked):has(#o-werkervaring-public:checked):has(#o-solliciteren-on:checked):has(#o-relatie-friends:checked):has(#o-familie-friends:checked):has(#o-relatie-ads-off:checked) .win-overlay{display:flex}
+form:has(#o-name-o0:checked):has(#o-posts-friends:checked):has(#o-private-private:checked):has(#o-friendlist-me:checked):has(#o-search-no:checked):has(#o-bday-o2:checked):has(#o-school-o1:checked,#o-school-o2:checked):has(#o-frq-o1:checked):has(#o-dm-friends:checked):has(#o-comments-friends:checked):has(#o-stories-friends:checked,#o-stories-list:checked):has(#o-past-o1:checked):has(#o-read-o0:checked):has(#o-tagwho-friends:checked):has(#o-tagreview-yes:checked):has(#o-mention-friends:checked,#o-mention-none:checked):has(#o-online-none:checked):has(#o-location-ask:checked,#o-location-never:checked):has(#o-autoloc-no:checked):has(#o-2fa-on:checked):has(#o-loginalert-on:checked):has(#o-opleiding-onlyme:checked):has(#o-werkervaring-onlyme:checked):has(#o-vriendenlijst-onlyme:checked):has(#o-verjaardag-onlyme:checked) .win-overlay{display:flex}
 
 form:has(#o-name-o0:checked):has(#o-posts-friends:checked):has(#o-private-private:checked):has(#o-friendlist-me:checked):has(#o-search-no:checked):has(#o-bday-o2:checked):has(#o-school-o1:checked,#o-school-o2:checked):has(#o-frq-o1:checked) .cat-account .mark::before{content:"✅"}
 form:has(#o-name-o0:checked):has(#o-posts-friends:checked):has(#o-private-private:checked):has(#o-friendlist-me:checked):has(#o-search-no:checked):has(#o-bday-o2:checked):has(#o-school-o1:checked,#o-school-o2:checked):has(#o-frq-o1:checked) .cat-account .status::before{content:"Afgerond";color:var(--success)}
@@ -330,7 +330,7 @@ form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security .status:
   </div>
   <div class="flex">
     <button type="reset" class="btn-soft round">↺ Opnieuw beginnen</button>
-    <span class="avatar" role="img" aria-label="Profiel van Lars (17 jaar, fictief)">🙋‍♀️</span>
+    <span class="avatar" role="img" aria-label="Profiel van Sanne (fictief)">🙋‍♀️</span>
   </div>
 </header>
 
@@ -386,8 +386,8 @@ form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security .status:
         <li><label class="nav-item" for="p-chat"><span class="ico" aria-hidden="true">💬</span><span>Chatberichten</span></label></li>
         <li><label class="nav-item" for="p-account-privacy"><span class="ico" aria-hidden="true">🔒</span><span>Accountprivacy</span></label></li>
         <li><label class="nav-item" for="p-blokkeren"><span class="ico" aria-hidden="true">🚫</span><span>Blokkeren</span></label></li>
-        <li><label class="nav-item" for="p-werk"><span class="ico" aria-hidden="true">💼</span><span>Werk en opleiding</span></label></li>
-        <li><label class="nav-item" for="p-relatie"><span class="ico" aria-hidden="true">💑</span><span>Relaties en privacy</span></label></li>
+        <li><label class="nav-item" for="p-werk"><span class="ico" aria-hidden="true">🎓</span><span>Werk en opleiding</span></label></li>
+        <li><label class="nav-item" for="p-relatie"><span class="ico" aria-hidden="true">👥</span><span>Privacy voor vrienden</span></label></li>
       </ul>
     </div>
     <div class="group">
@@ -507,9 +507,9 @@ form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security .status:
               <li class="cat cat-activity"><span class="mark" aria-hidden="true"></span><span><span class="b">Activiteit en locatie</span><span class="small status"></span></span></li>
               <li class="cat cat-security"><span class="mark" aria-hidden="true"></span><span><span class="b">Beveiliging</span><span class="small status"></span></span></li>
               <li class="cat cat-werk"><span class="mark" aria-hidden="true"></span><span><span class="b">Werk en opleiding</span><span class="small status"></span></span></li>
-              <li class="cat cat-relatie"><span class="mark" aria-hidden="true"></span><span><span class="b">Relaties en privacy</span><span class="small status"></span></span></li>
+              <li class="cat cat-relatie"><span class="mark" aria-hidden="true"></span><span><span class="b">Privacy voor vrienden</span><span class="small status"></span></span></li>
             </ul>
-            <aside class="tip"><strong>💡 Tip:</strong> Denk na over wat je deelt. Werkgevers kijken vaak naar sociale media profielen tijdens sollicitaties. Zorg dat je profiel professioneel oogt!</aside>
+            <aside class="tip"><strong>💬 Word je online lastiggevallen?</strong> Schakel een vertrouwde volwassene in, blokkeer of meld de persoon en bewaar bewijs (zoals schermafbeeldingen). Zoek zelf geen contact.</aside>
           </div>
         </div>
       </section>
@@ -1140,7 +1140,7 @@ form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security .status:
     <button class="win-close" type="button" id="winClose" aria-label="Sluiten">×</button>
     <div class="emoji" aria-hidden="true">🎉</div>
     <h1 class="win-title">GESLAAGD!</h1>
-    <p class="win-sub">Je hebt alle privacy-instellingen op veilig gezet. Lars' profiel is nu professioneel én veilig! 🎉</p>
+    <p class="win-sub">Je hebt alle privacy-instellingen op veilig gezet. Sanne's account is nu veel beter beschermd! 🎊</p>
     
     <div class="flag-panel">
       <span class="flag-label">GEVONDEN FLAG</span>
@@ -1198,7 +1198,7 @@ function launchConfetti(){
 }
 
 /* ===== COMPLETIE-CHECK (identiek aan de CSS-voorwaarden) ===== */
-var REQ=["o-name-o0","o-posts-friends","o-private-private","o-friendlist-me","o-search-no","o-bday-o2","o-frq-o1","o-dm-friends","o-comments-friends","o-past-o1","o-read-o0","o-tagwho-friends","o-tagreview-yes","o-online-none","o-autoloc-no","o-2fa-on","o-loginalert-on","o-opleiding-everyone","o-werkervaring-public","o-solliciteren-on","o-relatie-friends","o-familie-friends","o-relatie-ads-off"];
+var REQ=["o-name-o0","o-posts-friends","o-private-private","o-friendlist-me","o-search-no","o-bday-o2","o-frq-o1","o-dm-friends","o-comments-friends","o-past-o1","o-read-o0","o-tagwho-friends","o-tagreview-yes","o-online-none","o-autoloc-no","o-2fa-on","o-loginalert-on","o-opleiding-onlyme","o-werkervaring-onlyme","o-vriendenlijst-onlyme","o-verjaardag-onlyme"];
 var REQ_ANY=[["o-school-o1","o-school-o2"],["o-stories-friends","o-stories-list"],["o-mention-friends","o-mention-none"],["o-location-ask","o-location-never"]];
 var won=false;
 
