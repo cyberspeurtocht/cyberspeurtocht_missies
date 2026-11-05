@@ -1110,6 +1110,75 @@ form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security .status:
           </details>
         </div>
       </section>
+
+      <!-- ===== WERK EN OPLEIDING ===== -->
+      <section class="page-panel panel-werk">
+        <label class="back" for="p-none">↩ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Werk en opleiding</h1><p class="small muted">Wie ziet je school en eventuele werkervaring.</p></div>
+
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Wie kan mijn school zien?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Je school kan iets zeggen over waar je vaak bent.</p>
+              <label class="opt"><input type="radio" name="s-opleiding" id="o-opleiding-everyone" value="everyone"><span>Iedereen</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">⚠️</span><p><strong>Let op:</strong> onbekenden kunnen zien naar welke school je gaat.</p></div>
+              <label class="opt"><input type="radio" name="s-opleiding" id="o-opleiding-friends" value="friends"><span>Vrienden</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">⚠️</span><p>Vrienden kunnen je school zien. 'Alleen ik' is privacyvriendelijker.</p></div>
+              <label class="opt"><input type="radio" name="s-opleiding" id="o-opleiding-onlyme" value="onlyme"><span>Alleen ik</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Je school is alleen voor jou zichtbaar.</p></div>
+            </fieldset>
+          </details>
+
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Wie kan mijn werkervaring zien?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Als je al ervaring hebt met bijbanen of stages.</p>
+              <label class="opt"><input type="radio" name="s-werkervaring" id="o-werkervaring-everyone" value="everyone"><span>Iedereen</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">⚠️</span><p><strong>Let op:</strong> Iedereen kan dan je werkverleden zien.</p></div>
+              <label class="opt"><input type="radio" name="s-werkervaring" id="o-werkervaring-friends" value="friends"><span>Vrienden</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">⚠️</span><p><strong>Let op:</strong> Vrienden van vrienden kunnen je werkervaring misschien ook zien.</p></div>
+              <label class="opt"><input type="radio" name="s-werkervaring" id="o-werkervaring-onlyme" value="onlyme"><span>Alleen ik</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Je werkervaring is alleen voor jou zichtbaar.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== PRIVACY VOOR VRIENDEN ===== -->
+      <section class="page-panel panel-relatie">
+        <label class="back" for="p-none">↩ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Privacy voor vrienden</h1><p class="small muted">Wie ziet je persoonlijke informatie.</p></div>
+
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Wie kan mijn vriendenlijst zien?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Je vriendenlijst laat zien met wie je omgaat.</p>
+              <label class="opt"><input type="radio" name="s-vriendenlijst" id="o-vriendenlijst-everyone" value="everyone"><span>Iedereen</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">⚠️</span><p><strong>Let op:</strong> Een onbekende kan zo zien wie je vrienden zijn.</p></div>
+              <label class="opt"><input type="radio" name="s-vriendenlijst" id="o-vriendenlijst-friends" value="friends"><span>Vrienden</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">⚠️</span><p><strong>Let op:</strong> Beter, maar 'Alleen ik' geeft meer privacy.</p></div>
+              <label class="opt"><input type="radio" name="s-vriendenlijst" id="o-vriendenlijst-onlyme" value="onlyme"><span>Alleen ik</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Slim! Een verborgen vriendenlijst geeft minder informatie.</p></div>
+            </fieldset>
+          </details>
+
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Wie kan mijn verjaardag zien?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Kies wie deze persoonlijke informatie mag zien.</p>
+              <label class="opt"><input type="radio" name="s-verjaardag" id="o-verjaardag-everyone" value="everyone"><span>Iedereen</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">⚠️</span><p><strong>Let op:</strong> onbekenden kunnen dan je verjaardag zien.</p></div>
+              <label class="opt"><input type="radio" name="s-verjaardag" id="o-verjaardag-friends" value="friends"><span>Vrienden</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">⚠️</span><p>Vrienden kunnen je verjaardag zien. 'Alleen ik' is privacyvriendelijker.</p></div>
+              <label class="opt"><input type="radio" name="s-verjaardag" id="o-verjaardag-onlyme" value="onlyme"><span>Alleen ik</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Je verjaardag is alleen voor jou zichtbaar.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
     </div>
 
     <!-- SIDE MISSION (desktop) -->
