@@ -16,10 +16,8 @@
   --cs-pink:#e11d48;--cs-yellow:#ffd84d;
 }
 html{scroll-behavior:smooth}
-body{font-family:Segoe UI,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.45;padding-top:32px}
-.brand-strip{background:linear-gradient(90deg,var(--cs-teal) 0%,var(--cs-teal-dark) 100%);color:#fff;text-align:center;font-size:.72rem;font-weight:700;letter-spacing:.12em;padding:6px 12px;text-transform:uppercase;position:fixed;top:0;left:0;right:0;z-index:1000}
-.brand-strip .sep{color:var(--cs-teal-light);margin:0 8px}
-.topbar{position:sticky;top:24px;z-index:200;background:linear-gradient(180deg,var(--blue),var(--blue-dark));box-shadow:0 1px 4px rgba(0,0,0,.2);padding:8px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+body{font-family:Segoe UI,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.45}
+.topbar{position:sticky;top:0;z-index:200;background:linear-gradient(180deg,var(--blue),var(--blue-dark));box-shadow:0 1px 4px rgba(0,0,0,.2);padding:8px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .logo{display:flex;align-items:center;gap:8px;text-decoration:none}
 .logo-bubble{width:36px;height:36px;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
 .logo-word{font-size:1.5rem;font-weight:800;color:#fff;letter-spacing:-.5px}
@@ -141,7 +139,6 @@ body{font-family:Segoe UI,Helvetica,Arial,sans-serif;background:var(--bg);color:
 /* ===== RESPONSIVE ===== */
 @media(max-width:1100px){.sidebar-right{display:none}}
 @media(max-width:860px){
-  .brand-strip{font-size:.65rem;padding:5px 8px}
   .sidebar-left{display:none}
   .layout{padding:12px 8px}
   .search-pill{display:none}
@@ -158,8 +155,6 @@ body{font-family:Segoe UI,Helvetica,Arial,sans-serif;background:var(--bg);color:
   .cs-score-item{flex:1 1 30%;border-right:none}
 }
 @media(max-width:480px){
-  .brand-strip{font-size:.6rem;letter-spacing:.08em}
-  .topbar{top:18px}
   .sidebar-left{display:none}
   .layout{padding:8px 6px}
   .pa{font-size:.75rem}
@@ -178,9 +173,6 @@ body{font-family:Segoe UI,Helvetica,Arial,sans-serif;background:var(--bg);color:
 </style>
 </head>
 <body>
-<div class="brand-strip" role="banner">
-  🕵️‍♀️ Cyberspeurtocht<span class="sep">·</span>Operatie Schaduwspoor<span class="sep">·</span>Missie: Nepnieuws-jager (15-18)
-</div>
 <nav class="topbar" aria-label="GezichtBoek menubalk">
   <a class="logo" href="#" aria-label="GezichtBoek startpagina">
     <div class="logo-bubble" aria-hidden="true">💬</div>
