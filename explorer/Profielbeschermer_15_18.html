@@ -1,0 +1,1250 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GezichtBoek – Privacy Challenge</title>
+<meta name="description" content="Oefen met geavanceerde privacy-instellingen voor 15-18 jarigen. Help Lars zijn profiel veilig en professioneel in te richten.">
+<style>
+/* ===== Kleuren (zelfde als de originele site) ===== */
+:root {
+  --background: oklch(0.96 0.005 260);
+  --foreground: oklch(0.22 0.03 230);
+  --card: oklch(1 0 0);
+  --primary: oklch(0.5 0.19 258);
+  --primary-fg: oklch(0.99 0 0);
+  --secondary: oklch(0.93 0.04 255);
+  --muted: oklch(0.968 0.007 247.896);
+  --muted-fg: oklch(0.5 0.046 257.417);
+  --accent: oklch(0.93 0.06 75);
+  --accent-fg: oklch(0.3 0.06 60);
+  --border: oklch(0.929 0.013 255.508);
+  --ring: oklch(0.55 0.15 258);
+  --success: oklch(0.5 0.13 155);
+  --warning: oklch(0.75 0.15 70);
+  --radius: 0.75rem;
+  --font-display: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  --font-sans: "Nunito Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* ===== Basis ===== */
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: var(--font-sans); background: var(--background); color: var(--foreground); line-height: 1.5; }
+h1, h2, p { margin: 0; }
+ul { list-style: none; margin: 0; padding: 0; }
+button, select { font: inherit; color: inherit; }
+button { cursor: pointer; border: 0; background: none; }
+:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.display { font-family: var(--font-display); font-weight: 700; }
+.small { font-size: .875rem; display: block; }
+.muted { color: var(--muted-fg); }
+.ok { color: var(--success); }
+.b { font-weight: 600; }
+.grow { flex: 1; min-width: 0; }
+.flex { display: flex; align-items: center; gap: .5rem; }
+.pad { padding: 1rem; }
+.mt { margin-top: 1rem; }
+.center { text-align: center; padding: 2rem; }
+.center p { max-width: 28rem; margin: .5rem auto 0; }
+.emoji { font-size: 3rem; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 1px 2px rgb(0 0 0 / .06); overflow: hidden; }
+.card-head { padding: 1rem; border-bottom: 1px solid var(--border); }
+.card-head h1 { font-size: 1.25rem; }
+.pill { background: var(--accent); color: var(--accent-fg); border-radius: 999px; padding: .25rem .65rem; font-size: .75rem; font-weight: 600; }
+
+/* ===== Knoppen ===== */
+.btn-soft { background: var(--muted); border-radius: .5rem; padding: .4rem .75rem; font-size: .875rem; font-weight: 600; white-space: nowrap; }
+.btn-soft:hover { background: var(--border); }
+.btn-soft.round { border-radius: 999px; padding: .5rem .75rem; }
+.btn-outline { margin-top: 1.5rem; border: 1px solid var(--border); border-radius: 999px; padding: .75rem 1.25rem; font-weight: 600; }
+.btn-outline:hover { background: var(--muted); }
+.back { margin-bottom: .75rem; color: var(--primary); font-weight: 600; font-size: .875rem; }
+
+/* ===== Spelscherm ===== */
+.app { min-height: 100vh; display: flex; flex-direction: column; }
+.topbar { position: sticky; top: 0; z-index: 20; height: 3.5rem; display: flex; align-items: center; justify-content: space-between; gap: .75rem; padding: 0 .75rem; background: var(--card); border-bottom: 1px solid var(--border); box-shadow: 0 1px 2px rgb(0 0 0 / .06); }
+.logo { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--primary); color: var(--primary-fg); font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; }
+.brand-blue { color: var(--primary); font-size: 1.25rem; }
+.avatar { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--secondary); font-size: 1.25rem; }
+.layout { display: flex; flex: 1; }
+
+.sidebar { width: 100%; flex-shrink: 0; background: var(--card); border-right: 1px solid var(--border); overflow-y: auto; }
+.sidebar h1 { font-size: 1.5rem; }
+.group { border-top: 1px solid var(--border); padding: .75rem .5rem; }
+.group h2 { font-size: 1rem; padding: 0 .5rem; }
+.group > p { padding: 0 .5rem; margin-bottom: .25rem; font-size: .75rem; }
+.nav-item { display: flex; align-items: center; gap: .75rem; width: 100%; text-align: left; padding: .5rem; border-radius: .5rem; font-size: .95rem; font-weight: 500; line-height: 1.25; }
+.nav-item:hover { background: var(--muted); }
+.nav-item.current { background: var(--secondary); }
+.ico { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; flex-shrink: 0; border-radius: 50%; background: var(--muted); font-size: 1.1rem; }
+
+.main { flex: 1; min-width: 0; padding: 1.25rem .75rem; }
+.main-inner { max-width: 64rem; margin: 0 auto; display: flex; gap: 1.5rem; }
+.side-mission { display: none; width: 18rem; flex-shrink: 0; }
+.sticky { position: sticky; top: 5rem; }
+
+/* Instellingen */
+.row { border-bottom: 1px solid var(--border); }
+.row:last-child { border-bottom: 0; }
+.row-head { display: flex; align-items: center; gap: .75rem; padding: 1rem; }
+.row-panel { padding: 0 1rem 1rem; background: color-mix(in srgb, var(--muted) 40%, transparent); }
+.row-panel > p { margin-bottom: .5rem; }
+select { width: 100%; padding: .6rem .75rem; border: 1px solid var(--border); border-radius: .5rem; background: var(--card); }
+.fb { display: flex; gap: .5rem; margin-top: .75rem; padding: .75rem; border: 1px solid var(--border); border-radius: .5rem; background: var(--card); font-size: .875rem; }
+.fb-ok { border-color: var(--success); background: color-mix(in srgb, var(--success) 10%, var(--card)); }
+.fb-warn { border-color: var(--warning); background: color-mix(in srgb, var(--warning) 15%, var(--card)); }
+
+/* Missie */
+.mission h2 { font-size: 1rem; }
+.mission > p { margin-bottom: .5rem; }
+.bar { height: .5rem; background: var(--muted); border-radius: 999px; overflow: hidden; margin-bottom: .75rem; }
+.bar div { height: 100%; background: var(--success); transition: width .3s; }
+.checklist li { display: flex; gap: .5rem; align-items: flex-start; font-size: .875rem; margin-bottom: .4rem; }
+.checklist .small { font-size: .75rem; }
+.tip { margin-top: 1rem; background: var(--muted); border-radius: .5rem; padding: 1rem; font-size: .875rem; color: var(--muted-fg); }
+.tip strong { color: var(--foreground); }
+
+/* ===== Geslaagd-modal (in de stijl van Phishingdetective) ===== */
+.win-overlay { position: fixed; inset: 0; background: rgb(15 23 42 / .85); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 900; padding: 1rem; }
+.win-overlay.show { display: flex; }
+.win-overlay.force-hide { display: none !important; }
+.win-overlay.closed{display:none !important}
+.win-card { background: var(--card); border: 2px solid var(--success); border-radius: 1.5rem; max-width: 37rem; width: 100%; max-height: 88vh; overflow-y: auto; padding: 2rem 1.5rem; text-align: center; box-shadow: 0 10px 15px -3px rgb(0 0 0 / .25); animation: popIn .45s cubic-bezier(.34, 1.56, .64, 1); position: relative; }
+@keyframes popIn { from { transform: scale(.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.win-close { position: absolute; top: .75rem; right: .75rem; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--muted); font-size: 1rem; font-weight: 700; line-height: 1; }
+.win-close:hover { background: var(--border); }
+.win-title { font-size: 1.75rem; margin-top: .5rem; line-height: 1.2; color: var(--success); }
+.win-sub { color: var(--muted-fg); font-size: .9rem; max-width: 28rem; margin: .75rem auto 0; line-height: 1.6; }
+.flag-panel { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border: 2px solid #16857e; border-radius: 1rem; padding: 1.5rem 1.25rem; margin: 1.5rem 0 0; text-align: center; position: relative; overflow: hidden; }
+.flag-label { display: inline-block; font-size: .7rem; font-weight: 700; color: #fff; background: #16857e; letter-spacing: .15em; text-transform: uppercase; padding: .3rem .8rem; border-radius: .5rem; margin-bottom: .75rem; }
+#flag-output { display: block; font-family: ui-monospace, Consolas, Monaco, monospace; font-size: 1.25rem; font-weight: 700; color: #f1f5f9; background: rgb(22 133 126 / .15); border: 2px dashed #1fa39a; border-radius: .75rem; padding: .9rem .75rem; letter-spacing: .05em; word-break: break-all; user-select: all; }
+.flag-note { font-size: .8rem; color: #94a3b8; margin: .5rem 0 0; line-height: 1.5; }
+.copy-flag-btn { background: #16857e; color: #fff; border: 0; border-radius: .75rem; padding: .65rem 1.25rem; font-size: .85rem; font-weight: 600; cursor: pointer; margin-top: .75rem; transition: all .15s; box-shadow: 0 1px 2px rgb(0 0 0 / .06); }
+.copy-flag-btn:hover { background: #116a65; transform: translateY(-1px); }
+.win-tips { text-align: left; font-size: .875rem; line-height: 1.8; background: var(--muted); border: 1px solid var(--border); border-radius: .75rem; padding: 1rem 1rem 1rem 1.75rem; margin: 1.25rem 0; color: var(--foreground); }
+.win-tips strong { color: var(--primary); }
+.win-again { background: var(--primary); color: var(--primary-fg); border: 0; border-radius: 999px; padding: .75rem 1.5rem; font-weight: 600; font-size: .9rem; cursor: pointer; box-shadow: 0 1px 2px rgb(0 0 0 / .06); transition: all .15s; }
+.win-again:hover { transform: translateY(-1px); }
+.win-brand { display: block; font-size: .7rem; color: var(--muted-fg); letter-spacing: .08em; margin-top: 1rem; }
+#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 1000; }
+
+/* ===== Mobiel / desktop ===== */
+.hide-mobile { display: none; }
+@media (max-width: 479px) { .hide-xs, .topbar .pill { display: none; } }
+@media (min-width: 640px) {
+  .topbar { padding: 0 1rem; }
+  .main { padding: 1.25rem 1.5rem; }
+  .win-title { font-size: 2rem; }
+  .win-card { padding: 2.5rem 2rem; }
+  select { width: auto; min-width: 16rem; }
+}
+@media (min-width: 768px) {
+  .hide-mobile { display: block; }
+  .mobile-only, .back { display: none; }
+  .sidebar { display: block; position: sticky; top: 3.5rem; height: calc(100vh - 3.5rem); width: 20rem; }
+}
+@media (min-width: 1024px) {
+  .sidebar { width: 22.5rem; }
+  .side-mission { display: block; }
+}
+
+/* ===== Werkt zonder JavaScript: schermen wisselen met CSS ===== */
+.block{display:block}
+.page-panel,.fb{display:none}
+label{cursor:pointer}
+form:has(.pg:not(#p-none):checked) .placeholder{display:none}
+@media (max-width:767px){
+  .sidebar{display:block}.main{display:none}
+  form:has(.pg:not(#p-none):checked) .sidebar{display:none}
+  form:has(.pg:not(#p-none):checked) .main{display:block}
+}
+@media (min-width:768px){.back{display:none}}
+summary{list-style:none}summary::-webkit-details-marker{display:none}
+summary .btn-soft::after{content:"Bewerken"}
+details[open] summary .btn-soft::after{content:"Sluiten"}
+.row-head{cursor:pointer}
+.row-head:focus-visible{outline:2px solid var(--ring);outline-offset:-2px}
+.set-state::after{content:"Nog niet ingesteld"}
+.row:has(input:checked) .set-state::after{content:"✔ Ingesteld"}
+fieldset{border:0;margin:0;min-width:0}
+.opt{display:flex;align-items:center;gap:.6rem;margin-top:.5rem;padding:.6rem .75rem;border:1px solid var(--border);border-radius:.5rem;background:var(--card)}
+.opt:hover{background:var(--muted)}
+.opt:has(input:checked){border-color:var(--primary);background:var(--secondary);font-weight:600}
+.opt:has(input:focus-visible){outline:2px solid var(--ring);outline-offset:2px}
+.opt input{width:1.1rem;height:1.1rem;accent-color:var(--primary);margin:0}
+.opt:has(input:checked)+.fb{display:flex}
+.fb-info{background:var(--card)}
+.segs{display:flex;gap:3px;background:none}
+.segs span{flex:1;background:var(--muted);border-radius:999px;transition:background .3s}
+.cat{--done:0}
+.cat .mark::before{content:"⬜"}
+.cat .status::before{content:"Nog niet af";color:var(--muted-fg)}
+.reset-row{display:flex}
+
+form:has(#p-persoonlijk:checked) .panel-persoonlijk{display:block}
+form:has(#p-persoonlijk:checked) label[for="p-persoonlijk"]{background:var(--secondary)}
+form:has(#p-persoonlijk:focus-visible) label[for="p-persoonlijk"]{outline:2px solid var(--ring)}
+form:has(#p-beveiliging:checked) .panel-beveiliging{display:block}
+form:has(#p-beveiliging:checked) label[for="p-beveiliging"]{background:var(--secondary)}
+form:has(#p-beveiliging:focus-visible) label[for="p-beveiliging"]{outline:2px solid var(--ring)}
+form:has(#p-meldingen:checked) .panel-meldingen{display:block}
+form:has(#p-meldingen:checked) label[for="p-meldingen"]{background:var(--secondary)}
+form:has(#p-meldingen:focus-visible) label[for="p-meldingen"]{outline:2px solid var(--ring)}
+form:has(#p-weergave:checked) .panel-weergave{display:block}
+form:has(#p-weergave:checked) label[for="p-weergave"]{background:var(--secondary)}
+form:has(#p-weergave:focus-visible) label[for="p-weergave"]{outline:2px solid var(--ring)}
+form:has(#p-toegankelijkheid:checked) .panel-toegankelijkheid{display:block}
+form:has(#p-toegankelijkheid:checked) label[for="p-toegankelijkheid"]{background:var(--secondary)}
+form:has(#p-toegankelijkheid:focus-visible) label[for="p-toegankelijkheid"]{outline:2px solid var(--ring)}
+form:has(#p-taal:checked) .panel-taal{display:block}
+form:has(#p-taal:checked) label[for="p-taal"]{background:var(--secondary)}
+form:has(#p-taal:focus-visible) label[for="p-taal"]{outline:2px solid var(--ring)}
+form:has(#p-media:checked) .panel-media{display:block}
+form:has(#p-media:checked) label[for="p-media"]{background:var(--secondary)}
+form:has(#p-media:focus-visible) label[for="p-media"]{outline:2px solid var(--ring)}
+form:has(#p-tijd:checked) .panel-tijd{display:block}
+form:has(#p-tijd:checked) label[for="p-tijd"]{background:var(--secondary)}
+form:has(#p-tijd:focus-visible) label[for="p-tijd"]{outline:2px solid var(--ring)}
+form:has(#p-profielgegevens:checked) .panel-profielgegevens{display:block}
+form:has(#p-profielgegevens:checked) label[for="p-profielgegevens"]{background:var(--secondary)}
+form:has(#p-profielgegevens:focus-visible) label[for="p-profielgegevens"]{outline:2px solid var(--ring)}
+form:has(#p-vinden:checked) .panel-vinden{display:block}
+form:has(#p-vinden:checked) label[for="p-vinden"]{background:var(--secondary)}
+form:has(#p-vinden:focus-visible) label[for="p-vinden"]{outline:2px solid var(--ring)}
+form:has(#p-berichten:checked) .panel-berichten{display:block}
+form:has(#p-berichten:checked) label[for="p-berichten"]{background:var(--secondary)}
+form:has(#p-berichten:focus-visible) label[for="p-berichten"]{outline:2px solid var(--ring)}
+form:has(#p-verhalen:checked) .panel-verhalen{display:block}
+form:has(#p-verhalen:checked) label[for="p-verhalen"]{background:var(--secondary)}
+form:has(#p-verhalen:focus-visible) label[for="p-verhalen"]{outline:2px solid var(--ring)}
+form:has(#p-volgers:checked) .panel-volgers{display:block}
+form:has(#p-volgers:checked) label[for="p-volgers"]{background:var(--secondary)}
+form:has(#p-volgers:focus-visible) label[for="p-volgers"]{outline:2px solid var(--ring)}
+form:has(#p-taggen:checked) .panel-taggen{display:block}
+form:has(#p-taggen:checked) label[for="p-taggen"]{background:var(--secondary)}
+form:has(#p-taggen:focus-visible) label[for="p-taggen"]{outline:2px solid var(--ring)}
+form:has(#p-chat:checked) .panel-chat{display:block}
+form:has(#p-chat:checked) label[for="p-chat"]{background:var(--secondary)}
+form:has(#p-chat:focus-visible) label[for="p-chat"]{outline:2px solid var(--ring)}
+form:has(#p-account-privacy:checked) .panel-account-privacy{display:block}
+form:has(#p-account-privacy:checked) label[for="p-account-privacy"]{background:var(--secondary)}
+form:has(#p-account-privacy:focus-visible) label[for="p-account-privacy"]{outline:2px solid var(--ring)}
+form:has(#p-blokkeren:checked) .panel-blokkeren{display:block}
+form:has(#p-blokkeren:checked) label[for="p-blokkeren"]{background:var(--secondary)}
+form:has(#p-blokkeren:focus-visible) label[for="p-blokkeren"]{outline:2px solid var(--ring)}
+form:has(#p-actief:checked) .panel-actief{display:block}
+form:has(#p-actief:checked) label[for="p-actief"]{background:var(--secondary)}
+form:has(#p-actief:focus-visible) label[for="p-actief"]{outline:2px solid var(--ring)}
+form:has(#p-locatie:checked) .panel-locatie{display:block}
+form:has(#p-locatie:checked) label[for="p-locatie"]{background:var(--secondary)}
+form:has(#p-locatie:focus-visible) label[for="p-locatie"]{outline:2px solid var(--ring)}
+form:has(#p-activiteitenlog:checked) .panel-activiteitenlog{display:block}
+form:has(#p-activiteitenlog:checked) label[for="p-activiteitenlog"]{background:var(--secondary)}
+form:has(#p-activiteitenlog:focus-visible) label[for="p-activiteitenlog"]{outline:2px solid var(--ring)}
+form:has(#p-advertenties:checked) .panel-advertenties{display:block}
+form:has(#p-advertenties:checked) label[for="p-advertenties"]{background:var(--secondary)}
+form:has(#p-advertenties:focus-visible) label[for="p-advertenties"]{outline:2px solid var(--ring)}
+form:has(#p-apps:checked) .panel-apps{display:block}
+form:has(#p-apps:checked) label[for="p-apps"]{background:var(--secondary)}
+form:has(#p-apps:focus-visible) label[for="p-apps"]{outline:2px solid var(--ring)}
+form:has(#p-gegevens:checked) .panel-gegevens{display:block}
+form:has(#p-gegevens:checked) label[for="p-gegevens"]{background:var(--secondary)}
+form:has(#p-gegevens:focus-visible) label[for="p-gegevens"]{outline:2px solid var(--ring)}
+
+/* ===== Categorie
+form:has(#p-werk:checked) .panel-werk{display:block}
+form:has(#p-werk:checked) label[for="p-werk"]{background:var(--secondary)}
+form:has(#p-werk:focus-visible) label[for="p-werk"]{outline:2px solid var(--ring)}
+form:has(#p-relatie:checked) .panel-relatie{display:block}
+form:has(#p-relatie:checked) label[for="p-relatie"]{background:var(--secondary)}
+form:has(#p-relatie:focus-visible) label[for="p-relatie"]{outline:2px solid var(--ring)}
+ voltooid: account (incl. naam) ===== */
+form:has(#o-name-o0:checked):has(#o-posts-friends:checked):has(#o-private-private:checked):has(#o-friendlist-me:checked):has(#o-search-no:checked):has(#o-bday-o2:checked):has(#o-school-o1:checked,#o-school-o2:checked):has(#o-frq-o1:checked) .cat-account{--done:1}
+form:has(#o-name-o0:checked):has(#o-posts-friends:checked):has(#o-private-private:checked):has(#o-friendlist-me:checked):has(#o-search-no:checked):has(#o-bday-o2:checked):has(#o-school-o1:checked,#o-school-o2:checked):has(#o-frq-o1:checked) .seg-0{background:var(--success)}
+/* ===== Categorie voltooid: berichten (incl. oude berichten + leesbevestigingen) ===== */
+form:has(#o-dm-friends:checked):has(#o-comments-friends:checked):has(#o-stories-friends:checked,#o-stories-list:checked):has(#o-past-o1:checked):has(#o-read-o0:checked) .cat-messages{--done:1}
+form:has(#o-dm-friends:checked):has(#o-comments-friends:checked):has(#o-stories-friends:checked,#o-stories-list:checked):has(#o-past-o1:checked):has(#o-read-o0:checked) .seg-1{background:var(--success)}
+/* ===== Categorie voltooid: tags ===== */
+form:has(#o-tagwho-friends:checked):has(#o-tagreview-yes:checked):has(#o-mention-friends:checked,#o-mention-none:checked) .cat-tags{--done:1}
+form:has(#o-tagwho-friends:checked):has(#o-tagreview-yes:checked):has(#o-mention-friends:checked,#o-mention-none:checked) .seg-2{background:var(--success)}
+/* ===== Categorie voltooid: activiteit en locatie ===== */
+form:has(#o-online-none:checked):has(#o-location-ask:checked,#o-location-never:checked):has(#o-autoloc-no:checked) .cat-activity{--done:1}
+form:has(#o-online-none:checked):has(#o-location-ask:checked,#o-location-never:checked):has(#o-autoloc-no:checked) .seg-3{background:var(--success)}
+/* ===== Categorie voltooid: beveiliging ===== */
+form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security{--done:1}
+form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .seg-4{background:var(--success)}
+
+/* ===== GESLAAGD: modal tonen als ALLES veilig staat ===== */
+form:has(#o-name-o0:checked):has(#o-posts-friends:checked):has(#o-private-private:checked):has(#o-friendlist-me:checked):has(#o-search-no:checked):has(#o-bday-o2:checked):has(#o-school-o1:checked,#o-school-o2:checked):has(#o-frq-o1:checked):has(#o-dm-friends:checked):has(#o-comments-friends:checked):has(#o-stories-friends:checked,#o-stories-list:checked):has(#o-past-o1:checked):has(#o-read-o0:checked):has(#o-tagwho-friends:checked):has(#o-tagreview-yes:checked):has(#o-mention-friends:checked,#o-mention-none:checked):has(#o-online-none:checked):has(#o-location-ask:checked,#o-location-never:checked):has(#o-autoloc-no:checked):has(#o-2fa-on:checked):has(#o-loginalert-on:checked):has(#o-opleiding-everyone:checked):has(#o-werkervaring-public:checked):has(#o-solliciteren-on:checked):has(#o-relatie-friends:checked):has(#o-familie-friends:checked):has(#o-relatie-ads-off:checked) .win-overlay{display:flex}
+
+form:has(#o-name-o0:checked):has(#o-posts-friends:checked):has(#o-private-private:checked):has(#o-friendlist-me:checked):has(#o-search-no:checked):has(#o-bday-o2:checked):has(#o-school-o1:checked,#o-school-o2:checked):has(#o-frq-o1:checked) .cat-account .mark::before{content:"✅"}
+form:has(#o-name-o0:checked):has(#o-posts-friends:checked):has(#o-private-private:checked):has(#o-friendlist-me:checked):has(#o-search-no:checked):has(#o-bday-o2:checked):has(#o-school-o1:checked,#o-school-o2:checked):has(#o-frq-o1:checked) .cat-account .status::before{content:"Afgerond";color:var(--success)}
+form:has(#o-dm-friends:checked):has(#o-comments-friends:checked):has(#o-stories-friends:checked,#o-stories-list:checked):has(#o-past-o1:checked):has(#o-read-o0:checked) .cat-messages .mark::before{content:"✅"}
+form:has(#o-dm-friends:checked):has(#o-comments-friends:checked):has(#o-stories-friends:checked,#o-stories-list:checked):has(#o-past-o1:checked):has(#o-read-o0:checked) .cat-messages .status::before{content:"Afgerond";color:var(--success)}
+form:has(#o-tagwho-friends:checked):has(#o-tagreview-yes:checked):has(#o-mention-friends:checked,#o-mention-none:checked) .cat-tags .mark::before{content:"✅"}
+form:has(#o-tagwho-friends:checked):has(#o-tagreview-yes:checked):has(#o-mention-friends:checked,#o-mention-none:checked) .cat-tags .status::before{content:"Afgerond";color:var(--success)}
+form:has(#o-online-none:checked):has(#o-location-ask:checked,#o-location-never:checked):has(#o-autoloc-no:checked) .cat-activity .mark::before{content:"✅"}
+form:has(#o-online-none:checked):has(#o-location-ask:checked,#o-location-never:checked):has(#o-autoloc-no:checked) .cat-activity .status::before{content:"Afgerond";color:var(--success)}
+form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security .mark::before{content:"✅"}
+form:has(#o-2fa-on:checked):has(#o-loginalert-on:checked) .cat-security .status::before{content:"Afgerond";color:var(--success)}
+</style>
+</head>
+<body>
+<form id="game" onsubmit="return false">
+<!-- VERBORGEN RADIO INPUTS VOOR PAGINA-NAVIGATIE (JS-vrij schermen) -->
+<input type="checkbox" id="start" class="sr-only" aria-label="Spel gestart" checked>
+<input type="radio" class="pg sr-only" name="page" id="p-none" checked aria-label="Terug naar het menu">
+<input type="radio" class="pg sr-only" name="page" id="p-persoonlijk" aria-label="Persoonlijke gegevens">
+<input type="radio" class="pg sr-only" name="page" id="p-beveiliging" aria-label="Wachtwoord en beveiliging">
+<input type="radio" class="pg sr-only" name="page" id="p-meldingen" aria-label="Meldingen">
+<input type="radio" class="pg sr-only" name="page" id="p-weergave" aria-label="Weergave">
+<input type="radio" class="pg sr-only" name="page" id="p-toegankelijkheid" aria-label="Toegankelijkheid">
+<input type="radio" class="pg sr-only" name="page" id="p-taal" aria-label="Taal en regio">
+<input type="radio" class="pg sr-only" name="page" id="p-media" aria-label="Media">
+<input type="radio" class="pg sr-only" name="page" id="p-tijd" aria-label="Je tijd op GezichtBoek">
+<input type="radio" class="pg sr-only" name="page" id="p-profielgegevens" aria-label="Profielgegevens">
+<input type="radio" class="pg sr-only" name="page" id="p-vinden" aria-label="Hoe mensen je vinden en contact met je opnemen">
+<input type="radio" class="pg sr-only" name="page" id="p-berichten" aria-label="Berichten">
+<input type="radio" class="pg sr-only" name="page" id="p-verhalen" aria-label="Verhalen">
+<input type="radio" class="pg sr-only" name="page" id="p-volgers" aria-label="Volgers en openbare content">
+<input type="radio" class="pg sr-only" name="page" id="p-taggen" aria-label="Profiel en taggen">
+<input type="radio" class="pg sr-only" name="page" id="p-chat" aria-label="Chatberichten">
+<input type="radio" class="pg sr-only" name="page" id="p-account-privacy" aria-label="Accountprivacy">
+<input type="radio" class="pg sr-only" name="page" id="p-blokkeren" aria-label="Blokkeren">
+<input type="radio" class="pg sr-only" name="page" id="p-actief" aria-label="Actieve status">
+<input type="radio" class="pg sr-only" name="page" id="p-locatie" aria-label="Locatie">
+<input type="radio" class="pg sr-only" name="page" id="p-activiteitenlog" aria-label="Activiteitenlogboek">
+<input type="radio" class="pg sr-only" name="page" id="p-advertenties" aria-label="Advertentievoorkeuren">
+<input type="radio" class="pg sr-only" name="page" id="p-apps" aria-label="Apps en websites">
+<input type="radio" class="pg sr-only" name="page" id="p-gegevens" aria-label="Je gegevens downloaden">
+<input type="radio" class="pg sr-only" name="page" id="p-werk" aria-label="Werk en opleiding">
+<input type="radio" class="pg sr-only" name="page" id="p-relatie" aria-label="Relaties en privacy">
+
+<div class="app">
+<header class="topbar">
+  <div class="flex">
+    <span class="logo" aria-hidden="true">v</span>
+    <span class="display brand-blue hide-xs">GezichtBoek</span>
+  </div>
+  <div class="flex">
+    <button type="reset" class="btn-soft round">↺ Opnieuw beginnen</button>
+    <span class="avatar" role="img" aria-label="Profiel van Lars (17 jaar, fictief)">🙋‍♀️</span>
+  </div>
+</header>
+
+<div class="layout">
+<aside class="sidebar">
+  <div class="pad">
+    <h1 class="display">Instellingen en privacy</h1>
+    <div class="mobile-only mt">
+      <div class="card pad mission">
+        <h2>🎯 Missie: help Lars</h2>
+        <p class="small muted">Zet alle 7 onderdelen op veilig</p>
+        <div class="bar segs" aria-hidden="true"><span class="seg-0"></span><span class="seg-1"></span><span class="seg-2"></span><span class="seg-3"></span><span class="seg-4"></span><span class="seg-5"></span><span class="seg-6"></span></div>
+        <ul class="checklist">
+          <li class="cat cat-account"><span class="mark" aria-hidden="true"></span><span><span class="b">Account en zichtbaarheid</span><span class="small status"></span></span></li>
+          <li class="cat cat-messages"><span class="mark" aria-hidden="true"></span><span><span class="b">Berichten en reacties</span><span class="small status"></span></span></li>
+          <li class="cat cat-tags"><span class="mark" aria-hidden="true"></span><span><span class="b">Tags en vermeldingen</span><span class="small status"></span></span></li>
+          <li class="cat cat-activity"><span class="mark" aria-hidden="true"></span><span><span class="b">Activiteit en locatie</span><span class="small status"></span></span></li>
+          <li class="cat cat-security"><span class="mark" aria-hidden="true"></span><span><span class="b">Beveiliging</span><span class="small status"></span></span></li>
+        </ul>
+        <aside class="tip"><strong>💬 Word je online lastiggevallen?</strong> Schakel een vertrouwde volwassene in, blokkeer of meld de persoon en bewaar bewijs (zoals schermafbeeldingen). Zoek zelf geen contact.</aside>
+      </div>
+    </div>
+  </div>
+  <nav aria-label="Instellingen">
+    <div class="group">
+      <h2>Accountcentrum</h2>
+      <p class="small muted">Beheer je wachtwoord, beveiliging en persoonlijke gegevens.</p>
+      <ul>
+        <li><label class="nav-item" for="p-persoonlijk"><span class="ico" aria-hidden="true">🪪</span><span>Persoonlijke gegevens</span></label></li>
+        <li><label class="nav-item" for="p-beveiliging"><span class="ico" aria-hidden="true">🛡️</span><span>Wachtwoord en beveiliging</span></label></li>
+    <div class="group">
+      <h2>Voorkeuren</h2>
+      <p class="small muted">Pas je ervaring op GezichtBoek aan.</p>
+      <ul>
+        <li><label class="nav-item" for="p-meldingen"><span class="ico" aria-hidden="true">🔔</span><span>Meldingen</span></label></li>
+        <li><label class="nav-item" for="p-weergave"><span class="ico" aria-hidden="true">🌙</span><span>Weergave</span></label></li>
+        <li><label class="nav-item" for="p-toegankelijkheid"><span class="ico" aria-hidden="true">♿</span><span>Toegankelijkheid</span></label></li>
+        <li><label class="nav-item" for="p-taal"><span class="ico" aria-hidden="true">🌐</span><span>Taal en regio</span></label></li>
+        <li><label class="nav-item" for="p-media"><span class="ico" aria-hidden="true">▶️</span><span>Media</span></label></li>
+        <li><label class="nav-item" for="p-tijd"><span class="ico" aria-hidden="true">⏰</span><span>Je tijd op GezichtBoek</span></label></li>
+      </ul>
+    </div>
+    <div class="group">
+      <h2>Doelgroep en zichtbaarheid</h2>
+      <p class="small muted">Bepaal wie kan zien wat je deelt.</p>
+      <ul>
+        <li><label class="nav-item" for="p-profielgegevens"><span class="ico" aria-hidden="true">👤</span><span>Profielgegevens</span></label></li>
+        <li><label class="nav-item" for="p-vinden"><span class="ico" aria-hidden="true">🔍</span><span>Hoe mensen je vinden en contact met je opnemen</span></label></li>
+        <li><label class="nav-item" for="p-berichten"><span class="ico" aria-hidden="true">📰</span><span>Berichten</span></label></li>
+        <li><label class="nav-item" for="p-verhalen"><span class="ico" aria-hidden="true">⭕</span><span>Verhalen</span></label></li>
+        <li><label class="nav-item" for="p-volgers"><span class="ico" aria-hidden="true">👥</span><span>Volgers en openbare content</span></label></li>
+        <li><label class="nav-item" for="p-taggen"><span class="ico" aria-hidden="true">🏷️</span><span>Profiel en taggen</span></label></li>
+        <li><label class="nav-item" for="p-chat"><span class="ico" aria-hidden="true">💬</span><span>Chatberichten</span></label></li>
+        <li><label class="nav-item" for="p-account-privacy"><span class="ico" aria-hidden="true">🔒</span><span>Accountprivacy</span></label></li>
+        <li><label class="nav-item" for="p-blokkeren"><span class="ico" aria-hidden="true">🚫</span><span>Blokkeren</span></label></li>
+        <li><label class="nav-item" for="p-werk"><span class="ico" aria-hidden="true">💼</span><span>Werk en opleiding</span></label></li>
+        <li><label class="nav-item" for="p-relatie"><span class="ico" aria-hidden="true">💑</span><span>Relaties en privacy</span></label></li>
+      </ul>
+    </div>
+    <div class="group">
+      <h2>Je activiteit</h2>
+      <p class="small muted">Wat anderen zien van wat je doet.</p>
+      <ul>
+        <li><label class="nav-item" for="p-actief"><span class="ico" aria-hidden="true">🟢</span><span>Actieve status</span></label></li>
+        <li><label class="nav-item" for="p-locatie"><span class="ico" aria-hidden="true">📍</span><span>Locatie</span></label></li>
+        <li><label class="nav-item" for="p-activiteitenlog"><span class="ico" aria-hidden="true">🕘</span><span>Activiteitenlogboek</span></label></li>
+      </ul>
+    </div>
+    <div class="group">
+      <h2>Machtigingen</h2>
+      <p class="small muted">Advertenties, apps en gegevens.</p>
+      <ul>
+        <li><label class="nav-item" for="p-advertenties"><span class="ico" aria-hidden="true">📣</span><span>Advertentievoorkeuren</span></label></li>
+        <li><label class="nav-item" for="p-apps"><span class="ico" aria-hidden="true">🧩</span><span>Apps en websites</span></label></li>
+        <li><label class="nav-item" for="p-gegevens"><span class="ico" aria-hidden="true">⬇️</span><span>Je gegevens downloaden</span></label></li>
+      </ul>
+    </div>
+  </nav>
+</aside>
+
+<div class="main">
+  <div class="main-inner">
+    <div class="grow">
+      <!-- PLACERINGSPLAATS -->
+      <div class="card pad center placeholder">
+        <div class="emoji" aria-hidden="true">🔎</div>
+        <h1 class="display">Ga op zoek!</h1>
+        <p class="muted">De instellingen die Sanne beschermen zitten verstopt tussen veel andere instellingen. Klik door het menu en zet alles wat over privacy en veiligheid gaat zo veilig mogelijk.</p>
+      </div>
+
+      <!-- ===== PERSOONLIJKE GEGEVENS (met Naam-opties) ===== -->
+      <section class="page-panel panel-persoonlijk">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head">
+            <h1 class="display">Persoonlijke gegevens</h1>
+            <p class="small muted">Naam, contactgegevens en verjaardag.</p>
+          </div>
+
+          <details class="row">
+            <summary class="row-head">
+              <span class="grow">
+                <span class="b block">Naam</span>
+                <span class="small muted set-state"></span>
+              </span>
+              <span class="btn-soft"></span>
+            </summary>
+            <fieldset class="row-panel">
+              <legend class="sr-only">Naam</legend>
+              <p class="small muted">Zo heet je op GezichtBoek.</p>
+              
+              <label class="opt">
+                <input type="radio" name="s-name" id="o-name-o0" value="o0">
+                <span>Sanne V.</span>
+              </label>
+              <div class="fb fb-ok" role="status">
+                <span aria-hidden="true">✅</span>
+                <p><strong>Veilige keuze!</strong> Slim! Je achternaam met initiel geeft minder persoonlijk weg. (Nieuw in deze versie)</p>
+              </div>
+
+              <label class="opt">
+                <input type="radio" name="s-name" id="o-name-o1" value="o1">
+                <span>Sanne Voorbeeld</span>
+              </label>
+              <div class="fb fb-warn" role="status">
+                <span aria-hidden="true">💡</span>
+                <p><strong>Let op:</strong> Volledige namen zijn makkelijker te vinden. 'Sanne V.' geeft meer privacy.</p>
+              </div>
+            </fieldset>
+          </details>
+
+          <details class="row">
+            <summary class="row-head">
+              <span class="grow">
+                <span class="b block">Accounttype</span>
+                <span class="small muted set-state"></span>
+              </span>
+              <span class="btn-soft"></span>
+            </summary>
+            <fieldset class="row-panel">
+              <legend class="sr-only">Accounttype</legend>
+              <p class="small muted">Persoonlijk of zakelijk account.</p>
+              
+              <label class="opt">
+                <input type="radio" name="s-lang-acc" id="o-lang-acc-o0" value="o0">
+                <span>Persoonlijk</span>
+              </label>
+              <div class="fb fb-info" role="status">
+                <span aria-hidden="true">ℹ️</span>
+                <p>Opgeslagen. Dit is een gewone voorkeur: het maakt niet uit voor wie Sanne kan volgen.</p>
+              </div>
+
+              <label class="opt">
+                <input type="radio" name="s-lang-acc" id="o-lang-acc-o1" value="o1">
+                <span>Zakelijk</span>
+              </label>
+              <div class="fb fb-info" role="status">
+                <span aria-hidden="true">ℹ️</span>
+                <p>Opgeslagen. Dit is een gewone voorkeur: het maakt niet uit voor wie Sanne kan volgen.</p>
+              </div>
+            </fieldset>
+          </details>
+        </div>
+
+        <div class="mobile-only mt">
+          <div class="card pad mission">
+            <h2>🎯 Missie: help Lars</h2>
+            <p class="small muted">Zet alle 7 onderdelen op veilig</p>
+            <div class="bar segs" aria-hidden="true"><span class="seg-0"></span><span class="seg-1"></span><span class="seg-2"></span><span class="seg-3"></span><span class="seg-4"></span><span class="seg-5"></span><span class="seg-6"></span></div>
+            <ul class="checklist">
+              <li class="cat cat-account"><span class="mark" aria-hidden="true"></span><span><span class="b">Account en zichtbaarheid</span><span class="small status"></span></span></li>
+              <li class="cat cat-messages"><span class="mark" aria-hidden="true"></span><span><span class="b">Berichten en reacties</span><span class="small status"></span></span></li>
+              <li class="cat cat-tags"><span class="mark" aria-hidden="true"></span><span><span class="b">Tags en vermeldingen</span><span class="small status"></span></span></li>
+              <li class="cat cat-activity"><span class="mark" aria-hidden="true"></span><span><span class="b">Activiteit en locatie</span><span class="small status"></span></span></li>
+              <li class="cat cat-security"><span class="mark" aria-hidden="true"></span><span><span class="b">Beveiliging</span><span class="small status"></span></span></li>
+              <li class="cat cat-werk"><span class="mark" aria-hidden="true"></span><span><span class="b">Werk en opleiding</span><span class="small status"></span></span></li>
+              <li class="cat cat-relatie"><span class="mark" aria-hidden="true"></span><span><span class="b">Relaties en privacy</span><span class="small status"></span></span></li>
+            </ul>
+            <aside class="tip"><strong>💡 Tip:</strong> Denk na over wat je deelt. Werkgevers kijken vaak naar sociale media profielen tijdens sollicitaties. Zorg dat je profiel professioneel oogt!</aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== BEVEILIGING ===== -->
+      <section class="page-panel panel-beveiliging">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head">
+            <h1 class="display">Wachtwoord en beveiliging</h1>
+            <p class="small muted">Inloggen, waarschuwingen en controles.</p>
+          </div>
+
+          <details class="row">
+            <summary class="row-head">
+              <span class="grow">
+                <span class="b block">Wil je extra inlogbeveiliging inschakelen?</span>
+                <span class="small muted set-state"></span>
+              </span>
+              <span class="btn-soft"></span>
+            </summary>
+            <fieldset class="row-panel">
+              <legend class="sr-only">Extra inlogbeveiliging</legend>
+              <p class="small muted">Extra privacymaatregel. Je hoeft hier geen telefoonnummer of code in te vullen: dit is een oefening.</p>
+              
+              <label class="opt">
+                <input type="radio" name="s-2fa" id="o-2fa-off" value="off">
+                <span>Uit</span>
+              </label>
+              <div class="fb fb-warn" role="status">
+                <span aria-hidden="true">💡</span>
+                <p><strong>Let op:</strong> Zonder extra controle kan iemand met alleen je wachtwoord inloggen. Zet het aan.</p>
+              </div>
+
+              <label class="opt">
+                <input type="radio" name="s-2fa" id="o-2fa-on" value="on">
+                <span>Aan</span>
+              </label>
+              <div class="fb fb-ok" role="status">
+                <span aria-hidden="true">✅</span>
+                <p><strong>Veilige keuze!</strong> Top! Extra inlogcontrole maakt het moeilijker voor iemand anders om in je account te komen.</p>
+              </div>
+            </fieldset>
+          </details>
+
+          <details class="row">
+            <summary class="row-head">
+              <span class="grow">
+                <span class="b block">Wil je een melding krijgen bij een nieuwe of onbekende aanmelding?</span>
+                <span class="small muted set-state"></span>
+              </span>
+              <span class="btn-soft"></span>
+            </summary>
+            <fieldset class="row-panel">
+              <legend class="sr-only">Loginmelding</legend>
+              <p class="small muted">Extra privacymaatregel: je krijgt een seintje als er ergens anders wordt ingelogd.</p>
+              
+              <label class="opt">
+                <input type="radio" name="s-loginalert" id="o-loginalert-off" value="off">
+                <span>Uit</span>
+              </label>
+              <div class="fb fb-warn" role="status">
+                <span aria-hidden="true">💡</span>
+                <p><strong>Let op:</strong> Dan merk je niet als iemand anders probeert in te loggen. Zet het aan.</p>
+              </div>
+
+              <label class="opt">
+                <input type="radio" name="s-loginalert" id="o-loginalert-on" value="on">
+                <span>Aan</span>
+              </label>
+              <div class="fb fb-ok" role="status">
+                <span aria-hidden="true">✅</span>
+                <p><strong>Veilige keuze!</strong> Goed! Je merkt het nu sneller als iemand anders probeert in te loggen.</p>
+              </div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+      <section class="page-panel panel-meldingen">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head">
+            <h1 class="display">Meldingen</h1>
+            <p class="small muted">Kies waarover je een seintje krijgt.</p>
+          </div>
+
+          <details class="row">
+            <summary class="row-head">
+              <span class="grow"><span class="b block">Pushmeldingen</span><span class="small muted set-state"></span></span>
+              <span class="btn-soft"></span>
+            </summary>
+            <fieldset class="row-panel">
+              <legend class="sr-only">Pushmeldingen</legend>
+              <p class="small muted">Meldingen op je telefoon.</p>
+              <label class="opt"><input type="radio" name="s-push" id="o-push-o0" value="o0"><span>Aan</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen. Dit is een gewone voorkeur.</p></div>
+              <label class="opt"><input type="radio" name="s-push" id="o-push-o1" value="o1"><span>Uit</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen. Dit is een gewone voorkeur.</p></div>
+            </fieldset>
+          </details>
+
+          <details class="row">
+            <summary class="row-head">
+              <span class="grow"><span class="b block">E-mailmeldingen</span><span class="small muted set-state"></span></span>
+              <span class="btn-soft"></span>
+            </summary>
+            <fieldset class="row-panel">
+              <legend class="sr-only">E-mailmeldingen</legend>
+              <p class="small muted">Meldingen per e-mail.</p>
+              <label class="opt"><input type="radio" name="s-email" id="o-email-o0" value="o0"><span>Alles</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen. Dit is een gewone voorkeur.</p></div>
+              <label class="opt"><input type="radio" name="s-email" id="o-email-o1" value="o1"><span>Alleen belangrijk</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen. Dit is een gewone voorkeur.</p></div>
+              <label class="opt"><input type="radio" name="s-email" id="o-email-o2" value="o2"><span>Uit</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen. Dit is een gewone voorkeur.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== WEERGAVE ===== -->
+      <section class="page-panel panel-weergave">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Weergave</h1><p class="small muted">Donkere modus en lettergrootte.</p></div>
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Donkere modus</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Donkere achtergrond.</p>
+              <label class="opt"><input type="radio" name="s-dark" id="o-dark-o0" value="o0"><span>Uit</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+              <label class="opt"><input type="radio" name="s-dark" id="o-dark-o1" value="o1"><span>Aan</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== TOEGANKELIJKHEID ===== -->
+      <section class="page-panel panel-toegankelijkheid">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Toegankelijkheid</h1><p class="small muted">Ondertiteling en animaties.</p></div>
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Ondertiteling</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Toon ondertitels bij video's.</p>
+              <label class="opt"><input type="radio" name="s-subs" id="o-subs-o0" value="o0"><span>Aan</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+              <label class="opt"><input type="radio" name="s-subs" id="o-subs-o1" value="o1"><span>Uit</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== TAAL ===== -->
+      <section class="page-panel panel-taal">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Taal en regio</h1><p class="small muted">Taal en vertalingen.</p></div>
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Taal</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">De taal van GezichtBoek.</p>
+              <label class="opt"><input type="radio" name="s-lang" id="o-lang-o0" value="o0"><span>Nederlands</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+              <label class="opt"><input type="radio" name="s-lang" id="o-lang-o1" value="o1"><span>English</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== MEDIA ===== -->
+      <section class="page-panel panel-media">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Media</h1><p class="small muted">Video's en uploadkwaliteit.</p></div>
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Video's automatisch afspelen</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Video's starten vanzelf.</p>
+              <label class="opt"><input type="radio" name="s-autoplay" id="o-autoplay-o0" value="o0"><span>Aan</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+              <label class="opt"><input type="radio" name="s-autoplay" id="o-autoplay-o1" value="o1"><span>Alleen via wifi</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+              <label class="opt"><input type="radio" name="s-autoplay" id="o-autoplay-o2" value="o2"><span>Uit</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== TIJD OP GEZICHTBOEK ===== -->
+      <section class="page-panel panel-tijd">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Je tijd op GezichtBoek</h1><p class="small muted">Herinneringen en pauzes.</p></div>
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Dagelijkse herinnering</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Een seintje als je lang online bent.</p>
+              <label class="opt"><input type="radio" name="s-remind" id="o-remind-o0" value="o0"><span>Uit</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+              <label class="opt"><input type="radio" name="s-remind" id="o-remind-o1" value="o1"><span>Na 30 minuten</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+              <label class="opt"><input type="radio" name="s-remind" id="o-remind-o2" value="o2"><span>Na 1 uur</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== PROFIELGEGEVENS ===== -->
+      <section class="page-panel panel-profielgegevens">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Profielgegevens</h1><p class="small muted">Wie ziet je info op je profiel.</p></div>
+
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Wie kan je geboortedatum zien?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Kies wie deze persoonlijke informatie mag zien.</p>
+              <label class="opt"><input type="radio" name="s-bday" id="o-bday-o0" value="o0"><span>Iedereen</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> onbekenden kunnen dan je geboortedatum zien.</p></div>
+              <label class="opt"><input type="radio" name="s-bday" id="o-bday-o1" value="o1"><span>Vrienden</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p>Vrienden kunnen je geboortedatum zien. 'Alleen ik' is privacyvriendelijker.</p></div>
+              <label class="opt"><input type="radio" name="s-bday" id="o-bday-o2" value="o2"><span>Alleen ik</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Je geboortedatum is alleen voor jou zichtbaar.</p></div>
+            </fieldset>
+          </details>
+
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Wie kan je school zien?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Je school kan iets zeggen over waar je vaak bent.</p>
+              <label class="opt"><input type="radio" name="s-school" id="o-school-o0" value="o0"><span>Iedereen</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> onbekenden kunnen zien naar welke school je gaat.</p></div>
+              <label class="opt"><input type="radio" name="s-school" id="o-school-o1" value="o1"><span>Vrienden</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Alleen vrienden kunnen je school zien. Privé is veiliger.</p></div>
+              <label class="opt"><input type="radio" name="s-school" id="o-school-o2" value="o2"><span>Alleen ik</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Je school is alleen voor jou zichtbaar.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== HOE MENSEN JE VINDEN ===== -->
+      <section class="page-panel panel-vinden">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Hoe mensen je vinden</h1><p class="small muted">Zoeken, vriendschapsverzoeken en lijsten.</p></div>
+
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Wie kan mijn vriendenlijst bekijken?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Je vriendenlijst laat zien met wie je omgaat.</p>
+              <label class="opt"><input type="radio" name="s-friendlist" id="o-friendlist-everyone" value="everyone"><span>Iedereen</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Een onbekende kan zo zien wie je vrienden zijn.</p></div>
+              <label class="opt"><input type="radio" name="s-friendlist" id="o-friendlist-friends" value="friends"><span>Vrienden</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Beter, maar 'Alleen ik' geeft meer privacy.</p></div>
+              <label class="opt"><input type="radio" name="s-friendlist" id="o-friendlist-me" value="me"><span>Alleen ik</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Slim! Een verborgen vriendenlijst geeft minder informatie.</p></div>
+            </fieldset>
+          </details>
+
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Mogen zoekmachines buiten het platform mijn profiel tonen?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Extra privacymaatregel: gaat over gewone zoekmachines.</p>
+              <label class="opt"><input type="radio" name="s-search" id="o-search-yes" value="yes"><span>Ja</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Dan kan iemand je profiel vinden door je naam te zoeken.</p></div>
+              <label class="opt"><input type="radio" name="s-search" id="o-search-no" value="no"><span>Nee</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Je profiel is nu minder makkelijk via zoekmachines te vinden.</p></div>
+            </fieldset>
+          </details>
+
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Wie kan je vriendschapsverzoeken sturen?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Beperk verzoeken van onbekenden.</p>
+              <label class="opt"><input type="radio" name="s-frq" id="o-frq-o0" value="o0"><span>Iedereen</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> iedereen kan dan een verzoek sturen, ook onbekenden.</p></div>
+              <label class="opt"><input type="radio" name="s-frq" id="o-frq-o1" value="o1"><span>Vrienden van vrienden</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Zo kunnen niet zomaar alle onbekenden een verzoek sturen.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== BERICHTEN ===== -->
+      <section class="page-panel panel-berichten">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Berichten</h1><p class="small muted">Wie je berichten kan zien.</p></div>
+
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Wie kan mijn berichten bekijken?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Bepaalt wie je foto's en berichten op je profiel ziet.</p>
+              <label class="opt"><input type="radio" name="s-posts" id="o-posts-everyone" value="everyone"><span>Iedereen</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Iedereen betekent ook mensen die je niet kent.</p></div>
+              <label class="opt"><input type="radio" name="s-posts" id="o-posts-fof" value="fof"><span>Vrienden van vrienden</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Vrienden van vrienden zijn vaak honderden onbekenden.</p></div>
+              <label class="opt"><input type="radio" name="s-posts" id="o-posts-friends" value="friends"><span>Vrienden</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Goed zo! Nu kunnen alleen goedgekeurde vrienden de berichten zien.</p></div>
+            </fieldset>
+          </details>
+
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Oude berichten beperken</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Zet al je eerdere berichten in één keer op Vrienden.</p>
+              <label class="opt"><input type="radio" name="s-past" id="o-past-o0" value="o0"><span>Niet nu</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Oude berichten kunnen nog voor iedereen zichtbaar zijn. 'Beperken' is veiliger.</p></div>
+              <label class="opt"><input type="radio" name="s-past" id="o-past-o1" value="o1"><span>Beperken</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Slim! Alle oude berichten zijn nu ook alleen voor vrienden.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== VERHALEN ===== -->
+      <section class="page-panel panel-verhalen">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Verhalen</h1><p class="small muted">Tijdelijke updates.</p></div>
+
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Wie kan mijn verhalen bekijken?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Verhalen verdwijnen na een tijdje, maar kunnen worden vastgelegd.</p>
+              <label class="opt"><input type="radio" name="s-stories" id="o-stories-everyone" value="everyone"><span>Iedereen</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Tijdelijk is niet onzichtbaar: iedereen kan een schermafbeelding maken.</p></div>
+              <label class="opt"><input type="radio" name="s-stories" id="o-stories-friends" value="friends"><span>Vrienden</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Goed! Let op: ook vrienden kunnen een verhaal nog vastleggen.</p></div>
+              <label class="opt"><input type="radio" name="s-stories" id="o-stories-list" value="list"><span>Alleen een zelfgekozen lijst</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Heel goed! Alleen vertrouwde personen zien het.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== VOLGERS ===== -->
+      <section class="page-panel panel-volgers">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Volgers en openbare content</h1><p class="small muted">Volgers en reacties.</p></div>
+
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Wie kan reageren op mijn berichten?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Reacties staan onder je berichten.</p>
+              <label class="opt"><input type="radio" name="s-comments" id="o-comments-everyone" value="everyone"><span>Iedereen</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Zo kunnen onbekenden vervelende reacties plaatsen.</p></div>
+              <label class="opt"><input type="radio" name="s-comments" id="o-comments-fof" value="fof"><span>Vrienden van vrienden</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Bijna! Maar vrienden van vrienden ken je meestal niet.</p></div>
+              <label class="opt"><input type="radio" name="s-comments" id="o-comments-friends" value="friends"><span>Vrienden</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Goed! Dit beperkt ongewenste reacties van onbekenden.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== TAGGEN ===== -->
+      <section class="page-panel panel-taggen">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Profiel en taggen</h1><p class="small muted">Tags en vermeldingen.</p></div>
+
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Wie mag mij taggen?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Een tag koppelt jouw naam aan een foto of bericht.</p>
+              <label class="opt"><input type="radio" name="s-tagwho" id="o-tagwho-everyone" value="everyone"><span>Iedereen</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Dan kunnen onbekenden je naam aan hun foto's koppelen.</p></div>
+              <label class="opt"><input type="radio" name="s-tagwho" id="o-tagwho-friends" value="friends"><span>Vrienden</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Goed! Dit beperkt tags van onbekenden.</p></div>
+              <label class="opt"><input type="radio" name="s-tagwho" id="o-tagwho-none" value="none"><span>Niemand</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Begrijpelijk, maar in dit spel kiezen we 'Vrienden' + goedkeuring.</p></div>
+            </fieldset>
+          </details>
+
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Moet ik tags eerst goedkeuren?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Met goedkeuring zie je een tag eerst zelf.</p>
+              <label class="opt"><input type="radio" name="s-tagreview" id="o-tagreview-yes" value="yes"><span>Ja</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Slim! Je kunt eerst controleren wat er op je profiel verschijnt.</p></div>
+              <label class="opt"><input type="radio" name="s-tagreview" id="o-tagreview-no" value="no"><span>Nee</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Dan verschijnt elke tag meteen op je profiel.</p></div>
+            </fieldset>
+          </details>
+
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Wie mag mij vermelden?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Een vermelding is als iemand @jouwnaam typt.</p>
+              <label class="opt"><input type="radio" name="s-mention" id="o-mention-everyone" value="everyone"><span>Iedereen</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Zo kunnen onbekenden je in berichten betrekken.</p></div>
+              <label class="opt"><input type="radio" name="s-mention" id="o-mention-friends" value="friends"><span>Vrienden</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Goed! Onbekenden kunnen je nu minder makkelijk vermelden.</p></div>
+              <label class="opt"><input type="radio" name="s-mention" id="o-mention-none" value="none"><span>Niemand</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Ook prima! Niemand kan je nu vermelden.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== CHATBERICHTEN ===== -->
+      <section class="page-panel panel-chat">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Chatberichten</h1><p class="small muted">Wie je een privébericht kan sturen.</p></div>
+
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Wie kan mij een privébericht sturen?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Privéberichten zijn rechtstreekse chats.</p>
+              <label class="opt"><input type="radio" name="s-dm" id="o-dm-everyone" value="everyone"><span>Iedereen</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Dan kan de onbekende Sanne zomaar berichten sturen.</p></div>
+              <label class="opt"><input type="radio" name="s-dm" id="o-dm-fof" value="fof"><span>Vrienden van vrienden</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Nog steeds veel mensen die je niet kent.</p></div>
+              <label class="opt"><input type="radio" name="s-dm" id="o-dm-friends" value="friends"><span>Vrienden</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Prima! Onbekenden kunnen nu niet zomaar contact opnemen.</p></div>
+            </fieldset>
+          </details>
+
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Leesbevestigingen</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Laat zien dat je een bericht hebt gelezen.</p>
+              <label class="opt"><input type="radio" name="s-read" id="o-read-o0" value="o0"><span>Aan</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Goed!</strong> Met leesbevestigingen weet de ander dat je het bericht zag. (Nieuw in deze versie)</p></div>
+              <label class="opt"><input type="radio" name="s-read" id="o-read-o1" value="o1"><span>Uit</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Tip:</strong> 'Aan' staat in dit spel als goede keuze. (Nieuw)</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== ACCOUNTPRIVACY ===== -->
+      <section class="page-panel panel-account-privacy">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Accountprivacy</h1><p class="small muted">Openbaar of privé account.</p></div>
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Is mijn account openbaar of privé?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Bij een privé-account moet je nieuwe volgers eerst goedkeuren.</p>
+              <label class="opt"><input type="radio" name="s-private" id="o-private-public" value="public"><span>Openbaar</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Bij een openbaar account kan iedereen je volgen zonder goedkeuring.</p></div>
+              <label class="opt"><input type="radio" name="s-private" id="o-private-private" value="private"><span>Privé</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Top! Nieuwe volgers moeten nu eerst worden goedgekeurd.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== BLOKKEREN ===== -->
+      <section class="page-panel panel-blokkeren">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Blokkeren</h1><p class="small muted">Mensen blokkeren en beheren.</p></div>
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Geblokkeerde mensen</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Je hebt nog niemand geblokkeerd.</p>
+              <label class="opt"><input type="radio" name="s-blocklist" id="o-blocklist-o0" value="o0"><span>Lijst bekijken</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+              <label class="opt"><input type="radio" name="s-blocklist" id="o-blocklist-o1" value="o1"><span>Verbergen</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== ACTIEF STATUS ===== -->
+      <section class="page-panel panel-actief">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Actieve status</h1><p class="small muted">Laat zien wanneer je online bent.</p></div>
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Kunnen anderen zien wanneer ik online ben?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Een groen bolletje laat zien dat je de app gebruikt.</p>
+              <label class="opt"><input type="radio" name="s-online" id="o-online-everyone" value="everyone"><span>Iedereen</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Zo weet de onbekende precies wanneer Sanne online is.</p></div>
+              <label class="opt"><input type="radio" name="s-online" id="o-online-friends" value="friends"><span>Vrienden</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Al beter, maar 'Niemand' geeft meer privacy.</p></div>
+              <label class="opt"><input type="radio" name="s-online" id="o-online-none" value="none"><span>Niemand</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Goed! Anderen hoeven niet te weten wanneer je de app gebruikt.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== LOCATIE ===== -->
+      <section class="page-panel panel-locatie">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Locatie</h1><p class="small muted">Locatie in berichten en op je profiel.</p></div>
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Deel ik mijn locatie?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Locatie laat zien waar je bent of vaak komt.</p>
+              <label class="opt"><input type="radio" name="s-location" id="o-location-always" value="always"><span>Altijd</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Dan kan iemand zien waar je woont, op school zit of vaak komt.</p></div>
+              <label class="opt"><input type="radio" name="s-location" id="o-location-ask" value="ask"><span>Alleen als ik dat per keer kies</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Oké! Deel alleen als een functie het echt nodig heeft.</p></div>
+              <label class="opt"><input type="radio" name="s-location" id="o-location-never" value="never"><span>Nooit</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Super! Locatiegegevens kunnen laten zien waar je bent.</p></div>
+            </fieldset>
+          </details>
+
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Mogen berichten automatisch mijn locatie toevoegen?</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Sommige apps plakken je locatie ongemerkt aan een bericht.</p>
+              <label class="opt"><input type="radio" name="s-autoloc" id="o-autoloc-yes" value="yes"><span>Ja</span></label>
+              <div class="fb fb-warn"><span aria-hidden="true">💡</span><p><strong>Let op:</strong> Dan deel je je locatie zonder dat je het merkt. Zet dit uit.</p></div>
+              <label class="opt"><input type="radio" name="s-autoloc" id="o-autoloc-no" value="no"><span>Nee</span></label>
+              <div class="fb fb-ok"><span aria-hidden="true">✅</span><p><strong>Veilige keuze!</strong> Goed! Zo kies je altijd bewust of je je locatie deelt.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== ACTIVITEITENLOGBOEK ===== -->
+      <section class="page-panel panel-activiteitenlog">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Activiteitenlogboek</h1><p class="small muted">Overzicht van wat je hebt gedaan.</p></div>
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Activiteitenlogboek weergeven</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Alleen jij ziet je logboek.</p>
+              <label class="opt"><input type="radio" name="s-logview" id="o-logview-o0" value="o0"><span>Alle activiteit</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+              <label class="opt"><input type="radio" name="s-logview" id="o-logview-o1" value="o1"><span>Alleen berichten</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== ADVERTENTIES ===== -->
+      <section class="page-panel panel-advertenties">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Advertentievoorkeuren</h1><p class="small muted">Welke advertenties je ziet.</p></div>
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Advertenties op basis van je activiteit</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Hoort niet bij de opdracht, maar 'Uit' deelt minder over jou.</p>
+              <label class="opt"><input type="radio" name="s-adact" id="o-adact-o0" value="o0"><span>Aan</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen. 'Uit' is privacyvriendelijker.</p></div>
+              <label class="opt"><input type="radio" name="s-adact" id="o-adact-o1" value="o1"><span>Uit</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen. Goed bezig, adverteerders krijgen minder over jou te weten!</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== APPS ===== -->
+      <section class="page-panel panel-apps">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Apps en websites</h1><p class="small muted">Apps waarbij je inlogt met GezichtBoek.</p></div>
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Ingelogde apps</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Apps waarbij je inlogt met GezichtBoek.</p>
+              <label class="opt"><input type="radio" name="s-apps" id="o-apps-o0" value="o0"><span>Geen apps</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+              <label class="opt"><input type="radio" name="s-apps" id="o-apps-o1" value="o1"><span>Lijst bekijken</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+
+      <!-- ===== GEGEVENS DOWNLOADEN ===== -->
+      <section class="page-panel panel-gegevens">
+        <label class="back" for="p-none">‹ Instellingen en privacy</label>
+        <div class="card">
+          <div class="card-head"><h1 class="display">Je gegevens downloaden</h1><p class="small muted">Een kopie van je gegevens.</p></div>
+          <details class="row">
+            <summary class="row-head"><span class="grow"><span class="b block">Formaat van download</span><span class="small muted set-state"></span></span><span class="btn-soft"></span></summary>
+            <fieldset class="row-panel">
+              <p class="small muted">Bestandstype voor een kopie van je gegevens.</p>
+              <label class="opt"><input type="radio" name="s-dl" id="o-dl-o0" value="o0"><span>HTML</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+              <label class="opt"><input type="radio" name="s-dl" id="o-dl-o1" value="o1"><span>JSON</span></label>
+              <div class="fb fb-info"><span aria-hidden="true">ℹ️</span><p>Opgeslagen.</p></div>
+            </fieldset>
+          </details>
+        </div>
+      </section>
+    </div>
+
+    <!-- SIDE MISSION (desktop) -->
+    <div class="side-mission">
+      <div class="sticky">
+        <div class="card pad mission">
+          <h2>🎯 Missie: help Lars</h2>
+          <p class="small muted">Zet alle 7 onderdelen op veilig</p>
+          <div class="bar segs" aria-hidden="true"><span class="seg-0"></span><span class="seg-1"></span><span class="seg-2"></span><span class="seg-3"></span><span class="seg-4"></span><span class="seg-5"></span><span class="seg-6"></span></div>
+          <ul class="checklist">
+            <li class="cat cat-account"><span class="mark" aria-hidden="true"></span><span><span class="b">Account en zichtbaarheid</span><span class="small status"></span></span></li>
+            <li class="cat cat-messages"><span class="mark" aria-hidden="true"></span><span><span class="b">Berichten en reacties</span><span class="small status"></span></span></li>
+            <li class="cat cat-tags"><span class="mark" aria-hidden="true"></span><span><span class="b">Tags en vermeldingen</span><span class="small status"></span></span></li>
+            <li class="cat cat-activity"><span class="mark" aria-hidden="true"></span><span><span class="b">Activiteit en locatie</span><span class="small status"></span></span></li>
+            <li class="cat cat-security"><span class="mark" aria-hidden="true"></span><span><span class="b">Beveiliging</span><span class="small status"></span></span></li>
+          </ul>
+          <aside class="tip"><strong>💬 Word je online lastiggevallen?</strong> Schakel een vertrouwde volwassene in, blokkeer of meld de persoon en bewaar bewijs.</aside>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== GESLAAGD MODAL (in stijl van Phishingdetective) ===== -->
+<div class="win-overlay" id="winModal">
+  <div class="win-card">
+    <button class="win-close" type="button" id="winClose" aria-label="Sluiten">×</button>
+    <div class="emoji" aria-hidden="true">🎉</div>
+    <h1 class="win-title">GESLAAGD!</h1>
+    <p class="win-sub">Je hebt alle privacy-instellingen op veilig gezet. Lars' profiel is nu professioneel én veilig! 🎉</p>
+    
+    <div class="flag-panel">
+      <span class="flag-label">GEVONDEN FLAG</span>
+      <code id="flag-output"></code>
+      <p class="flag-note">Gebruik deze code om de opdracht af te ronden bij de gameleiding.</p>
+      <button class="copy-flag-btn" id="copyFlagBtn" type="button">📋 Klik om te kopiëren</button>
+    </div>
+    
+    <ul class="win-tips">
+      <li><strong>🪪 Naam met initiaal</strong> — 'Sanne V.' geeft minder weg dan de volledige naam</li>
+      <li><strong>🏫 School & verjaardag</strong> — Privacyvriendelijk = 'Alleen ik' of 'Vrienden'</li>
+      <li><strong>🔐 2FA + login alerts</strong> — Extra beveiliging tegen inbraak</li>
+      <li><strong>👁️ Vriendenlijst verbergen</strong> — Onbekenden zien niet met wie je omgaat</li>
+      <li><strong>📬 Oude berichten beperken</strong> — Alles op 'Vrienden', inclusief het verleden</li>
+      <li><strong>🚫 Geen locatie delen</strong> — Onbekenden weten niet waar je bent</li>
+      <li><strong>✅ Tags goedkeuren</strong> — Jij bepaalt wat op je profiel verschijnt</li>
+    </ul>
+    
+    <button class="win-again" onclick="location.reload()">Opnieuw spelen 🔁</button>
+    <span class="win-brand">cyberspeurtocht.app</span>
+  </div>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<script>
+/* ===== FLAG (base64: LBG{Privacyinstellingen}) ===== */
+const FLAG_B64 = "TEJHe1Byb2Zlc3Npb25lZWxEnV9WZWlsaWc9";
+var K = "GezichtBoek-progress-v2";
+
+function decodeFlag(){ return atob(FLAG_B64); }
+function showFlag(){ document.getElementById("flag-output").textContent = decodeFlag(); }
+
+document.getElementById("copyFlagBtn").addEventListener("click", function () {
+  var flag = decodeFlag(), btn = this;
+  function feedback(){ btn.textContent = "✅ Gekopieerd!";
+    setTimeout(function(){ btn.textContent = "📋 Klik om te kopiëren"; }, 2500); }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(flag).then(feedback).catch(function(){ window.prompt("Kopieer de flag:", flag); feedback(); });
+  } else { window.prompt("Kopieer de flag:", flag); feedback(); }
+});
+
+/* ===== CONFETTI ===== */
+function launchConfetti(){
+  var canvas=document.getElementById("confetti"),ctx=canvas.getContext("2d");
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  var colors=["#16857e","#e11d48","#059669","#fbbf24","#e879f9","#60a5fa"],pieces=[];
+  for(var i=0;i<220;i++)pieces.push({x:Math.random()*canvas.width,y:-20-Math.random()*canvas.height,w:6+Math.random()*7,h:8+Math.random()*8,c:colors[Math.floor(Math.random()*colors.length)],vy:2+Math.random()*3.5,vx:-1.5+Math.random()*3,rot:Math.random()*360,vr:-6+Math.random()*12});
+  var frames=0;
+  (function anim(){ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(function(p){p.y+=p.vy;p.x+=p.vx;p.rot+=p.vr;
+      if(p.y>canvas.height+20){p.y=-20;p.x=Math.random()*canvas.width}
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot*Math.PI/180);ctx.fillStyle=p.c;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();});
+    frames++;if(frames<480)requestAnimationFrame(anim);else ctx.clearRect(0,0,canvas.width,canvas.height);})();
+}
+
+/* ===== COMPLETIE-CHECK (identiek aan de CSS-voorwaarden) ===== */
+var REQ=["o-name-o0","o-posts-friends","o-private-private","o-friendlist-me","o-search-no","o-bday-o2","o-frq-o1","o-dm-friends","o-comments-friends","o-past-o1","o-read-o0","o-tagwho-friends","o-tagreview-yes","o-online-none","o-autoloc-no","o-2fa-on","o-loginalert-on","o-opleiding-everyone","o-werkervaring-public","o-solliciteren-on","o-relatie-friends","o-familie-friends","o-relatie-ads-off"];
+var REQ_ANY=[["o-school-o1","o-school-o2"],["o-stories-friends","o-stories-list"],["o-mention-friends","o-mention-none"],["o-location-ask","o-location-never"]];
+var won=false;
+
+function isComplete(){
+  for(var i=0;i<REQ.length;i++){var e=document.getElementById(REQ[i]);if(!e||!e.checked)return false;}
+  for(var j=0;j<REQ_ANY.length;j++){var hit=false;
+    for(var k=0;k<REQ_ANY[j].length;k++){var e2=document.getElementById(REQ_ANY[j][k]);if(e2&&e2.checked){hit=true;break;}}
+    if(!hit)return false;}
+  return true;
+}
+function checkWin(){
+  if(!won&&isComplete()){won=true;showFlag();launchConfetti();}
+}
+
+/* ===== VOORTGANg OPSLAAN (optioneel) ===== */
+var form=document.getElementById("game");
+try{
+  var saved=JSON.parse(localStorage.getItem(K)||"[]");
+  saved.forEach(function(id){var el=document.getElementById(id);if(el&&id.indexOf("p-")!==0)el.checked=true;});
+}catch(e){}
+
+form.addEventListener("change",function(){
+  checkWin();
+  try{
+    var ids=[].slice.call(form.querySelectorAll("input:checked")).map(function(e){return e.id}).filter(function(id){return id.indexOf("p-")!==0});
+    localStorage.setItem(K,JSON.stringify(ids));
+  }catch(e){}
+});
+
+form.addEventListener("reset",function(){
+  won=false;
+  document.getElementById("winModal").classList.remove("closed");
+  try{localStorage.removeItem(K);}catch(e){}
+  window.scrollTo(0,0);
+});
+
+/* sluiten via ✕ of Escape */
+document.getElementById("winClose").addEventListener("click",function(){
+  document.getElementById("winModal").classList.add("closed");
+});
+document.addEventListener("keydown",function(ev){
+  if(ev.key==="Escape"){document.getElementById("winModal").classList.add("closed");}
+});
+
+checkWin();
+</script>
+</form>
+</body>
+</html>
