@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔓</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CYBERSPEURTOCHT // Codekraker – Broncode (15-18)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#14161f;
+  --panel:#1b1e29;
+  --panel-light:#232735;
+  --primary:#16857e;
+  --primary-glow:#1fa39a;
+  --cyan:#22d3ee;
+  --lime:#4ade80;
+  --coral:#ff6b57;
+  --amber:#fbbf24;
+  --text:#e8eaf0;
+  --text-muted:#9aa1b2;
+  --border:#333747;
+  --radius:16px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:"Inter",system-ui,-apple-system,sans-serif;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow-x:hidden;
+  padding:20px;
+  background-image:
+    linear-gradient(rgba(34,211,238,0.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(34,211,238,0.035) 1px,transparent 1px);
+  background-size:44px 44px;
+}
+
+.container{width:min(760px,94vw);position:relative;z-index:10}
+
+/* ===== TERMINAL PANEL ===== */
+.terminal{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:0 24px 60px rgba(0,0,0,0.5),0 0 50px rgba(22,133,126,0.10);
+  overflow:hidden;
+}
+
+.titlebar{
+  background:var(--panel-light);
+  padding:12px 18px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border-bottom:1px solid var(--border);
+}
+
+.brand-logo{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--primary);margin-right:auto}
+.brand-logo svg{width:22px;height:22px}
+
+.dot-group{display:flex;gap:6px}
+.dot{width:11px;height:11px;border-radius:50%}
+.dot.red{background:#ff5f56}
+.dot.yellow{background:#ffbd2e}
+.dot.green{background:#27c93f}
+
+.titlebar-text{font-size:11px;color:var(--text-muted);letter-spacing:1px;flex:1;text-align:center;font-family:"IBM Plex Mono",monospace}
+
+.content{padding:38px 36px;position:relative}
+
+/* ===== EMBLEM ===== */
+.badge-icon{
+  width:72px;height:72px;margin:0 auto 22px;
+  background:linear-gradient(135deg,rgba(22,133,126,0.18),rgba(22,133,126,0.05));
+  border:2px solid var(--primary);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;
+  box-shadow:0 0 24px rgba(22,133,126,0.35),inset 0 0 18px rgba(22,133,126,0.12);
+}
+
+.kicker{
+  text-align:center;
+  font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--coral);
+  margin-bottom:10px;
+}
+
+h1{
+  text-align:center;
+  font-family:"Outfit",sans-serif;
+  color:var(--coral);
+  font-size:clamp(28px,5.5vw,42px);
+  letter-spacing:2px;
+  margin-bottom:10px;
+  font-weight:800;
+  animation:flicker 6s infinite;
+}
+
+@keyframes flicker{
+  0%,100%{opacity:1}
+  90%{opacity:1}
+  91%{opacity:0.4}
+  92%{opacity:1}
+  94%{opacity:0.55}
+  95%{opacity:1}
+}
+
+.subtitle{
+  text-align:center;
+  color:var(--cyan);
+  font-family:"IBM Plex Mono",monospace;
+  font-size:13px;
+  margin-bottom:26px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+}
+
+/* ===== SYSTEM MESSAGE ===== */
+.sysmsg{
+  background:rgba(255,107,87,0.07);
+  border-left:3px solid var(--coral);
+  padding:18px 20px;
+  margin-bottom:30px;
+  font-size:14px;
+  line-height:1.8;
+  border-radius:0 12px 12px 0;
+}
+
+.sysmsg strong{color:var(--coral);font-weight:700;display:block;margin-bottom:6px;font-size:12px;letter-spacing:1px;font-family:"IBM Plex Mono",monospace}
+.sysmsg code{font-family:"IBM Plex Mono",monospace;color:var(--amber);font-size:13px}
+
+/* ===== TAUNT BUTTON ===== */
+.btn-wrap{text-align:center;margin:32px 0 6px}
+.big-btn{
+  display:inline-block;
+  padding:18px 44px;
+  font-family:"Outfit",sans-serif;
+  font-size:15px;
+  font-weight:700;
+  letter-spacing:2px;
+  color:#fff;
+  background:linear-gradient(180deg,#ff7a6b,#d3402f);
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  box-shadow:0 6px 0 #8f2418,0 12px 26px rgba(255,107,87,0.35),inset 0 2px 0 rgba(255,255,255,0.18);
+  transition:transform 0.1s,box-shadow 0.1s,filter 0.15s;
+  text-transform:uppercase;
+}
+.big-btn:hover{filter:brightness(1.1);transform:translateY(-2px)}
+.big-btn:active{transform:translateY(5px);box-shadow:0 1px 0 #8f2418,0 5px 14px rgba(255,107,87,0.3)}
+
+.taunt-line{
+  display:block;
+  text-align:center;
+  font-size:13px;
+  color:var(--amber);
+  margin-top:16px;
+  letter-spacing:0.5px;
+  min-height:22px;
+  font-family:"IBM Plex Mono",monospace;
+}
+
+/* ===== CODE INPUT ===== */
+.code-section{margin-top:34px;padding-top:26px;border-top:1px dashed var(--border)}
+
+.code-label{
+  font-size:12px;
+  color:var(--lime);
+  letter-spacing:1.5px;
+  margin-bottom:14px;
+  font-weight:600;
+  text-transform:uppercase;
+  font-family:"IBM Plex Mono",monospace;
+}
+
+.code-input-row{display:flex;gap:12px;flex-wrap:wrap}
+
+#codeInput{
+  flex:1;
+  min-width:220px;
+  background:var(--panel-light);
+  border:2px solid var(--border);
+  color:var(--lime);
+  font-family:"IBM Plex Mono",monospace;
+  font-size:16px;
+  padding:14px 18px;
+  border-radius:10px;
+  letter-spacing:1px;
+  outline:none;
+  caret-color:var(--lime);
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
+
+#codeInput::placeholder{color:#565d70}
+#codeInput:focus{border-color:var(--lime);box-shadow:0 0 0 4px rgba(74,222,128,0.10)}
+#codeInput:disabled{opacity:0.5}
+
+#codeBtn{
+  background:var(--primary);
+  border:2px solid var(--primary);
+  color:#fff;
+  font-family:"Outfit",sans-serif;
+  font-size:15px;
+  font-weight:700;
+  letter-spacing:1px;
+  padding:14px 28px;
+  border-radius:10px;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:all 0.15s;
+}
+
+#codeBtn:hover:not(:disabled){background:var(--primary-glow);transform:translateY(-1px)}
+#codeBtn:active:not(:disabled){transform:translateY(0)}
+#codeBtn:disabled{opacity:0.5;cursor:not-allowed}
+
+.feedback{
+  margin-top:14px;
+  font-size:13px;
+  min-height:22px;
+  color:var(--coral);
+  font-weight:600;
+  font-family:"IBM Plex Mono",monospace;
+}
+
+.feedback.ok{color:var(--lime)}
+
+.attempts{
+  margin-top:8px;
+  font-size:11px;
+  color:var(--text-muted);
+  font-family:"IBM Plex Mono",monospace;
+  letter-spacing:0.5px;
+}
+
+.shake{animation:shake 0.45s cubic-bezier(.36,.07,.19,.97)}
+@keyframes shake{
+  10%,90%{transform:translateX(-3px)}
+  20%,80%{transform:translateX(6px)}
+  30%,50%,70%{transform:translateX(-8px)}
+  40%,60%{transform:translateX(8px)}
+}
+
+/* ===== FOOTER ===== */
+.footer-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:30px;
+  padding-top:18px;
+  border-top:1px dashed var(--border);
+  font-size:11px;
+  color:var(--text-muted);
+  letter-spacing:0.5px;
+  font-family:"IBM Plex Mono",monospace;
+}
+
+.status-dot{
+  display:inline-block;
+  width:7px;height:7px;
+  background:var(--lime);
+  border-radius:50%;
+  margin-right:6px;
+  box-shadow:0 0 8px var(--lime);
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* ===== SUCCESS SCREEN ===== */
+#successScreen{display:none}
+#deniedScreen.hidden{display:none}
+#successScreen.active{display:block}
+
+.success-title{
+  text-align:center;
+  font-family:"Outfit",sans-serif;
+  color:var(--lime);
+  font-size:clamp(30px,6vw,46px);
+  letter-spacing:3px;
+  margin-bottom:8px;
+  text-shadow:0 0 30px rgba(74,222,128,0.5);
+  font-weight:800;
+}
+
+.glitch-tag{
+  text-align:center;
+  color:var(--cyan);
+  font-family:"IBM Plex Mono",monospace;
+  font-size:13px;
+  letter-spacing:2px;
+  margin-bottom:26px;
+}
+
+.typed-output{
+  background:var(--panel-light);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:22px;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:13.5px;
+  line-height:1.9;
+  min-height:170px;
+  margin-bottom:26px;
+  white-space:pre-wrap;
+}
+
+.cursor-blink{color:var(--lime);animation:blink 1s infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* ===== FLAG PANEL ===== */
+.flag-panel{
+  text-align:center;
+  background:linear-gradient(135deg,rgba(74,222,128,0.07),rgba(22,133,126,0.05));
+  border:2px dashed var(--lime);
+  border-radius:14px;
+  padding:26px 22px;
+  animation:popIn 0.55s cubic-bezier(0.68,-0.55,0.265,1.55);
+}
+
+@keyframes popIn{0%{transform:scale(0.94);opacity:0}100%{transform:scale(1);opacity:1}}
+
+.flag-label{
+  font-size:11px;
+  letter-spacing:2px;
+  color:#fff;
+  text-transform:uppercase;
+  margin-bottom:14px;
+  display:inline-block;
+  background:var(--primary);
+  padding:5px 14px;
+  border-radius:8px;
+  font-weight:700;
+}
+
+.flag-code{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:clamp(20px,4vw,27px);
+  color:var(--lime);
+  letter-spacing:2px;
+  word-break:break-all;
+  font-weight:600;
+  text-shadow:0 0 22px rgba(74,222,128,0.35);
+  margin-bottom:16px;
+}
+
+.copy-flag-btn{
+  background:var(--primary);
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  padding:12px 24px;
+  font-size:14px;
+  font-weight:700;
+  font-family:"Outfit",sans-serif;
+  letter-spacing:1px;
+  cursor:pointer;
+  transition:all 0.15s;
+  box-shadow:0 4px 14px rgba(22,133,126,0.35);
+}
+
+.copy-flag-btn:hover{background:var(--primary-glow);transform:translateY(-2px)}
+.copy-flag-btn.copied{background:var(--lime);color:#10241a}
+
+.flag-note{margin-top:16px;font-size:13px;color:var(--text-muted);line-height:1.6}
+
+.confetti-row{text-align:center;margin-top:22px;font-size:24px;letter-spacing:6px}
+
+@media(max-width:580px){
+  .content{padding:28px 20px}
+  .big-btn{padding:16px 32px;font-size:14px}
+  .code-input-row{flex-direction:column}
+  #codeBtn{width:100%}
+  .footer-bar{flex-direction:column;gap:8px;text-align:center}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ================= SCHERM 1: TOEGANG GEWEIGERD ================= -->
+  <div id="deniedScreen">
+    <div class="terminal">
+      <div class="titlebar">
+        <div class="brand-logo">
+          <svg viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="10" fill="#16857e"/>
+            <circle cx="16" cy="16" r="5" fill="white"/>
+            <path d="M22 24l4 4" stroke="#16857e" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <span>cyberspeurtocht</span>
+        </div>
+        <div class="dot-group">
+          <div class="dot red"></div>
+          <div class="dot yellow"></div>
+          <div class="dot green"></div>
+        </div>
+        <span class="titlebar-text">COD3KRAKER // BRONCODE · 15-18</span>
+      </div>
+
+      <div class="content">
+        <div class="badge-icon">🛰️</div>
+        <p class="kicker">Operatie Nachtwacht</p>
+        <h1>TOEGANG GEWEIGERD</h1>
+        <p class="subtitle">&gt;&gt; intern portaal · nachtwacht bv &lt;&lt;</p>
+
+        <div class="sysmsg">
+          <strong>[SYSTEM ALERT 0x42]</strong>
+          Dit is het interne portaal van <em>Nachtwacht BV</em>. Je identiteit is niet
+          geverifieerd — en eerlijk? De beveiliging hier is sowieso lek.<br><br>
+          Een van de developers heeft de <strong>override-code in de broncode van deze pagina
+          verstopt</strong> in plaats van 'm server-side te checken. Dom, maar handig voor jou.<br><br>
+          Er is maar één manier om binnen te komen: vind de code in de <code>view-source</code> van deze pagina.
+          En nee — bruteforcen helpt niet. Echt niet.
+        </div>
+
+        <div class="btn-wrap">
+          <button class="big-btn" id="bigRedBtn">START BRUTEFORCE</button>
+          <span class="taunt-line" id="tauntLine"></span>
+        </div>
+
+        <div class="code-section">
+          <div class="code-label">&gt; override_protocol // voer toegangscode in:</div>
+          <div class="code-input-row">
+            <input type="text" id="codeInput" placeholder="CODE..." autocomplete="off" spellcheck="false">
+            <button id="codeBtn">ONTGRENDEL ➜</button>
+          </div>
+          <div class="feedback" id="feedback"></div>
+          <div class="attempts" id="attempts"></div>
+        </div>
+
+        <div class="footer-bar">
+          <span><span class="status-dot"></span>SCOUTNET v5.1 · Versleuteld (zogezegd)</span>
+          <span>Codekraker · Editie Explorers 15-18</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SCHERM 2: TOEGANG VERLEEND ================= -->
+  <div id="successScreen">
+    <div class="terminal">
+      <div class="titlebar">
+        <div class="brand-logo">
+          <svg viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="10" fill="#4ade80"/>
+            <circle cx="16" cy="16" r="5" fill="#14161f"/>
+            <path d="M22 24l4 4" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+          <span>cyberspeurtocht</span>
+        </div>
+        <div class="dot-group">
+          <div class="dot red"></div>
+          <div class="dot yellow"></div>
+          <div class="dot green"></div>
+        </div>
+        <span class="titlebar-text">ACCESS_GRANTED // OVERRIDE_ACTIVE</span>
+      </div>
+
+      <div class="content">
+        <h1 class="success-title">TOEGANG VERLEEND</h1>
+        <p class="glitch-tag">== WELKOM BINNEN, AGENT ==</p>
+
+        <div class="typed-output"><span id="typedText"></span><span class="cursor-blink">▊</span></div>
+
+        <div class="flag-panel">
+          <span class="flag-label">🎯 MISSIE VOLTOOID — JOUW VLAG:</span>
+          <div class="flag-code" id="flagText"></div>
+          <button class="copy-flag-btn" id="copyFlagBtn">📋 KOPIEER VLAG</button>
+          <p class="flag-note">Noteer deze vlag en lever hem in bij de gameleiding. Succes!</p>
+        </div>
+
+        <div class="confetti-row">🎉🔐🖥️⚡🎯💻🛰️</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================================
+     MISSIE-OPDRACHT VOOR DE SPELERS (zichtbaar in de broncode!)
+     De toegangscode staat expres in platte tekst in deze comment,
+     zodat spelers 'm vinden met "Paginabron weergeven" (Ctrl+U).
+     ============================================================ -->
+<script>
+/* ============================================================
+   CONFIGURATIE VOOR DE LEIDING
+   ============================================================ */
+// De geheime code — vindbaar in de HTML-broncode van deze pagina
+const ACCESS_CODE = "NACHTWACHT-7F3K9Q";
+
+// De vlag (base64: LBG{V13W_S0URC3})
+const FLAG_B64 = "TEJHe1YxM1dfUzBVUkMzfQ==";
+const VLAG = atob(FLAG_B64);
+
+/* Gefrustreerde bruteforce-reacties (gericht op 15-18) */
+const KNOP_REACTIES = [
+  "⚠️ Bruteforce gestart... 0 combinaties geprobeerd. Kans op succes: 0%.",
+  "🐌 Nog steeds bezig... Spoiler: het lukt niet. Net als in het echt.",
+  "🛑 Rate-limited door de server. Ook dat is realistisch, hè.",
+  "😴 Deze knop doet letterlijk niks. Serieus.",
+  "🤓 Tip van een echte hacker: broncode bekijken (Ctrl+U), niet rammen.",
+  "🏁 Genoeg geprobeerd. De code staat gewoon leesbaar in de HTML."
+];
+
+/* Progressieve hints na foute pogingen */
+const HINTS = [
+  "❌ Onjuiste code.",
+  "❌ Nog steeds fout. Tip: de broncode van een pagina is gewoon leesbaar voor iedereen.",
+  "❌ Fout. Open de broncode: Ctrl+U (of rechtermuisknop → Paginabron weergeven).",
+  "❌ Fout. In de broncode: Ctrl+F en zoek naar ACCESS_CODE.",
+  "❌ Fout. Scroll in de broncode naar de <script> onderaan de pagina..."
+];
+
+const MAX_POGINGEN = 5;
+const LOCKOUT_SECONDEN = 10;
+
+/* ==================== STATE ==================== */
+let knopClicks = 0;
+let pogingen = 0;
+let lockedOut = false;
+
+/* ==================== ELEMENTEN ==================== */
+const bigRedBtn = document.getElementById("bigRedBtn");
+const tauntLine = document.getElementById("tauntLine");
+const codeInput = document.getElementById("codeInput");
+const codeBtn = document.getElementById("codeBtn");
+const feedback = document.getElementById("feedback");
+const attemptsEl = document.getElementById("attempts");
+
+/* ==================== BRUTEFORCE-KNOP ==================== */
+bigRedBtn.addEventListener("click", () => {
+  knopClicks++;
+  const reactie = KNOP_REACTIES[Math.min(knopClicks - 1, KNOP_REACTIES.length - 1)];
+  tauntLine.textContent = "> " + reactie;
+
+  bigRedBtn.style.transform = "translateY(4px)";
+  setTimeout(() => { bigRedBtn.style.transform = ""; }, 100);
+});
+
+/* ==================== CODE CONTROLLEREN ==================== */
+function updateAttempts() {
+  attemptsEl.textContent = "pogingen: " + pogingen + "/" + MAX_POGINGEN;
+}
+
+function lockout() {
+  lockedOut = true;
+  codeInput.disabled = true;
+  codeBtn.disabled = true;
+  let t = LOCKOUT_SECONDEN;
+  feedback.className = "feedback";
+  feedback.textContent = "⏳ Te veel pogingen — rate limit. Wacht " + t + "s...";
+  const timer = setInterval(() => {
+    t--;
+    if (t <= 0) {
+      clearInterval(timer);
+      lockedOut = false;
+      codeInput.disabled = false;
+      codeBtn.disabled = false;
+      feedback.textContent = "";
+      codeInput.focus();
+    } else {
+      feedback.textContent = "⏳ Te veel pogingen — rate limit. Wacht " + t + "s...";
+    }
+  }, 1000);
+}
+
+function checkCode() {
+  if (lockedOut) return;
+
+  const waarde = codeInput.value.trim().toUpperCase().replace(/\s+/g, "");
+  if (waarde === ACCESS_CODE.toUpperCase().replace(/\s+/g, "")) {
+    unlock();
+    return;
+  }
+
+  pogingen++;
+  updateAttempts();
+
+  const hint = HINTS[Math.min(pogingen - 1, HINTS.length - 1)];
+  feedback.className = "feedback";
+  feedback.textContent = hint;
+
+  const section = document.querySelector(".code-section");
+  section.classList.remove("shake");
+  void section.offsetWidth;
+  section.classList.add("shake");
+
+  setTimeout(() => { codeInput.value = ""; }, 1200);
+
+  if (pogingen >= MAX_POGINGEN) {
+    lockout();
+  }
+}
+
+codeBtn.addEventListener("click", checkCode);
+codeInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") checkCode();
+});
+
+/* ==================== SUCCES-FLOW ==================== */
+function unlock() {
+  document.getElementById("deniedScreen").classList.add("hidden");
+  document.getElementById("successScreen").classList.add("active");
+  document.getElementById("flagText").textContent = VLAG;
+  typeWriterEffect();
+}
+
+const RAPPORT_TEXT =
+`> override_protocol geaccepteerd...
+> IDENTITEIT_GEVERIFIEERD: EXPLORER-TEAM
+> firewall_omzeild... OK ✅
+> hardcoded_secret_gevonden... OK ✅
+> ScoutNet_kern bereikt... OK ✅
+
+MISSIE VOLBRACHT, AGENT. 🎯
+
+Wat je zojuist hebt bewezen:
+De toegangscode stond in platte tekst in de broncode van deze
+pagina. Alles wat jij in je browser ziet, kan iedereen lezen —
+met Ctrl+U of rechtermuisknop → "Paginabron weergeven".
+
+DE LES: hardcoded secrets in front-end code zijn NOOIT veilig.
+Wie écht beveiligt, checkt codes server-side, nooit in de browser.
+
+GOED GEDAAN! 🔐`;
+
+function typeWriterEffect() {
+  const el = document.getElementById("typedText");
+  el.innerHTML = "";
+  let i = 0;
+  const speed = 14;
+
+  function type() {
+    if (i < RAPPORT_TEXT.length) {
+      const char = RAPPORT_TEXT.charAt(i);
+      el.innerHTML += char === "\n" ? "<br>" : char;
+      i++;
+      setTimeout(type, speed);
+    }
+  }
+  type();
+}
+
+/* ==================== KOPIEER-KNOP ==================== */
+document.getElementById("copyFlagBtn").addEventListener("click", async function() {
+  const btn = this;
+
+  try {
+    await navigator.clipboard.writeText(VLAG);
+    btn.textContent = "✅ KOPIEERD!";
+    btn.classList.add("copied");
+    setTimeout(() => {
+      btn.textContent = "📋 KOPIEER VLAG";
+      btn.classList.remove("copied");
+    }, 2500);
+  } catch (err) {
+    const tempInput = document.createElement("input");
+    tempInput.value = VLAG;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+
+    btn.textContent = "✅ KOPIEERD!";
+    btn.classList.add("copied");
+    setTimeout(() => {
+      btn.textContent = "📋 KOPIEER VLAG";
+      btn.classList.remove("copied");
+    }, 2500);
+  }
+});
+</script>
+</body>
+</html>
