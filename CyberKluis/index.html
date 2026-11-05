@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="nl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyberspeurtocht // CyberKluis — Wachtwoordzinnen</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===== THEMA (cyberspeurtocht.app-huisstijl) ===== */
+:root{
+  --primary-teal:#16857e;
+  --primary-teal-dark:#116a65;
+  --primary-teal-light:#1fa39a;
+  --accent-pink:#e11d48;
+  --bg-page:#f9fafb;
+  --bg-white:#ffffff;
+  --bg-soft:#f3f4f6;
+  --border:#e5e7eb;
+  --text-heading:#1f2937;
+  --text-primary:#374151;
+  --text-secondary:#6b7280;
+  --text-muted:#9ca3af;
+  --success-green:#059669;
+  --warning-orange:#d97706;
+  --danger-red:#dc2626;
+  --shadow-sm:0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --radius-sm:6px;--radius-md:8px;--radius-lg:12px;--radius-xl:16px;
+}
+[data-theme="dark"]{
+  --bg-page:#0f1115;
+  --bg-white:#14171c;
+  --bg-soft:#1a1e26;
+  --border:#2a2f36;
+  --text-heading:#e5e7eb;
+  --text-primary:#d1d5db;
+  --text-secondary:#9ca3af;
+  --text-muted:#6b7280;
+  --primary-teal:#1fa39a;
+  --primary-teal-dark:#16857e;
+  --primary-teal-light:#2dd4bf;
+  --shadow-sm:0 1px 2px 0 rgb(0 0 0 / 0.4);
+  --shadow-md:0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.4);
+  --shadow-lg:0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:var(--bg-page);
+  color:var(--text-primary);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  transition:background 0.25s ease,color 0.25s ease;
+}
+
+/* ===== HEADER: branding + theme toggle + progress ===== */
+header{
+  background:var(--bg-white);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:50;
+}
+.header-inner{
+  width:min(760px,94vw);
+  margin:0 auto;
+  padding:12px 0;
+  display:flex;align-items:center;gap:12px;
+}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;color:var(--primary-teal);margin-right:auto}
+.brand svg{width:26px;height:26px;flex-shrink:0}
+.brand small{display:block;font-size:10px;font-weight:500;color:var(--text-muted);letter-spacing:0.4px}
+.theme-toggle{
+  border:1px solid var(--border);background:var(--bg-white);color:var(--text-heading);
+  width:44px;height:44px;border-radius:var(--radius-md);font-size:18px;cursor:pointer;
+  transition:all 0.15s;flex-shrink:0;
+}
+.theme-toggle:hover{background:var(--bg-soft);border-color:var(--primary-teal)}
+.progress{
+  width:min(760px,94vw);margin:0 auto;padding:0 0 12px;
+  display:flex;align-items:center;gap:4px;
+}
+.progress-label{font-size:11px;font-weight:600;color:var(--text-secondary);margin-right:8px;white-space:nowrap}
+.pdot{
+  flex:1;height:8px;border-radius:99px;background:var(--bg-soft);
+  border:1px solid var(--border);transition:all 0.3s ease;min-width:14px;
+}
+.pdot.done{background:var(--primary-teal);border-color:var(--primary-teal)}
+.pdot.current{background:var(--primary-teal-light);border-color:var(--primary-teal);animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 3px rgba(22,133,126,0.18)}50%{box-shadow:0 0 0 7px rgba(22,133,126,0.08)}}
+
+/* ===== SCHERMEN ===== */
+main{flex:1;width:min(760px,94vw);margin:0 auto;padding:28px 0 48px}
+.screen{display:none}
+.screen.active{display:block;animation:fadeSlide 0.3s ease}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+.card{
+  background:var(--bg-white);
+  border:1px solid var(--border);
+  border-radius:var(--radius-xl);
+  box-shadow:var(--shadow-md);
+  padding:32px 28px;
+  text-align:center;
+}
+.eyebrow{
+  display:inline-block;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--primary-teal);background:rgba(22,133,126,0.1);
+  padding:5px 14px;border-radius:var(--radius-md);margin-bottom:16px;
+}
+h1{color:var(--text-heading);font-size:26px;font-weight:800;letter-spacing:-0.5px;margin-bottom:10px}
+h2{color:var(--text-heading);font-size:22px;font-weight:800;letter-spacing:-0.5px;margin-bottom:10px}
+.lead{color:var(--text-secondary);font-size:15px;line-height:1.65;margin-bottom:20px}
+.lead strong{color:var(--text-heading)}
+
+/* ===== KNOPPEN (huisstijl) ===== */
+.btn{
+  display:inline-block;background:var(--primary-teal);color:#fff;
+  padding:14px 28px;border:none;border-radius:var(--radius-lg);
+  font-size:15px;font-weight:600;cursor:pointer;min-height:44px;
+  box-shadow:var(--shadow-sm);transition:all 0.15s;font-family:inherit;
+}
+.btn:hover{background:var(--primary-teal-dark);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.btn:disabled{opacity:0.45;cursor:not-allowed;transform:none}
+.btn-secondary{
+  background:var(--bg-white);color:var(--text-heading);
+  border:1px solid var(--border);box-shadow:var(--shadow-sm);
+}
+.btn-secondary:hover{background:var(--bg-soft);border-color:var(--primary-teal);color:var(--primary-teal)}
+.btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+
+/* ===== WACHTWOORD-KAART ===== */
+.pw-card{
+  background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);
+  border:2px solid var(--primary-teal);border-radius:var(--radius-xl);
+  padding:28px 20px;margin:22px 0;box-shadow:var(--shadow-lg);position:relative;overflow:hidden;
+}
+[data-theme="dark"] .pw-card{background:linear-gradient(135deg,rgba(22,133,126,0.15),#0f172a 60%)}
+.pw-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--primary-teal-light);margin-bottom:12px}
+.pw-value{
+  font-family:'Consolas','Monaco','Courier New',monospace;
+  font-size:clamp(26px,7vw,40px);font-weight:700;color:#f1f5f9;
+  letter-spacing:3px;word-break:break-all;user-select:all;
+  text-shadow:0 2px 8px rgba(0,0,0,0.4);
+}
+.phrase-value{
+  font-size:clamp(22px,6vw,32px);font-weight:800;color:#f1f5f9;
+  letter-spacing:1px;line-height:1.5;user-select:all;
+}
+.phrase-emoji{font-size:clamp(24px,6vw,34px);letter-spacing:8px;margin-top:10px}
+
+/* ===== FORM ===== */
+.field{max-width:420px;margin:0 auto 8px;text-align:left}
+.field label{display:block;font-size:14px;font-weight:600;color:var(--text-heading);margin-bottom:8px}
+.field input{
+  width:100%;padding:14px 16px;font-size:17px;font-family:inherit;
+  border:2px solid var(--border);border-radius:var(--radius-lg);
+  background:var(--bg-white);color:var(--text-heading);
+  transition:border-color 0.15s, box-shadow 0.15s;min-height:48px;
+}
+.field input:focus{outline:none;border-color:var(--primary-teal);box-shadow:0 0 0 4px rgba(22,133,126,0.15)}
+.field input.shake{animation:shake 0.4s ease;border-color:var(--danger-red)}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(9px)}
+  60%{transform:translateX(-6px)}80%{transform:translateX(6px)}
+}
+.feedback{min-height:24px;font-size:14px;font-weight:600;margin:10px 0 4px}
+.feedback.ok{color:var(--success-green)}
+.feedback.no{color:var(--warning-orange)}
+.empathy{
+  display:none;max-width:460px;margin:18px auto 0;
+  background:rgba(225,29,72,0.07);border:1px solid rgba(225,29,72,0.25);
+  color:var(--text-primary);border-radius:var(--radius-lg);
+  padding:14px 18px;font-size:14px;line-height:1.6;text-align:center;
+}
+.empathy.show{display:block;animation:fadeSlide 0.3s ease}
+
+/* ===== SPIEK-VERGELIJKING ===== */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0}
+@media(max-width:560px){.stat-grid{grid-template-columns:1fr}}
+.stat-box{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 14px}
+.stat-box .big{font-size:30px;font-weight:800;color:var(--primary-teal)}
+.stat-box .lbl{font-size:13px;color:var(--text-secondary);margin-top:4px;line-height:1.4}
+.stars{font-size:38px;letter-spacing:6px;margin:8px 0 4px}
+.stars .dim{opacity:0.25}
+
+/* ===== LEVEL 5 kraak-tijd ===== */
+.crack-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0}
+@media(max-width:560px){.crack-grid{grid-template-columns:1fr}}
+.crack-box{border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 16px;background:var(--bg-soft);text-align:left}
+.crack-box h3{font-size:15px;color:var(--text-heading);margin-bottom:4px}
+.crack-box .pw-mini{font-family:monospace;font-size:13px;color:var(--text-secondary);word-break:break-all;margin-bottom:12px}
+.crack-box.bad h3{color:var(--danger-red)}
+.crack-box.good h3{color:var(--success-green)}
+.hacker{font-size:26px;display:block;text-align:center;margin-bottom:8px}
+.hacker.blink{animation:blink 0.7s steps(2) infinite}
+@keyframes blink{50%{opacity:0.25}}
+.bar{height:16px;background:var(--bg-white);border:1px solid var(--border);border-radius:99px;overflow:hidden;margin:10px 0 8px}
+[data-theme="dark"] .bar{background:#0f1115}
+.bar-fill{height:100%;width:0;border-radius:99px}
+.bar-fill.fast{background:linear-gradient(90deg,var(--danger-red),var(--warning-orange));animation:fillFast 4s ease-in forwards}
+.bar-fill.slow{background:linear-gradient(90deg,var(--primary-teal),var(--success-green));animation:fillSlow 14s linear forwards}
+.bar-fill.instant{background:var(--danger-red);animation:fillFast 1s ease-out forwards}
+@keyframes fillFast{from{width:0}to{width:100%}}
+@keyframes fillSlow{from{width:0}to{width:0.8%}}
+.crack-result{font-size:14px;font-weight:700;min-height:22px}
+.crack-box.bad .crack-result{color:var(--danger-red)}
+.crack-box.good .crack-result{color:var(--success-green)}
+.pin-box{
+  margin-top:16px;border:2px dashed var(--warning-orange);border-radius:var(--radius-lg);
+  padding:16px;background:rgba(217,119,6,0.06);text-align:left;
+}
+.pin-box h3{font-size:15px;color:var(--text-heading);margin-bottom:8px}
+
+/* ===== QUIZ ===== */
+.quiz-q{font-size:17px;font-weight:700;color:var(--text-heading);margin-bottom:16px;text-align:left}
+.opts{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;text-align:left}
+.opt{
+  display:flex;align-items:center;gap:12px;padding:14px 16px;min-height:48px;
+  background:var(--bg-soft);border:2px solid var(--border);border-radius:var(--radius-lg);
+  cursor:pointer;font-size:15px;font-weight:500;color:var(--text-primary);transition:all 0.15s;
+}
+.opt:hover{border-color:var(--primary-teal)}
+.opt.sel{border-color:var(--primary-teal);background:rgba(22,133,126,0.1)}
+.opt .box{
+  width:24px;height:24px;border-radius:var(--radius-sm);border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;background:var(--bg-white);color:#fff;
+}
+.opt.sel .box{background:var(--primary-teal);border-color:var(--primary-teal)}
+.opt.right{border-color:var(--success-green);background:rgba(5,150,105,0.1)}
+.opt.right .box{background:var(--success-green);border-color:var(--success-green)}
+.opt.wrong{border-color:var(--danger-red);background:rgba(220,38,38,0.08)}
+.opt.wrong .box{background:var(--danger-red);border-color:var(--danger-red)}
+.explain{
+  display:none;text-align:left;background:rgba(5,150,105,0.08);border:1px solid rgba(5,150,105,0.3);
+  border-radius:var(--radius-lg);padding:14px 18px;font-size:14px;line-height:1.6;margin-bottom:16px;
+}
+.explain.show{display:block;animation:fadeSlide 0.3s ease}
+.quiz-progress{font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:14px;text-align:left}
+
+/* ===== CYBERKLUIS ===== */
+.kluis{
+  border:2px solid var(--primary-teal);border-radius:var(--radius-xl);
+  background:linear-gradient(160deg,rgba(22,133,126,0.08),var(--bg-white) 55%);
+  padding:24px 22px;text-align:left;box-shadow:var(--shadow-md);
+}
+.kluis-head{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.kluis-head .lock{font-size:34px}
+.kluis-head h3{color:var(--text-heading);font-size:19px;font-weight:800}
+.kluis-head p{font-size:13px;color:var(--text-secondary)}
+.vault-row{
+  display:flex;align-items:center;gap:12px;background:var(--bg-white);
+  border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:14px 16px;margin-bottom:10px;flex-wrap:wrap;
+}
+.vault-row .acc{font-weight:700;color:var(--text-heading);font-size:15px;min-width:110px}
+.vault-row .pw{font-family:monospace;font-size:14px;color:var(--text-muted);letter-spacing:2px;flex:1;min-width:120px;word-break:break-all}
+.gen-btn{
+  border:1px solid var(--primary-teal);background:var(--bg-white);color:var(--primary-teal);
+  padding:10px 14px;border-radius:var(--radius-md);font-size:13px;font-weight:600;cursor:pointer;min-height:44px;transition:all 0.15s;font-family:inherit;
+}
+.gen-btn:hover{background:var(--primary-teal);color:#fff}
+.login-demo{
+  background:var(--bg-white);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:22px;max-width:380px;margin:0 auto;text-align:left;
+}
+.login-demo h3{text-align:center;color:var(--primary-teal);margin-bottom:14px;font-size:18px}
+.login-demo .field{margin-bottom:12px}
+.kluis-toast{
+  display:none;margin-top:14px;text-align:center;font-size:14px;font-weight:600;color:var(--success-green);
+}
+.kluis-toast.show{display:block;animation:fadeSlide 0.3s ease}
+.step{display:none}
+.step.active{display:block;animation:fadeSlide 0.3s ease}
+
+/* ===== MODALS / FLAG / CONFETTI ===== */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(15,23,42,0.8);backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;z-index:900;padding:20px;
+}
+.modal-overlay.show{display:flex}
+.modal-card{
+  background:var(--bg-white);border-radius:var(--radius-xl);max-width:600px;width:100%;
+  padding:36px 32px;text-align:center;animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  max-height:88vh;overflow-y:auto;box-shadow:var(--shadow-lg);border:1px solid var(--border);
+}
+@keyframes popIn{from{transform:scale(0.7);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-card .icon{
+  width:84px;height:84px;margin:0 auto 16px;border-radius:50%;
+  background:rgba(5,150,105,0.12);border:3px solid var(--success-green);
+  display:flex;align-items:center;justify-content:center;font-size:44px;
+}
+.modal-card h2{color:var(--primary-teal);font-size:25px;margin-bottom:8px;font-weight:800}
+.modal-card .sub{color:var(--text-secondary);font-size:14px;margin-bottom:22px;line-height:1.65}
+.flag-panel{
+  background:linear-gradient(135deg,#0f172a 0%,#1e293b 100%);
+  border:2px solid var(--primary-teal);border-radius:var(--radius-xl);
+  padding:24px 20px;margin:20px 0;text-align:center;box-shadow:var(--shadow-lg);
+}
+.flag-label{
+  font-size:11px;font-weight:700;color:var(--primary-teal-light);letter-spacing:2px;text-transform:uppercase;
+  background:rgba(255,255,255,0.92);display:inline-block;padding:4px 14px;border-radius:var(--radius-md);margin-bottom:12px;
+}
+#flag-output{
+  display:block;font-family:'Consolas','Monaco','Courier New',monospace;font-size:19px;font-weight:700;
+  color:#f1f5f9;background:rgba(22,133,126,0.15);border:2px dashed var(--primary-teal-light);
+  border-radius:var(--radius-lg);padding:16px 14px;letter-spacing:1px;word-break:break-all;user-select:all;
+}
+.flag-note{font-size:13px;color:#94a3b8;margin:12px 0 0;line-height:1.5}
+.copy-flag-btn{
+  background:var(--primary-teal);color:#fff;border:none;border-radius:var(--radius-lg);
+  padding:12px 22px;font-size:14px;font-weight:600;cursor:pointer;margin-top:14px;min-height:44px;
+  transition:all 0.15s;box-shadow:var(--shadow-sm);font-family:inherit;
+}
+.copy-flag-btn:hover{background:var(--primary-teal-dark);transform:translateY(-1px)}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:1000}
+
+/* ===== FOOTER ===== */
+footer{
+  border-top:1px solid var(--border);background:var(--bg-white);
+  padding:16px 0;text-align:center;font-size:12px;color:var(--text-muted);
+}
+footer strong{color:var(--primary-teal);font-weight:700}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" fill="none">
+        <circle cx="16" cy="16" r="12" fill="#16857e"/>
+        <circle cx="16" cy="16" r="6" fill="white"/>
+        <path d="M22 26l4 4" stroke="#16857e" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <span>cyberspeurtocht.app<small>team Cyber-speurders</small></span>
+    </div>
+    <button class="theme-toggle" id="themeToggle" type="button" title="Wissel licht/donker">🌙</button>
+  </div>
+  <div class="progress" id="progress">
+    <span class="progress-label">Level 1 t/m 7</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===== LEVEL 1 ===== -->
+  <section class="screen active" id="s1">
+    <div class="card">
+      <span class="eyebrow">Level 1 · Onthoud dit wachtwoord!</span>
+      <h1>🕵️ Missie van Dorian</h1>
+      <p class="lead">Een spion van Dorian heeft dit wachtwoord achtergelaten.<br><strong>Onthoud het — je hebt het zo meteen nodig!</strong></p>
+      <div class="pw-card">
+        <div class="pw-label">Geheim wachtwoord</div>
+        <div class="pw-value" id="pwShow"></div>
+      </div>
+      <button class="btn" id="btnL1" type="button">Ik heb het onthouden →</button>
+    </div>
+  </section>
+
+  <!-- ===== LEVEL 2 ===== -->
+  <section class="screen" id="s2">
+    <div class="card">
+      <span class="eyebrow">Level 2 · Typ het wachtwoord na</span>
+      <h2>Typ het wachtwoord na</h2>
+      <p class="lead">Kun je het nog uit je hoofd? Typ het hier precies over.</p>
+      <form id="formL2" autocomplete="off">
+        <div class="field">
+          <label for="inL2">Het geheime wachtwoord</label>
+          <input type="text" id="inL2" placeholder="Typ het wachtwoord…" autocomplete="off" autocapitalize="off" spellcheck="false">
+        </div>
+        <p class="feedback" id="fbL2"></p>
+        <div class="btn-row">
+          <button class="btn btn-secondary" id="btnPeek1" type="button">← Spieken</button>
+          <button class="btn" type="submit">Check →</button>
+        </div>
+      </form>
+      <div class="empathy" id="empathy1">💭 Lastig hè? Wachtwoordzinnen zijn juist zo'n beetje uitgevonden om dit probleem op te lossen…</div>
+    </div>
+  </section>
+
+  <!-- ===== LEVEL 3 ===== -->
+  <section class="screen" id="s3">
+    <div class="card">
+      <span class="eyebrow">Level 3 · Nu een wachtwoordzin</span>
+      <h2>Nu een wachtwoordzin 🔑</h2>
+      <p class="lead">Er is een makkelijker manier… een <strong>wachtwoordzin</strong>: losse woorden die samen een plaatje vormen in je hoofd!<br>Het verhaaltje in je hoofd helpt je onthouden. Kijk maar:</p>
+      <div class="pw-card">
+        <div class="pw-label">Jouw wachtwoordzin</div>
+        <div class="phrase-value" id="phShow"></div>
+        <div class="phrase-emoji" id="phEmoji"></div>
+      </div>
+      <button class="btn" id="btnL3" type="button">Ik heb het onthouden →</button>
+    </div>
+  </section>
+
+  <!-- ===== LEVEL 4 ===== -->
+  <section class="screen" id="s4">
+    <div class="card">
+      <span class="eyebrow">Level 4 · Typ de wachtwoordzin na</span>
+      <h2>Typ de wachtwoordzin na</h2>
+      <p class="lead">Herinner je het plaatje in je hoofd? Typ de vier woorden na.</p>
+      <form id="formL4" autocomplete="off">
+        <div class="field">
+          <label for="inL4">De wachtwoordzin</label>
+          <input type="text" id="inL4" placeholder="Typ de wachtwoordzin…" autocomplete="off" autocapitalize="off" spellcheck="false">
+        </div>
+        <p class="feedback" id="fbL4"></p>
+        <div class="btn-row">
+          <button class="btn btn-secondary" id="btnPeek2" type="button">← Spieken</button>
+          <button class="btn" type="submit">Check →</button>
+        </div>
+      </form>
+      <div class="empathy" id="empathy2">💭 Lastig hè? Een wachtwoordzin met een grappig plaatje blijft veel makkelijker hangen…</div>
+    </div>
+  </section>
+
+  <!-- ===== SPIEK-VERGELIJKING ===== -->
+  <section class="screen" id="sCompare">
+    <div class="card">
+      <span class="eyebrow">🏆 Het aha-moment!</span>
+      <h2>Kijk eens naar jezelf, Cyber-speurder!</h2>
+      <p class="lead" id="compareText"></p>
+      <div class="stars" id="stars"></div>
+      <div class="stat-grid">
+        <div class="stat-box"><div class="big" id="statPeek1">0</div><div class="lbl">keer teruggekeken bij het losse wachtwoord</div></div>
+        <div class="stat-box"><div class="big" id="statPeek2">0</div><div class="lbl">keer teruggekeken bij de wachtwoordzin</div></div>
+        <div class="stat-box"><div class="big" id="statTime1">0s</div><div class="lbl">duurde het losse wachtwoord</div></div>
+        <div class="stat-box"><div class="big" id="statTime2">0s</div><div class="lbl">duurde de wachtwoordzin</div></div>
+      </div>
+      <p class="lead">💡 Waarom denk je dat de zin makkelijker blijft hangen?</p>
+      <button class="btn" id="btnCompare" type="button">Door naar level 5 →</button>
+    </div>
+  </section>
+
+  <!-- ===== LEVEL 5 ===== -->
+  <section class="screen" id="s5">
+    <div class="card">
+      <span class="eyebrow">Level 5 · Welke is veiliger?</span>
+      <h2>💻 De hackerscomputer</h2>
+      <p class="lead">Een kraker probeert wachtwoorden te raden (brute force). Kijk wat er gebeurt met jouw twee wachtwoorden…</p>
+      <div class="crack-grid">
+        <div class="crack-box bad">
+          <span class="hacker" id="hack1">💻</span>
+          <h3>Los wachtwoord (8 tekens)</h3>
+          <div class="pw-mini" id="crackPw1"></div>
+          <div class="bar"><div class="bar-fill" id="bar1"></div></div>
+          <div class="crack-result" id="res1"></div>
+        </div>
+        <div class="crack-box good">
+          <span class="hacker" id="hack2">💻</span>
+          <h3>Wachtwoordzin (4 woorden)</h3>
+          <div class="pw-mini" id="crackPw2"></div>
+          <div class="bar"><div class="bar-fill" id="bar2"></div></div>
+          <div class="crack-result" id="res2"></div>
+        </div>
+      </div>
+      <div class="pin-box">
+        <h3>📱 En een 4-cijferige pincode?</h3>
+        <div class="bar"><div class="bar-fill" id="barPin"></div></div>
+        <div class="crack-result" style="color:var(--danger-red)" id="resPin"></div>
+        <p class="lead" style="margin:8px 0 0;font-size:14px">Daarom mag je pin nóóit je wachtwoord zijn.</p>
+      </div>
+      <div class="btn-row"><button class="btn" id="btnL5" type="button">Begrepen → level 6</button></div>
+    </div>
+  </section>
+
+  <!-- ===== LEVEL 6 ===== -->
+  <section class="screen" id="s6">
+    <div class="card">
+      <span class="eyebrow">Level 6 · Mini-quiz</span>
+      <h2>🧠 Wat is een sterk wachtwoord?</h2>
+      <div class="quiz-progress" id="quizProg"></div>
+      <div id="quizBox"></div>
+      <div class="btn-row"><button class="btn" id="btnL6" type="button" disabled>Door naar level 7 →</button></div>
+    </div>
+  </section>
+
+  <!-- ===== LEVEL 7 ===== -->
+  <section class="screen" id="s7">
+    <div class="card" style="text-align:left">
+      <div style="text-align:center">
+        <span class="eyebrow">Level 7 · CyberKluis</span>
+        <h2>🔐 Welkom bij de CyberKluis</h2>
+        <p class="lead">De kluis bewaart álle wachtwoorden voor je. Jij onthoudt er maar één: je <strong>hoofdwachtwoordzin</strong>.</p>
+      </div>
+
+      <!-- stap A: hoofdwachtwoord -->
+      <div class="step active" id="vaultA">
+        <div class="kluis">
+          <div class="kluis-head"><span class="lock">🔐</span><div><h3>Kies je hoofdwachtwoordzin</h3><p>Déze moet je wél zelf onthouden — hij beschermt je hele kluis!</p></div></div>
+          <form id="formVault" autocomplete="off">
+            <div class="field" style="margin:0 0 12px">
+              <label for="inMaster">Jouw hoofdwachtwoordzin</label>
+              <input type="text" id="inMaster" placeholder="Bijv. paarse tijger danst vrolijk…" autocomplete="off" autocapitalize="off" spellcheck="false">
+            </div>
+            <p class="feedback" id="fbMaster"></p>
+            <div class="btn-row" style="justify-content:flex-start;margin-top:12px">
+              <button class="btn btn-secondary" id="btnGenMaster" type="button">✨ Stel er één voor mij samen</button>
+              <button class="btn" type="submit">Kluis openen →</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- stap B: kluis-overzicht -->
+      <div class="step" id="vaultB">
+        <div class="kluis">
+          <div class="kluis-head"><span class="lock">🗝️</span><div><h3>Jouw CyberKluis</h3><p>Elke site krijgt zijn eigen unieke, superlange wachtwoord — en jij hoeft ze NIET te onthouden!</p></div></div>
+          <div id="vaultRows"></div>
+          <div class="btn-row" style="justify-content:flex-start"><button class="btn" id="btnToAutofill" type="button">Autofill proberen →</button></div>
+        </div>
+      </div>
+
+      <!-- stap C: autofill-demo -->
+      <div class="step" id="vaultC">
+        <div class="login-demo">
+          <h3>👤 GezichtBoek — inloggen</h3>
+          <div class="field"><label for="demoMail">E-mailadres</label><input type="text" id="demoMail" value="jij@voorbeeld.nl" disabled></div>
+          <div class="field"><label for="demoPw">Wachtwoord</label><input type="text" id="demoPw" placeholder="Wachtwoord…" autocomplete="off" readonly></div>
+          <div class="btn-row" style="justify-content:center;margin-top:14px">
+            <button class="btn" id="btnAutofill" type="button">🤖 Laat CyberKluis invullen</button>
+          </div>
+          <p class="kluis-toast" id="autofillToast">✅ Ingelogd! Zie je? Jij onthoudt alleen je hoofdwachtwoordzin — de kluis doet de rest.</p>
+        </div>
+        <div class="btn-row"><button class="btn btn-secondary" id="btnToLeak" type="button">Volgende →</button></div>
+      </div>
+
+      <!-- stap D: leak-scenario -->
+      <div class="step" id="vaultD">
+        <div class="kluis">
+          <div class="kluis-head"><span class="lock">🚨</span><div><h3>Oh nee — GezichtBoek is gehackt!</h3><p>Er zijn wachtwoorden gelekt. Wat moet er gebeuren?</p></div></div>
+          <div class="opts" id="leakOpts"></div>
+          <p class="feedback" id="fbLeak"></p>
+          <div class="explain" id="leakExplain">✅ Precies! Vervang alléén het wachtwoord van GezichtBoek in de kluis. GameBox en SchoolPortaal zijn veilig, want elk account heeft een uniek wachtwoord.</div>
+          <div class="btn-row" style="justify-content:flex-start"><button class="btn" id="btnFinish" type="button" disabled>Open het portaal van Dorian →</button></div>
+        </div>
+        <p class="lead" style="margin-top:18px;font-size:14px;text-align:center">Zo werken echte passwordmanagers (zoals Proton Pass, Bitwarden en 1Password) ook: één hoofdwachtwoordzin, en alle accounts veilig. 🔒</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>🔍 <strong>cyberspeurtocht.app</strong> · een missie van de <strong>Cyber-speurders</strong> · speel veilig!</footer>
+
+<!-- ===== SUCCES-POPUP ===== -->
+<div class="modal-overlay" id="winModal">
+  <div class="modal-card">
+    <div class="icon">✅</div>
+    <h2>GESLAAGD!</h2>
+    <p class="sub">Je hebt alle 7 levels gehaald, Cyber-speurder in opleiding!<br><strong>Toegang tot het geheime portaal van Dorian verleend!</strong> 🎉</p>
+    <div class="flag-panel">
+      <span class="flag-label">GEVONDEN FLAG</span>
+      <code id="flag-output"></code>
+      <p class="flag-note">Plak hem in het missieportaal om de opdracht af te ronden.</p>
+      <button class="copy-flag-btn" id="copyFlagBtn" type="button">📋 Klik om te kopiëren</button>
+    </div>
+    <button class="btn" id="btnAgain" type="button">🔁 Opnieuw spelen</button>
+  </div>
+</div>
+
+<canvas id="confetti"></canvas>
+<script>
+/* ===== CTF Flag (base64-gecodeerd, pas zichtbaar bij succes) ===== */
+const FLAG_B64 = "TEJHe3c0Y2h0dzAwcmR6MW5fd2ludH0=";
+function decodeFlag(){ return atob(FLAG_B64); }
+
+/* ===== THEMA (light standaard, dark via toggle + localStorage) ===== */
+const themeToggle = document.getElementById("themeToggle");
+function setTheme(t){
+  document.documentElement.setAttribute("data-theme", t);
+  themeToggle.textContent = t === "dark" ? "☀️" : "🌙";
+  try{ localStorage.setItem("ck-theme", t); }catch(e){}
+}
+let savedTheme = null;
+try{ savedTheme = localStorage.getItem("ck-theme"); }catch(e){}
+setTheme(savedTheme === "dark" ? "dark" : "light");
+themeToggle.addEventListener("click", function(){
+  setTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
+});
+
+/* ===== WOORDLIJST (kindvriendelijk, met emoji) ===== */
+const KLEUR = {"blauw":"🔵","groen":"🟢","rood":"🔴","geel":"🟡","paars":"🟣","oranje":"🟠","roze":"🩷","bruin":"🟤","grijs":"⚪","turquoise":"🩵"};
+const DIER  = {"vos":"🦊","wolf":"🐺","beer":"🐻","kat":"🐱","hond":"🐶","uil":"🦉","haas":"🐰","hert":"🦌","eekhoorn":"🐿️","panda":"🐼","tijger":"🐯","leeuw":"🦁","olifant":"🐘","giraf":"🦒","zebra":"🦓","octopus":"🐙","schildpad":"🐢","krokodil":"🐊","pinguïn":"🐧","flamingo":"🦩"};
+const WERKWOORD = {"springt":"🦘","danst":"💃","rent":"🏃","vliegt":"🕊️","zwemt":"🏊","lacht":"😄","zingt":"🎤","glijdt":"🛝","klimt":"🧗","slaapt":"😴","eet":"🍕","leest":"📖","tekent":"✏️","bouwt":"🧱","gooit":"🤾","vangt":"🥅","huppelt":"🐇"};
+const NAAM = {"Sam":"🧒","Noor":"👧","Lars":"👦","Emma":"👩","Julia":"🧑","Daan":"🧑‍🦱","Sophie":"👱‍♀️","Finn":"👨","Mila":"👩‍🦰","Levi":"🧔"};
+const BIJWOORD = {"hoog":"⬆️","snel":"💨","ver":"🌅","stil":"🤫","vrolijk":"😊","hard":"💪","geheim":"🤐","mooi":"✨"};
+
+function pick(obj){ const k = Object.keys(obj); return k[Math.floor(Math.random()*k.length)]; }
+
+/* ===== RANDOM WACHTWOORD (8 tekens, per sessie nieuw) ===== */
+function genPassword(){
+  const letters = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz";
+  const digits = "23456789";
+  const symbols = "!@#$%&*?";
+  const all = letters + digits + symbols;
+  const arr = [
+    letters[Math.floor(Math.random()*letters.length)],
+    digits[Math.floor(Math.random()*digits.length)],
+    symbols[Math.floor(Math.random()*symbols.length)]
+  ];
+  while(arr.length < 8) arr.push(all[Math.floor(Math.random()*all.length)]);
+  for(let i=arr.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); const t = arr[i]; arr[i] = arr[j]; arr[j] = t; }
+  return arr.join("");
+}
+
+/* ===== Wachtwoordzin (4 woorden, wisselend patroon) ===== */
+function genPhrase(){
+  const pattern = Math.random() < 0.5 ? "kdwb" : "ndwb";
+  const w = { k:pick(KLEUR), d:pick(DIER), n:pick(NAAM), w:pick(WERKWOORD), b:pick(BIJWOORD) };
+  const words = pattern.split("").map(c => w[c]);
+  const cat = { k:KLEUR, d:DIER, n:NAAM, w:WERKWOORD, b:BIJWOORD };
+  const emojis = pattern.split("").map(c => cat[c][w[c]]);
+  return { text: words.join(" "), emojis: emojis.join(" ") };
+}
+
+/* ===== SPELSTATUS (spiek-meter blijft in-memory) ===== */
+const state = {
+  pw: genPassword(),
+  phrase: genPhrase(),
+  peeks1:0, fails1:0, peeks2:0, fails2:0,
+  t1Start:null, t1End:null, t2Start:null, t2End:null,
+  vaultPws:{}
+};
+
+/* ===== NAVIGATIE + progress-dots ===== */
+const screens = ["s1","s2","s3","s4","sCompare","s5","s6","s7"];
+const progress = document.getElementById("progress");
+for(let i=1;i<=7;i++){
+  const d = document.createElement("div");
+  d.className = "pdot"; d.id = "pdot"+i;
+  progress.appendChild(d);
+}
+function go(id){
+  screens.forEach(s => document.getElementById(s).classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  const lvl = {s1:1,s2:2,s3:3,s4:4,sCompare:4,s5:5,s6:6,s7:7}[id];
+  for(let i=1;i<=7;i++){
+    const d = document.getElementById("pdot"+i);
+    d.classList.toggle("done", i < lvl || (id === "sCompare" && i === 4));
+    d.classList.toggle("current", i === lvl && id !== "sCompare");
+  }
+  window.scrollTo({top:0});
+}
+
+/* ===== LEVEL 1 → 2 (stopwatch start bij tonen wachtwoord) ===== */
+document.getElementById("pwShow").textContent = state.pw;
+state.t1Start = Date.now();
+document.getElementById("btnL1").addEventListener("click", function(){ go("s2"); document.getElementById("inL2").focus(); });
+
+/* ===== LEVEL 2: case-sensitive check ===== */
+function maybeEmpathy(){
+  if((state.peeks1 >= 3 || state.fails1 >= 3) && !document.getElementById("empathy1").classList.contains("show"))
+    document.getElementById("empathy1").classList.add("show");
+}
+document.getElementById("btnPeek1").addEventListener("click", function(){
+  state.peeks1++; maybeEmpathy(); go("s1");
+});
+document.getElementById("formL2").addEventListener("submit", function(e){
+  e.preventDefault();
+  const inp = document.getElementById("inL2"), fb = document.getElementById("fbL2");
+  if(inp.value === state.pw){
+    state.t1End = Date.now();
+    fb.textContent = "✅ Goed zo, Cyber-speurder!"; fb.className = "feedback ok";
+    setTimeout(function(){ go("s3"); }, 650);
+  } else {
+    state.fails1++;
+    inp.classList.remove("shake"); void inp.offsetWidth; inp.classList.add("shake");
+    fb.textContent = "Bijna! Kijk nog eens goed. 👀"; fb.className = "feedback no";
+    maybeEmpathy();
+  }
+});
+
+/* ===== LEVEL 3 → 4 ===== */
+document.getElementById("phShow").textContent = state.phrase.text;
+document.getElementById("phEmoji").textContent = state.phrase.emojis;
+document.getElementById("btnL3").addEventListener("click", function(){
+  state.t2Start = Date.now(); go("s4"); document.getElementById("inL4").focus();
+});
+
+/* ===== LEVEL 4: vergevend matchen (hoofdletters/spaties mogen afwijken) ===== */
+function normalize(s){ return s.toLowerCase().trim().replace(/\s+/g," "); }
+document.getElementById("btnPeek2").addEventListener("click", function(){
+  state.peeks2++;
+  if(state.peeks2 >= 3 && !document.getElementById("empathy2").classList.contains("show"))
+    document.getElementById("empathy2").classList.add("show");
+  go("s3");
+});
+document.getElementById("formL4").addEventListener("submit", function(e){
+  e.preventDefault();
+  const inp = document.getElementById("inL4"), fb = document.getElementById("fbL4");
+  if(normalize(inp.value) === normalize(state.phrase.text)){
+    state.t2End = Date.now();
+    fb.textContent = "✅ Geweldig onthouden!"; fb.className = "feedback ok";
+    setTimeout(showCompare, 650);
+  } else {
+    state.fails2++;
+    inp.classList.remove("shake"); void inp.offsetWidth; inp.classList.add("shake");
+    fb.textContent = "Goed geprobeerd! Denk aan het plaatje in je hoofd. 🖼️"; fb.className = "feedback no";
+  }
+});
+
+/* ===== SPIEK-METER vergelijking (altijd positief) ===== */
+function secs(a,b){ return Math.max(1, Math.round((b-a)/1000)); }
+function showCompare(){
+  const t1 = secs(state.t1Start, state.t1End), t2 = secs(state.t2Start, state.t2End);
+  const diff = t1 - t2;
+  const speedTxt = diff > 0
+    ? "En je was er <strong>" + diff + " seconden sneller</strong> mee klaar!"
+    : "En in maar <strong>" + t2 + " seconden</strong> had je de zin paraat — knap hoor!";
+  document.getElementById("compareText").innerHTML =
+    "Bij het losse wachtwoord keek je <strong>" + state.peeks1 + " keer</strong> terug, " +
+    "bij de wachtwoordzin maar <strong>" + state.peeks2 + " keer</strong>. " + speedTxt;
+  document.getElementById("statPeek1").textContent = state.peeks1;
+  document.getElementById("statPeek2").textContent = state.peeks2;
+  document.getElementById("statTime1").textContent = t1 + "s";
+  document.getElementById("statTime2").textContent = t2 + "s";
+  const totalPeeks = state.peeks1 + state.peeks2, totalFails = state.fails1 + state.fails2;
+  const stars = (totalPeeks === 0 && totalFails === 0) ? 3 : (totalPeeks <= 2 && totalFails <= 2) ? 2 : 1;
+  document.getElementById("stars").innerHTML =
+    "⭐".repeat(stars) + '<span class="dim">' + "⭐".repeat(3-stars) + "</span>";
+  go("sCompare");
+}
+document.getElementById("btnCompare").addEventListener("click", function(){ go("s5"); runCrack(); });
+
+/* ===== LEVEL 5: kraak-animatie (CSS keyframes) ===== */
+let crackRan = false;
+function runCrack(){
+  if(crackRan) return; crackRan = true;
+  document.getElementById("crackPw1").textContent = state.pw;
+  document.getElementById("crackPw2").textContent = state.phrase.text;
+  document.getElementById("hack1").classList.add("blink");
+  document.getElementById("hack2").classList.add("blink");
+  requestAnimationFrame(function(){
+    document.getElementById("bar1").classList.add("fast");
+    document.getElementById("bar2").classList.add("slow");
+    document.getElementById("barPin").classList.add("instant");
+  });
+  setTimeout(function(){ document.getElementById("res1").textContent = "💥 Gekraakt in enkele uren!"; }, 4100);
+  setTimeout(function(){ document.getElementById("res2").textContent = "🐌 Duizenden jaren bezig… nog geen 1% gekraakt!"; }, 5200);
+  setTimeout(function(){ document.getElementById("resPin").textContent = "💥 10.000 combinaties = gekraakt in 1 seconde!"; }, 1100);
+}
+document.getElementById("btnL5").addEventListener("click", function(){ go("s6"); renderQuiz(); });
+
+/* ===== LEVEL 6: mini-quiz (meerdere correcte antwoorden mogelijk) ===== */
+const QUIZ = [
+  { q:"Wat maakt een wachtwoord écht sterk? (meerdere goed)", multi:true,
+    opts:["Hij is lang — bijvoorbeeld een zin van 4 of meer woorden","Hij is uniek voor elk account","Hij bevat mijn naam en geboortedatum","Kort is prima, als er maar een cijfer in zit"],
+    correct:[0,1],
+    why:"Lengte wint het van ingewikkeldheid! Een lange wachtwoordzin is óók nog eens makkelijk te onthouden. Naam en geboortedatum raden kraker als eerste." },
+  { q:"Welke wachtwoorden moet je nóóit gebruiken? (meerdere goed)", multi:true,
+    opts:["1234","Je eigen naam","Je geboortedatum","Een wachtwoordzin als 'blauwe vos springt hoog'"],
+    correct:[0,1,2],
+    why:"1234, namen en geboortedata staan bovenaan elke kraker-lijst. Een grappige wachtwoordzin is juist wél slim!" },
+  { q:"Welke stellingen over wachtwoorden zijn waar? (meerdere goed)", multi:true,
+    opts:["Alleen ik hoef mijn wachtwoord te kennen","Vrienden hoeven mijn wachtwoord niet te kennen","Mijn klasgenoten mogen mijn wachtwoord best lenen","Een wachtwoordzin deel ik met niemand"],
+    correct:[0,1,3],
+    why:"Je wachtwoord is van jou alleen — ook niet 'even' aan vrienden. Alleen jij (en evt. je ouders als back-up) kennen je hoofdwachtwoordzin." },
+  { q:"Je gebruikt een passwordmanager (een kluis). Wat hoef je zelf nog te onthouden?", multi:false,
+    opts:["Alleen mijn hoofdwachtwoordzin","Alle wachtwoorden van al mijn accounts","Niets — de kluis werkt zonder wachtwoord"],
+    correct:[0],
+    why:"Precies! Jij onthoudt één sterke hoofdwachtwoordzin. De kluis onthoudt en vult de rest automatisch in." }
+];
+let quizIdx = 0;
+function renderQuiz(){
+  document.getElementById("quizProg").textContent = "Vraag " + (quizIdx+1) + " van " + QUIZ.length;
+  const q = QUIZ[quizIdx], box = document.getElementById("quizBox");
+  delete box.dataset.locked;
+  let html = '<div class="quiz-q">' + q.q + "</div><div class='opts'>";
+  q.opts.forEach(function(o,i){
+    html += '<div class="opt" data-i="'+i+'"><span class="box"></span><span>'+o+"</span></div>";
+  });
+  html += "</div>";
+  html += '<p class="feedback" id="fbQuiz"></p>';
+  html += '<div class="explain" id="why"></div>';
+  html += '<div class="btn-row" style="justify-content:flex-start"><button class="btn" id="btnCheckQ" type="button">Check antwoord →</button></div>';
+  box.innerHTML = html;
+  const selected = new Set();
+  box.querySelectorAll(".opt").forEach(function(el){
+    el.addEventListener("click", function(){
+      if(box.dataset.locked) return;
+      const i = +el.dataset.i;
+      if(q.multi){
+        if(selected.has(i)){ selected.delete(i); el.classList.remove("sel"); }
+        else { selected.add(i); el.classList.add("sel"); }
+      } else {
+        selected.clear();
+        box.querySelectorAll(".opt").forEach(function(o){ o.classList.remove("sel"); });
+        selected.add(i); el.classList.add("sel");
+      }
+    });
+  });
+  document.getElementById("btnCheckQ").addEventListener("click", function(){
+    const fb = document.getElementById("fbQuiz");
+    if(selected.size === 0){ fb.textContent = "Kies eerst een antwoord 🙂"; fb.className = "feedback no"; return; }
+    const ok = selected.size === q.correct.length && q.correct.every(function(c){ return selected.has(c); });
+    if(ok){
+      box.dataset.locked = "1";
+      box.querySelectorAll(".opt").forEach(function(el){
+        const i = +el.dataset.i;
+        el.classList.remove("sel");
+        el.classList.add(q.correct.indexOf(i) >= 0 ? "right" : "wrong");
+        el.querySelector(".box").textContent = q.correct.indexOf(i) >= 0 ? "✓" : "✗";
+      });
+      const why = document.getElementById("why");
+      why.innerHTML = "💡 <strong>Waarom dit klopt:</strong> " + q.why;
+      why.classList.add("show");
+      fb.textContent = "✅ Heel goed!"; fb.className = "feedback ok";
+      const btn = document.getElementById("btnCheckQ");
+      btn.textContent = quizIdx === QUIZ.length-1 ? "Naar level 7 →" : "Volgende vraag →";
+      btn.onclick = function(){
+        if(quizIdx === QUIZ.length-1){
+          document.getElementById("btnL6").disabled = false;
+          go("s7");
+        } else { quizIdx++; renderQuiz(); }
+      };
+    } else {
+      box.querySelectorAll(".opt.sel").forEach(function(el){ el.classList.remove("shake"); void el.offsetWidth; el.classList.add("shake"); });
+      fb.textContent = "Nog niet helemaal — kijk nog eens goed! 🔍"; fb.className = "feedback no";
+    }
+  });
+}
+document.getElementById("btnL6").addEventListener("click", function(){ go("s7"); });
+
+/* ===== LEVEL 7: CyberKluis (fictieve passwordmanager) ===== */
+const ACCOUNTS = ["GezichtBoek","GameBox","SchoolPortaal"];
+function genVaultPw(){
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%^&*?";
+  let s = "";
+  for(let i=0;i<18;i++) s += chars[Math.floor(Math.random()*chars.length)];
+  return s;
+}
+function step(id){
+  ["vaultA","vaultB","vaultC","vaultD"].forEach(function(s){ document.getElementById(s).classList.remove("active"); });
+  document.getElementById(id).classList.add("active");
+}
+document.getElementById("btnGenMaster").addEventListener("click", function(){
+  document.getElementById("inMaster").value = genPhrase().text;
+});
+document.getElementById("formVault").addEventListener("submit", function(e){
+  e.preventDefault();
+  const inp = document.getElementById("inMaster"), fb = document.getElementById("fbMaster");
+  if(inp.value.trim().length < 8){
+    fb.textContent = "Kies een wachtwoordzin van minstens een paar woorden 🙂"; fb.className = "feedback no";
+    inp.classList.remove("shake"); void inp.offsetWidth; inp.classList.add("shake");
+    return;
+  }
+  ACCOUNTS.forEach(function(a){ state.vaultPws[a] = genVaultPw(); });
+  renderVault(); step("vaultB");
+});
+function renderVault(){
+  const box = document.getElementById("vaultRows");
+  box.innerHTML = "";
+  ACCOUNTS.forEach(function(acc){
+    const row = document.createElement("div");
+    row.className = "vault-row";
+    row.innerHTML = '<span class="acc">'+acc+'</span><span class="pw" id="pw_'+acc+'">••••••••••••••••</span>';
+    const btn = document.createElement("button");
+    btn.className = "gen-btn"; btn.type = "button";
+    btn.textContent = "🔄 Nieuw wachtwoord genereren";
+    btn.addEventListener("click", function(){
+      const pw = genVaultPw();
+      const el = document.getElementById("pw_"+acc);
+      el.textContent = pw; el.style.color = "var(--text-heading)";
+      setTimeout(function(){ el.textContent = "••••••••••••••••"; el.style.color = ""; }, 2200);
+    });
+    row.appendChild(btn);
+    box.appendChild(row);
+  });
+}
+document.getElementById("btnToAutofill").addEventListener("click", function(){ step("vaultC"); });
+document.getElementById("btnAutofill").addEventListener("click", function(){
+  const demo = document.getElementById("demoPw"), toast = document.getElementById("autofillToast");
+  const pw = state.vaultPws["GezichtBoek"] || genVaultPw();
+  demo.value = ""; toast.classList.remove("show");
+  let i = 0;
+  const t = setInterval(function(){
+    demo.value += pw[i++];
+    if(i >= pw.length){ clearInterval(t); toast.classList.add("show"); }
+  }, 70);
+});
+document.getElementById("btnToLeak").addEventListener("click", function(){ step("vaultD"); renderLeak(); });
+
+/* ===== LEVEL 7: leak-scenario ===== */
+const LEAK = {
+  opts:["Vervang alléén het wachtwoord van GezichtBoek in de kluis","Ik verander álle wachtwoorden van al mijn accounts","Niets — één gehackt wachtwoord is niet erg"],
+  correct:0
+};
+let leakDone = false;
+function renderLeak(){
+  const box = document.getElementById("leakOpts");
+  box.innerHTML = "";
+  LEAK.opts.forEach(function(o,i){
+    const el = document.createElement("div");
+    el.className = "opt"; el.dataset.i = i;
+    el.innerHTML = '<span class="box"></span><span>'+o+"</span>";
+    el.addEventListener("click", function(){
+      if(leakDone) return;
+      const fb = document.getElementById("fbLeak");
+      if(i === LEAK.correct){
+        leakDone = true;
+        el.classList.add("right"); el.querySelector(".box").textContent = "✓";
+        document.getElementById("leakExplain").classList.add("show");
+        fb.textContent = "✅ Precies goed!"; fb.className = "feedback ok";
+        document.getElementById("btnFinish").disabled = false;
+      } else {
+        el.classList.add("wrong"); el.querySelector(".box").textContent = "✗";
+        fb.textContent = "Denk na: juist omdat elk account uniek is… probeer het opnieuw 🤔"; fb.className = "feedback no";
+      }
+    });
+    box.appendChild(el);
+  });
+}
+document.getElementById("btnFinish").addEventListener("click", function(){
+  document.getElementById("flag-output").textContent = decodeFlag();
+  document.getElementById("winModal").classList.add("show");
+  launchConfetti();
+});
+
+/* ===== FLAG kopiëren ===== */
+document.getElementById("copyFlagBtn").addEventListener("click", function(){
+  const flag = decodeFlag(), btn = this;
+  function feedback(){
+    btn.textContent = "✅ Gekopieerd! Plak hem in het missieportaal.";
+    setTimeout(function(){ btn.textContent = "📋 Klik om te kopiëren"; }, 2500);
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(flag).then(feedback).catch(function(){ window.prompt("Kopieer de flag:", flag); });
+  } else { window.prompt("Kopieer de flag:", flag); }
+});
+document.getElementById("btnAgain").addEventListener("click", function(){ location.reload(); });
+
+/* ===== CONFETTI (canvas, geen libraries) ===== */
+function launchConfetti(){
+  const canvas = document.getElementById("confetti");
+  const ctx = canvas.getContext && canvas.getContext("2d");
+  if(!ctx) return;
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const colors = ["#16857e","#e11d48","#059669","#fbbf24","#e879f9","#60a5fa"];
+  const pieces = [];
+  for(let i=0;i<220;i++) pieces.push({
+    x:Math.random()*canvas.width, y:-20-Math.random()*canvas.height,
+    w:6+Math.random()*7, h:8+Math.random()*8,
+    c:colors[Math.floor(Math.random()*colors.length)],
+    vy:2+Math.random()*3.5, vx:-1.5+Math.random()*3,
+    rot:Math.random()*360, vr:-6+Math.random()*12
+  });
+  let frames = 0;
+  (function anim(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(function(p){
+      p.y += p.vy; p.x += p.vx; p.rot += p.vr;
+      if(p.y > canvas.height+20){ p.y = -20; p.x = Math.random()*canvas.width; }
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle = p.c; ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h); ctx.restore();
+    });
+    frames++;
+    if(frames < 480) requestAnimationFrame(anim); else ctx.clearRect(0,0,canvas.width,canvas.height);
+  })();
+}
+</script>
+</body>
+</html>
