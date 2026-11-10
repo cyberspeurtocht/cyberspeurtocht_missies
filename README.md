@@ -6,9 +6,6 @@ Welkom bij **Cyberspeurtocht**, een interactieve webapplicatie ontworpen om scou
 
 Deze speurtocht combineert plezier met leren: kinderen spelen actief mee, oefenen praktische vaardigheden en leren hoe ze veilig kunnen navigeren in de online omgeving. Ze leren gevaren herkennen, kritisch nadenken over informatie en begrijpen hoe privacy en beveiliging werken.
 
-## 🌐 Speel het spel
-Het volledige spel is gratis beschikbaar voor scoutinggroepen op:
-👉 **[cyberspeurtocht.app](https://cyberspeurtocht.app)**
 
 Op de website speel je niet alleen de spellen, maar krijg je ook toegang tot een handig **dashboard** met extra functionaliteiten voor begeleiders.
 
@@ -18,8 +15,6 @@ Alle spellen zijn ook als losse **HTML-bestanden** in deze repository beschikbaa
 - Aanpassingen door te voeren op de inhoud of het ontwerp.
 - Het spel verder uit te breiden met eigen challenges.
 - Het spel zelf te hosten (bijvoorbeeld op Cloudflare Workers).
-
-> **Tip:** Voor de beste ervaring raden we aan om het spel te spelen via [cyberspeurtocht.app](https://cyberspeurtocht.app), waar je ook de extra dashboardfuncties kunt gebruiken.
 
 ## 🎮 De Spellen
 
